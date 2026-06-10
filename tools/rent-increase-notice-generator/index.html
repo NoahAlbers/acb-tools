@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex"><!-- tool is iframed; the Webflow page is the indexed URL -->
+<title>Rent Increase Notice Generator | Advanced Collection Bureau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --acb-blue:#3D5AF1;--acb-blue-dark:#2D45C6;--acb-blue-light:#EEF1FE;--acb-blue-mid:#D5DBFC;
+  --acb-bg:#F4F5F9;--acb-card:#FFFFFF;--acb-text:#1A1A2E;--acb-text-mid:#4A4A68;--acb-text-light:#8889A0;
+  --acb-border:#E2E4EC;--acb-warn:#E8A83E;--acb-warn-bg:#FEF9EE;--acb-green:#16A34A;--acb-red:#DC2626;--acb-gold:#F5B301;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-text);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 48px}
+.tool-head{text-align:center;margin-bottom:26px}
+.tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
+.tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.grid{display:grid;grid-template-columns:10fr 11fr;gap:22px;align-items:start}
+@media(max-width:960px){.grid{grid-template-columns:1fr}}
+.card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
+.card+.card{margin-top:22px}
+.sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
+.field{margin-bottom:16px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:14px;font-weight:600;color:var(--acb-text);margin-bottom:7px}
+.in-wrap{position:relative;display:flex;align-items:center}
+.in-wrap .pre{position:absolute;left:14px;color:var(--acb-text-light);font-size:15px;font-weight:500;pointer-events:none}
+input[type=text],input[type=date],select,textarea{width:100%;padding:13px 16px;background:#fff;border:1.5px solid var(--acb-border);border-radius:10px;color:var(--acb-text);font-size:16px;font-family:inherit;outline:none;transition:border-color .25s,box-shadow .25s}
+textarea{resize:vertical;min-height:64px;line-height:1.5}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238889A0' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px;cursor:pointer}
+.in-wrap.has-pre input{padding-left:30px}
+input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(61,90,241,.09)}
+.hint{font-size:12.5px;color:var(--acb-text-light);margin-top:6px;line-height:1.5}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.mini-row{grid-template-columns:1fr}}
+.chip-warn{display:flex;gap:8px;align-items:flex-start;background:var(--acb-warn-bg);border:1px solid #F0DCB2;color:#8A6213;border-radius:10px;padding:10px 13px;font-size:12.5px;line-height:1.5;margin-top:8px;font-weight:500}
+.chip-warn[hidden]{display:none}
+.chip-bad{display:flex;gap:8px;align-items:flex-start;background:#FDF1F1;border:1px solid #F2C7C7;color:#9B2222;border-radius:10px;padding:10px 13px;font-size:12.5px;line-height:1.5;margin-top:8px;font-weight:500}
+.chip-bad[hidden]{display:none}
+.chip-ok{display:flex;gap:8px;align-items:flex-start;background:#F0FAF3;border:1px solid #BFE5CC;color:#13713A;border-radius:10px;padding:10px 13px;font-size:12.5px;line-height:1.5;margin-top:8px;font-weight:500}
+.rules{background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:14px 16px;font-size:12.5px;color:var(--acb-text-mid);line-height:1.6;margin-top:8px}
+.rules .r-title{font-size:13px;font-weight:700;color:var(--acb-text);margin-bottom:6px}
+.rules .r-row{margin-bottom:6px}
+.rules .r-row:last-child{margin-bottom:0}
+.rules .r-key{font-weight:600;color:var(--acb-text)}
+.rules .r-big{font-size:13.5px;font-weight:700;color:var(--acb-blue)}
+.rules em{color:var(--acb-text-light)}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{padding:10px 20px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s;min-height:44px}
+.pill.sel{background:var(--acb-blue-light);border-color:var(--acb-blue);color:var(--acb-blue);font-weight:600}
+.chips-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.stat-chip{background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:10px;padding:8px 13px;font-size:12.5px;color:var(--acb-text-mid)}
+.stat-chip b{display:block;font-size:16px;font-weight:800;color:var(--acb-text);margin-top:1px}
+.stat-chip b.up{color:var(--acb-green)}
+.stat-chip b.down{color:var(--acb-red)}
+.sw-line{display:flex;align-items:center;gap:12px;padding:8px 0;cursor:pointer}
+.sw-line .tt{flex:1;font-size:14px;font-weight:600}
+.sw-line .ts{font-size:12px;color:var(--acb-text-light);margin-top:1px;font-weight:400}
+.sw{position:relative;width:40px;height:23px;flex-shrink:0}
+.sw input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2}
+.sw .knob{position:absolute;inset:0;background:#D0D3DC;border-radius:50px;transition:background .2s}
+.sw .knob:after{content:'';position:absolute;top:2.5px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw input:checked+.knob{background:var(--acb-blue)}
+.sw input:checked+.knob:after{transform:translateX(16px)}
+.use-btn{display:inline-block;margin-left:6px;padding:4px 14px;border-radius:50px;border:1.5px solid var(--acb-blue);background:var(--acb-blue-light);color:var(--acb-blue);font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s}
+.use-btn:hover{background:var(--acb-blue);color:#fff}
+/* document preview */
+.preview-shell{padding:18px}
+.doc{background:#fff;border:1px solid var(--acb-border);border-radius:8px;padding:34px 32px;font-size:13px;color:#15151f;line-height:1.5}
+@media(max-width:480px){.doc{padding:22px 16px}}
+.doc-title{text-align:center;font-size:18px;font-weight:800;letter-spacing:.13em}
+.doc-rule{border-bottom:1.6px solid #1A1A2E;margin:14px 0 16px}
+.lt-addr{font-size:12.3px;color:#26263a;line-height:1.55;margin-bottom:12px;white-space:pre-line}
+.lt-re{font-size:12.5px;font-weight:700;color:#1c1c2c;margin:14px 0 12px}
+.lt-para{font-size:12.3px;color:#26263a;line-height:1.65;margin-bottom:12px;text-align:justify}
+.lt-box{border:1.2px solid #8a8a96;border-radius:4px;padding:11px 14px;margin:14px 0;font-size:12px;color:#1c1c2c;line-height:1.7}
+.lt-box .bk{display:inline-block;min-width:170px;font-weight:700}
+.lt-sig{margin-top:24px;font-size:12.3px;color:#26263a}
+.lt-sig .line{display:inline-block;width:240px;border-bottom:1.2px solid #555;height:18px;vertical-align:bottom}
+.lt-sig .dline{display:inline-block;width:130px;border-bottom:1.2px solid #555;height:18px;vertical-align:bottom;margin-left:18px}
+.lt-sig .lbl{display:block;font-size:10.5px;color:#5a5a68;margin-top:3px}
+.lt-cos{border-top:1.4px solid #1A1A2E;margin-top:24px;padding-top:12px}
+.lt-cos .ct{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.lt-cb{display:inline-block;width:10px;height:10px;border:1.3px solid #333;vertical-align:-1px;margin-right:6px}
+.lt-cos p{font-size:11.5px;color:#26263a;line-height:1.7;margin-bottom:6px}
+.doc-legal{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:16px;border-top:1px solid #d8d8e0;padding-top:8px}
+/* actions / education */
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.btn-secondary{padding:11px 24px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s;min-height:44px}
+.btn-secondary:hover{border-color:var(--acb-blue-mid);color:var(--acb-blue)}
+.acb-btn-primary{display:inline-block;padding:14px 36px;border-radius:50px;border:none;background:var(--acb-blue);color:#fff;font-size:15px;font-family:inherit;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(61,90,241,.27);transition:all .2s}
+.acb-btn-primary:hover{background:var(--acb-blue-dark);transform:translateY(-1px)}
+.edu{display:flex;gap:16px;align-items:flex-start;margin-top:22px}
+.edu .ico{flex-shrink:0;width:42px;height:42px;border-radius:12px;background:var(--acb-blue-light);display:flex;align-items:center;justify-content:center;color:var(--acb-blue);font-size:20px}
+.edu h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.edu p{font-size:14px;color:var(--acb-text-mid);line-height:1.6}
+.edu a{color:var(--acb-blue);font-weight:600;text-decoration:none}
+.acb-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:var(--acb-blue-light);border-left:4px solid var(--acb-blue);border-radius:6px 16px 16px 6px;padding:24px 28px;margin-top:34px}
+.acb-cta-title{font-size:19px;font-weight:700;color:var(--acb-text);margin-bottom:6px}
+.acb-cta p{font-size:14.5px;color:var(--acb-text-mid);line-height:1.55;margin:0;max-width:520px}
+.acb-cta-actions{display:flex;flex-direction:column;align-items:center;gap:8px}
+.acb-cta-tel{font-size:13px;color:var(--acb-blue);text-decoration:none;font-weight:600;white-space:nowrap}
+.acb-rating{display:flex;flex-direction:column;align-items:center;gap:6px;margin:34px auto 0;text-align:center}
+.acb-star{background:none;border:none;font-size:30px;line-height:1;color:#D0D3DC;cursor:pointer;padding:2px 3px;transition:color .15s,transform .15s;font-family:inherit}
+.acb-star.on{color:var(--acb-gold)}
+.acb-star:hover{transform:scale(1.15)}
+.acb-rating-meta{font-size:13px;color:var(--acb-text-light)}
+.disclaimer{font-size:12px;color:var(--acb-text-light);text-align:center;line-height:1.6;margin-top:26px;max-width:680px;margin-left:auto;margin-right:auto}
+.fade{animation:fadeIn .35s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media print{
+  @page{margin:.7in}
+  body{background:#fff}
+  .no-print{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .grid{display:block}
+  #previewCard{border:none;box-shadow:none;padding:0;border-radius:0;margin:0}
+  .doc{border:none;border-radius:0;padding:0;font-size:12.5px}
+  .lt-box,.lt-sig,.lt-cos{page-break-inside:avoid;break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tool-head no-print">
+    <h1>Rent Increase Notice Generator</h1>
+    <p>Build a professional rent increase letter with the right notice period for your state — live preview, effective-date validation, and cap warnings for rent-control states.</p>
+    <div class="badges"><span class="badge">100% Free</span><span class="badge">No Signup</span><span class="badge">No Email Required</span></div>
+  </div>
+
+  <div class="grid">
+    <!-- ============ BUILDER COLUMN ============ -->
+    <div class="no-print">
+      <div class="card">
+        <div class="sec-label">1 · Where is the property?</div>
+        <div class="field">
+          <label for="inState">State</label>
+          <select id="inState"></select>
+        </div>
+        <div class="field">
+          <label for="inCity">City</label>
+          <input type="text" id="inCity" placeholder="e.g. Orlando" autocomplete="address-level2">
+          <div class="chip-warn" id="cityChip" hidden role="alert"></div>
+        </div>
+        <div class="field" id="occWrap" hidden>
+          <label for="inOcc">How long has the tenant lived there?</label>
+          <select id="inOcc">
+            <option value="lt1">Less than 1 year</option>
+            <option value="1to2">1 to 2 years</option>
+            <option value="2plus">2 or more years</option>
+          </select>
+          <div class="hint">New York's notice period for increases of 5% or more depends on occupancy length.</div>
+        </div>
+        <div class="rules" id="rulesPanel" aria-live="polite"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">2 · Parties &amp; property</div>
+        <div class="field">
+          <label for="inLandlord">Landlord / management company name</label>
+          <input type="text" id="inLandlord" placeholder="e.g. Maple Court Properties LLC" autocomplete="organization">
+        </div>
+        <div class="field">
+          <label for="inLandlordAddr">Landlord mailing address &amp; phone (optional)</label>
+          <input type="text" id="inLandlordAddr" placeholder="e.g. PO Box 100, Orlando, FL 32801 · (555) 555-0100">
+        </div>
+        <div class="field">
+          <label for="inTenants">Tenant name(s)</label>
+          <input type="text" id="inTenants" placeholder="e.g. Jordan Smith and Casey Smith">
+        </div>
+        <div class="field">
+          <label for="inAddress">Rental property address</label>
+          <input type="text" id="inAddress" placeholder="e.g. 123 Main St, Unit 4, Orlando, FL 32801">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">3 · The increase</div>
+        <div class="mini-row">
+          <div class="field">
+            <label for="inCurrent">Current monthly rent</label>
+            <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="inCurrent" inputmode="decimal" placeholder="2,000"></div>
+          </div>
+          <div class="field">
+            <label for="inNew">New monthly rent</label>
+            <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="inNew" inputmode="decimal" placeholder="2,100"></div>
+          </div>
+        </div>
+        <div class="chips-row" aria-live="polite">
+          <div class="stat-chip">Increase / month<b id="incAmt">—</b></div>
+          <div class="stat-chip">Increase %<b id="incPct">—</b></div>
+          <div class="stat-chip">New annual cost<b id="incAnnual">—</b></div>
+        </div>
+        <div class="chip-bad" id="capWarn" hidden role="alert"></div>
+        <div class="chip-warn" id="capSoftWarn" hidden role="alert"></div>
+        <div class="chip-warn" id="freqWarn" hidden role="alert"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">4 · Dates &amp; tenancy</div>
+        <div class="field">
+          <label>Tenancy type</label>
+          <div class="pills" role="radiogroup" aria-label="Tenancy type">
+            <button type="button" class="pill" id="ttM2m" role="radio">Month-to-month</button>
+            <button type="button" class="pill" id="ttFixed" role="radio">Fixed-term renewal</button>
+          </div>
+        </div>
+        <div class="mini-row">
+          <div class="field">
+            <label for="inDelivery">Notice delivery date</label>
+            <input type="date" id="inDelivery">
+          </div>
+          <div class="field">
+            <label for="inEffective">New rent effective date</label>
+            <input type="date" id="inEffective">
+          </div>
+        </div>
+        <div id="effMsg" aria-live="polite"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">5 · Tone &amp; options</div>
+        <label class="sw-line">
+          <span style="flex:1"><span class="tt">Appreciation line</span><span class="ts" style="display:block">"We value you as a resident…" — keeps the letter warm</span></span>
+          <span class="sw"><input type="checkbox" id="optAppreciation" checked><span class="knob"></span></span>
+        </label>
+        <div class="field" style="margin-top:10px">
+          <label for="optReason">Reason for the increase (optional)</label>
+          <select id="optReason">
+            <option value="none">Don't include a reason</option>
+            <option value="market">Market adjustment</option>
+            <option value="taxes">Increased taxes &amp; insurance</option>
+            <option value="improvements">Property improvements</option>
+            <option value="custom">Custom reason…</option>
+          </select>
+        </div>
+        <div class="field" id="reasonCustomWrap" hidden>
+          <label for="optReasonCustom">Custom reason</label>
+          <textarea id="optReasonCustom" rows="2" placeholder="e.g. This adjustment reflects rising utility and maintenance costs for the building."></textarea>
+        </div>
+        <div class="field">
+          <label for="optReplyBy">"Please reply by" date (optional)</label>
+          <input type="date" id="optReplyBy">
+          <div class="hint">Useful for renewal decisions — gives the tenant a clear deadline to respond.</div>
+        </div>
+        <label class="sw-line">
+          <span style="flex:1"><span class="tt">Certificate of service</span><span class="ts" style="display:block">Adds a delivery-method record you fill out when you serve the notice</span></span>
+          <span class="sw"><input type="checkbox" id="optCos"><span class="knob"></span></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- ============ PREVIEW COLUMN ============ -->
+    <div>
+      <div class="card preview-shell" id="previewCard">
+        <div class="sec-label no-print" style="margin-bottom:12px">Live preview — updates as you build</div>
+        <div class="doc" id="docPreview" aria-live="polite"></div>
+      </div>
+      <div class="actions no-print">
+        <button type="button" class="acb-btn-primary" id="printBtn">Print / Save as PDF</button>
+        <button type="button" class="btn-secondary" id="copyBtn">Copy text</button>
+      </div>
+      <p class="hint no-print" style="text-align:center;margin-top:10px">"Print / Save as PDF" prints only the notice letter. Everything stays on your device — nothing is uploaded or shared.</p>
+    </div>
+  </div>
+
+  <div class="card edu no-print">
+    <div class="ico" aria-hidden="true">↻</div>
+    <div>
+      <h3>Run the retention math before you send it</h3>
+      <p>A $50 increase that causes a turnover costs more than it earns — one vacancy (make-ready, marketing, lost rent) can wipe out years of the extra income. Price the increase so a good tenant stays. Estimate your real cost with the free <a href="https://www.advancedcb.com/resources/turnover-cost-estimator" target="_top">Turnover Cost Estimator</a>.</p>
+    </div>
+  </div>
+
+  <div class="acb-rating no-print" id="acbRating" aria-label="Rate this tool">
+    <div class="acb-rating-stars" id="acbStars" role="radiogroup"></div>
+    <div class="acb-rating-meta" id="acbRatingMeta"></div>
+  </div>
+
+  <div class="acb-cta no-print">
+    <div class="acb-cta-text">
+      <div class="acb-cta-title">Tenant left owing money?</div>
+      <p>Advanced Collection Bureau has recovered over <strong>$85&nbsp;million</strong> in unpaid rent, fees, and damages for landlords and property managers. No recovery, no fee.</p>
+    </div>
+    <div class="acb-cta-actions">
+      <a class="acb-btn-primary" href="https://www.advancedcb.com/" target="_top">Get Started</a>
+      <a class="acb-cta-tel" href="tel:3216334999">or call (321) 633-4999</a>
+    </div>
+  </div>
+
+  <p class="disclaimer no-print">This generator produces a general-purpose template and notice-period guidance for informational purposes only — it is not legal advice. Rent increase rules change frequently and vary by state, county, and city; rent control and rent stabilization ordinances add their own caps and procedures. Review the notice with a local attorney and verify current requirements before sending. © Advanced Collection Bureau, Inc.</p>
+</div>
+
+<script>
+/* ============ Pure data + letter model (no DOM access in this block) ============ */
+"use strict";
+var fmtUSD=function(n,c){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:c?2:0,maximumFractionDigits:c?2:0}).format(isFinite(n)?n:0);};
+var money=function(s){var v=parseFloat(String(s==null?'':s).replace(/[^0-9.\-]/g,''));return isFinite(v)?v:0;};
+var escHtml=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});};
+
+/* Base notice periods — `n` and `mtm` copied verbatim from the Lease Agreement
+   Generator's state data (month-to-month termination notice = conservative base
+   for changing terms). `d` is the numeric day count this tool computes with. */
+var BASE={
+AL:{n:"Alabama",mtm:"30 days",d:30},
+AK:{n:"Alaska",mtm:"30 days",d:30},
+AZ:{n:"Arizona",mtm:"30 days",d:30},
+AR:{n:"Arkansas",mtm:"30 days",d:30},
+CA:{n:"California",mtm:"30 days (under 1 year of tenancy) / 60 days (1 year or more)",d:30},
+CO:{n:"Colorado",mtm:"21 to 91 days depending on length of tenancy",d:60},
+CT:{n:"Connecticut",mtm:"No statute — lease should specify (30 days used here)",d:30},
+DE:{n:"Delaware",mtm:"60 days",d:60},
+DC:{n:"Washington, D.C.",mtm:"30 days",d:30},
+FL:{n:"Florida",mtm:"30 days",d:30},
+GA:{n:"Georgia",mtm:"60 days by Landlord / 30 days by Tenant",d:60},
+HI:{n:"Hawaii",mtm:"45 days by Landlord / 28 days by Tenant",d:45},
+ID:{n:"Idaho",mtm:"One month",d:30},
+IL:{n:"Illinois",mtm:"30 days",d:30},
+IN:{n:"Indiana",mtm:"One month",d:30},
+IA:{n:"Iowa",mtm:"30 days",d:30},
+KS:{n:"Kansas",mtm:"30 days",d:30},
+KY:{n:"Kentucky",mtm:"30 days",d:30},
+LA:{n:"Louisiana",mtm:"10 days",d:10},
+ME:{n:"Maine",mtm:"30 days",d:45},
+MD:{n:"Maryland",mtm:"One month (some counties require 60+ days)",d:60},
+MA:{n:"Massachusetts",mtm:"30 days or one full rental period, whichever is longer",d:30},
+MI:{n:"Michigan",mtm:"One month",d:30},
+MN:{n:"Minnesota",mtm:"One full rental period plus one day",d:31},
+MS:{n:"Mississippi",mtm:"30 days",d:30},
+MO:{n:"Missouri",mtm:"One month",d:30},
+MT:{n:"Montana",mtm:"30 days",d:30},
+NE:{n:"Nebraska",mtm:"30 days",d:30},
+NV:{n:"Nevada",mtm:"30 days",d:30},
+NH:{n:"New Hampshire",mtm:"30 days (eviction requires good cause)",d:30},
+NJ:{n:"New Jersey",mtm:"One month (eviction requires good cause under the Anti-Eviction Act)",d:30},
+NM:{n:"New Mexico",mtm:"30 days",d:30},
+NY:{n:"New York",mtm:"30 days (under 1 yr) / 60 days (1–2 yrs) / 90 days (2+ yrs of occupancy)",d:30},
+NC:{n:"North Carolina",mtm:"7 days",d:7},
+ND:{n:"North Dakota",mtm:"30 days",d:30},
+OH:{n:"Ohio",mtm:"30 days",d:30},
+OK:{n:"Oklahoma",mtm:"30 days",d:30},
+OR:{n:"Oregon",mtm:"30 days (90 days+ and just cause after the first year; Portland adds rules)",d:90},
+PA:{n:"Pennsylvania",mtm:"No statute — lease should specify (30 days used here)",d:30},
+RI:{n:"Rhode Island",mtm:"30 days",d:30},
+SC:{n:"South Carolina",mtm:"30 days",d:30},
+SD:{n:"South Dakota",mtm:"One month",d:30},
+TN:{n:"Tennessee",mtm:"30 days",d:30},
+TX:{n:"Texas",mtm:"One month",d:30},
+UT:{n:"Utah",mtm:"15 days",d:15},
+VT:{n:"Vermont",mtm:"60 days (90 days if tenancy exceeds 2 years)",d:60},
+VA:{n:"Virginia",mtm:"30 days",d:30},
+WA:{n:"Washington",mtm:"Tenant: 20 days; Landlord: just cause required to end tenancy",d:90},
+WV:{n:"West Virginia",mtm:"One month",d:30},
+WI:{n:"Wisconsin",mtm:"28 days",d:28},
+WY:{n:"Wyoming",mtm:"No statute — lease should specify (30 days used here)",d:30}
+};
+
+/* Rent-increase overrides & extras (spec data — cap warnings where noted).
+   rule: notice-period rule for increases · cap: {soft,hard,text} thresholds in % ·
+   freq: frequency rule · note: extra panel note. */
+var INC={
+CA:{rule:"30 days' notice if the total of all increases over the past 12 months is 10% or less; 90 days' notice if it exceeds 10%.",
+    cap:{soft:5,hard:10,text:"AB 1482 caps increases at 5% + regional CPI (10% absolute max) for most buildings 15+ years old."}},
+OR:{d:90,rule:"90 days' written notice for rent increases (increases are generally barred during the first year of a month-to-month occupancy).",
+    cap:{soft:7,hard:10,text:"Statewide cap: 7% + CPI (10% max) for buildings over 15 years old; first-year-of-occupancy rules apply — verify the current annual figure."}},
+WA:{d:90,rule:"Recent statewide law extends rent-increase notice requirements (60–90 days) — this tool uses 90 days as the conservative basis. Verify the current statute.",
+    cap:{soft:7,hard:10,text:"Recent statewide law caps most increases at roughly 7% + inflation (10% max) — verify the current statute."}},
+CO:{d:60,rule:"60 days' notice.",freq:"Colorado limits rent increases to once per 12 months."},
+NY:{rule:"For increases of 5% or more, notice depends on occupancy length: 30 days (under 1 year), 60 days (1–2 years), 90 days (2+ years).",
+    note:"Rent-stabilized units follow Rent Guidelines Board orders instead of this notice."},
+NJ:{d:30,rule:"One full calendar month's notice, effective with the start of a rental period.",
+    note:"Many NJ municipalities have local rent control with their own caps — check your city's ordinance."},
+DC:{d:30,rule:"30 days' notice.",
+    note:"Most D.C. rentals are rent-stabilized: increases are capped (CPI-based) and registration requirements apply."},
+DE:{d:60,rule:"60 days' notice."},
+ME:{rule:"45 days' notice (75 days for increases of 10% or more — verify the current statute).",
+    note:"Portland, Maine has local rent control."},
+MD:{d:60,rule:"60 days' notice is required in several counties; local rules vary — this tool uses 60 days as the conservative basis."},
+MN:{d:31,rule:"One full rental period plus one day.",
+    note:"No statewide cap; St. Paul has rent stabilization."},
+VT:{d:60,rule:"60 days' notice."},
+AZ:{d:30,rule:"30 days' notice."},
+FL:{d:30,rule:"No statewide notice statute for raising rent at a fixed-term expiry; month-to-month increases follow the 30-day termination notice."}
+};
+
+/* Cities with their own rent rules — matched case-insensitively against the typed city. */
+var CITY_FLAGS=[
+{k:["new york city","nyc","new york","manhattan","brooklyn","queens","bronx","staten island"],n:"New York City",t:"New York City has rent stabilization — covered units follow Rent Guidelines Board orders, not standard notice rules."},
+{k:["san francisco"],n:"San Francisco",t:"San Francisco has rent control — the Rent Board sets the allowable annual increase for covered units."},
+{k:["los angeles"],n:"Los Angeles",t:"Los Angeles has its own Rent Stabilization Ordinance with annual caps for covered units."},
+{k:["st. paul","st paul","saint paul"],n:"St. Paul",t:"St. Paul has rent stabilization capping annual increases for most units."},
+{k:["newark"],n:"Newark",t:"Newark has local rent control with its own caps and procedures."},
+{k:["jersey city"],n:"Jersey City",t:"Jersey City has local rent control with its own caps and procedures."},
+{k:["portland"],n:"Portland",t:"Portland adds its own rent rules — Portland, OR layers relocation-assistance rules on large increases, and Portland, ME has rent control."},
+{k:["seattle"],n:"Seattle",t:"Seattle adds local notice and economic-displacement rules on top of Washington state law."},
+{k:["washington dc","washington d.c.","washington, d.c.","washington, dc","washington"],n:"Washington, D.C.",t:"Washington, D.C. rent-stabilized units are capped (CPI-based) with registration requirements."},
+{k:["montgomery county","montgomery co","montgomery"],n:"Montgomery County",t:"Montgomery County, MD has its own rent stabilization rules and caps.",st:"MD"}
+];
+function cityFlag(city,st){
+  var c=String(city||'').toLowerCase().replace(/[^a-z. ]+/g,' ').replace(/\s+/g,' ').trim();
+  if(!c)return null;
+  for(var i=0;i<CITY_FLAGS.length;i++){
+    var f=CITY_FLAGS[i];
+    if(f.st&&f.st!==st)continue;
+    for(var j=0;j<f.k.length;j++){
+      if(c.indexOf(f.k[j])!==-1)return f;
+    }
+  }
+  return null;
+}
+
+/* ---- date helpers (string-based, timezone-safe) ---- */
+var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function parseISO(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s||''));if(!m)return null;
+  var d={y:+m[1],mo:+m[2],d:+m[3]};return (d.mo>=1&&d.mo<=12&&d.d>=1&&d.d<=31)?d:null;}
+function toUTC(d){return Date.UTC(d.y,d.mo-1,d.d);}
+function fromUTC(ms){var dt=new Date(ms);return {y:dt.getUTCFullYear(),mo:dt.getUTCMonth()+1,d:dt.getUTCDate()};}
+function addDays(d,n){return fromUTC(Date.UTC(d.y,d.mo-1,d.d+n));}
+function fmtDate(d){return d?MONTHS[d.mo-1]+' '+d.d+', '+d.y:'____________';}
+function isoOf(d){var p=function(n){return (n<10?'0':'')+n;};return d.y+'-'+p(d.mo)+'-'+p(d.d);}
+function firstOnOrAfter(d){return d.d===1?d:fromUTC(Date.UTC(d.y,d.mo,1));}
+function diffDays(a,b){return Math.round((toUTC(b)-toUTC(a))/86400000);}
+
+/* ---- core rules derivation ---- */
+function pctOf(S){var c=money(S.cur),n=money(S.neu);return (c>0&&n>0)?(n-c)/c*100:0;}
+function noticeDays(S){
+  var p=pctOf(S);
+  if(S.st==='CA')return p>10?90:30;
+  if(S.st==='NY')return p>=5?(S.occ==='lt1'?30:(S.occ==='1to2'?60:90)):30;
+  if(S.st==='ME')return p>=10?75:45;
+  var o=INC[S.st];
+  if(o&&o.d)return o.d;
+  return BASE[S.st]?BASE[S.st].d:30;
+}
+/* {level:'hard'|'soft'|null, text} cap warning per spec */
+function capWarning(S){
+  var p=pctOf(S),o=INC[S.st];
+  if(!o||!o.cap||p<=0)return null;
+  if(p>o.cap.hard){
+    var t='This '+p.toFixed(1)+'% increase exceeds '+o.cap.hard+'% — '+o.cap.text+' If your property is covered, the increase may not be enforceable.';
+    if(S.st==='CA')t+=' Because the increase exceeds 10%, California also requires at least 90 days’ notice (applied below and in the letter).';
+    return {level:'hard',text:t};
+  }
+  if(p>o.cap.soft){
+    return {level:'soft',text:'A '+p.toFixed(1)+'% increase may exceed the cap — '+o.cap.text+' Verify the current CPI-based figure for your area.'};
+  }
+  return null;
+}
+/* effective-date evaluation → {min, suggest, status:'ok'|'early'|'misaligned'|'missing'|'nodelivery', days} */
+function evalEffective(S){
+  var days=noticeDays(S);
+  var del=parseISO(S.delivery);
+  if(!del)return {status:'nodelivery',days:days,min:null,suggest:null};
+  var min=addDays(del,days);
+  var suggest=(S.tenancy==='m2m')?firstOnOrAfter(min):min;
+  var eff=parseISO(S.effective);
+  if(!eff)return {status:'missing',days:days,min:min,suggest:suggest};
+  if(toUTC(eff)<toUTC(min))return {status:'early',days:days,min:min,suggest:suggest};
+  if(S.tenancy==='m2m'&&eff.d!==1)return {status:'misaligned',days:days,min:min,suggest:suggest};
+  return {status:'ok',days:days,min:min,suggest:suggest};
+}
+
+/* ---- letter ---- */
+var REASONS={
+  market:'This adjustment reflects current market rents for comparable homes in the area.',
+  taxes:'This adjustment reflects increased property taxes and insurance costs.',
+  improvements:'This adjustment reflects our continued investment in maintaining and improving the property.'
+};
+function letterModel(S){
+  var st=BASE[S.st]||BASE.FL,o=INC[S.st]||null;
+  var cur=money(S.cur),neu=money(S.neu);
+  var inc=neu-cur,p=pctOf(S);
+  var ev=evalEffective(S);
+  var del=parseISO(S.delivery);
+  var eff=parseISO(S.effective)||ev.suggest;
+  var tenants=S.tenants.trim()||'Resident(s)';
+  var addr=S.addr.trim()||'the rental premises';
+  var paras=[];
+  if(S.appreciation)paras.push('We value you as a resident and appreciate the care you have taken of the home. Thank you for being a great tenant.');
+  var moneyTxt=function(n){return n>0?fmtUSD(n,n%1!==0):'$______';};
+  paras.push('This letter is your formal written notice that the monthly rent for '+addr+' will increase from '+moneyTxt(cur)+' to '+moneyTxt(neu)+', effective '+fmtDate(eff)+'.'+((cur>0&&neu>cur)?' This is an increase of '+fmtUSD(inc,inc%1!==0)+' per month ('+p.toFixed(1)+'%).':''));
+  var reason='';
+  if(S.reason==='custom')reason=S.reasonCustom.trim();
+  else if(REASONS[S.reason])reason=REASONS[S.reason];
+  if(reason)paras.push(reason);
+  /* notice-period sentence citing the state minimum */
+  var ruleTxt=o&&o.rule?o.rule:('the state’s month-to-month notice rules ('+st.mtm+')');
+  var noticeSentence='This notice is being given at least '+ev.days+' days before the effective date, consistent with '+st.n+'’s minimum notice requirement for this change — '+(o&&o.rule?o.rule:st.mtm+' under '+st.n+'’s month-to-month notice rules.');
+  if(S.st==='CA'&&p>10)noticeSentence+=' Because this increase exceeds 10% of the rent charged during the past 12 months, California requires at least 90 days’ written notice.';
+  paras.push(noticeSentence);
+  /* what happens next */
+  if(S.tenancy==='m2m'){
+    paras.push('What happens next: no action is needed to accept this change. Your tenancy will continue on its existing terms at the new monthly rent beginning '+fmtDate(eff)+'; all other terms of your rental agreement remain unchanged. If you do not wish to continue at the new rent, you may end your tenancy by giving written notice as required by your rental agreement and '+st.n+' law.');
+  }else{
+    paras.push('What happens next: your current lease term ends on '+fmtDate(eff)+'. We would be glad to renew your lease at the new monthly rent of '+moneyTxt(neu)+' beginning '+fmtDate(eff)+', with all other terms remaining as in your current lease unless we agree otherwise in writing. If you choose not to renew, your tenancy will end on the date provided by your lease and '+st.n+' law.');
+  }
+  var reply=parseISO(S.replyBy);
+  if(reply)paras.push('Please reply by '+fmtDate(reply)+' to let us know your decision.');
+  paras.push('Thank you for your tenancy. If you have any questions about this notice, please contact us.');
+  return {st:st,del:del,eff:eff,cur:cur,neu:neu,inc:inc,pct:p,tenants:tenants,addr:addr,paras:paras,ruleTxt:ruleTxt};
+}
+function renderLetterHtml(S){
+  var m=letterModel(S);
+  var h='<div class="doc-title">NOTICE OF RENT INCREASE</div><div class="doc-rule"></div>';
+  var fromLines=[];
+  if(S.landlord.trim())fromLines.push(escHtml(S.landlord.trim()));
+  if(S.landlordAddr.trim())fromLines.push(escHtml(S.landlordAddr.trim()));
+  if(fromLines.length)h+='<p class="lt-addr"><strong>From:</strong> '+fromLines.join('<br>')+'</p>';
+  h+='<p class="lt-addr">'+escHtml(fmtDate(m.del))+'</p>';
+  h+='<p class="lt-addr"><strong>To:</strong> '+escHtml(m.tenants)+'<br>'+escHtml(m.addr)+'</p>';
+  h+='<p class="lt-re">RE: Notice of Rent Increase — '+escHtml(m.addr)+'</p>';
+  h+='<p class="lt-para">Dear '+escHtml(m.tenants)+',</p>';
+  m.paras.forEach(function(p){h+='<p class="lt-para">'+escHtml(p)+'</p>';});
+  h+='<div class="lt-box">'
+    +'<span class="bk">Current monthly rent:</span> '+(m.cur>0?escHtml(fmtUSD(m.cur,m.cur%1!==0)):'$______')+'<br>'
+    +'<span class="bk">New monthly rent:</span> '+(m.neu>0?escHtml(fmtUSD(m.neu,m.neu%1!==0)):'$______')+'<br>'
+    +'<span class="bk">Effective date:</span> '+escHtml(fmtDate(m.eff))+'<br>'
+    +'<span class="bk">Required notice:</span> At least '+evalEffective(S).days+' days ('+escHtml(m.st.n)+')'
+    +'</div>';
+  h+='<div class="lt-sig">Sincerely,<br><br><span class="line"></span><span class="dline"></span>'
+    +'<span class="lbl">'+escHtml(S.landlord.trim()||'Landlord / Agent')+' — Signature &amp; Date</span></div>';
+  if(S.cos){
+    h+='<div class="lt-cos"><div class="ct">Certificate of Service</div>'
+      +'<p>I certify that on ____________________ I served a copy of this Notice of Rent Increase on the tenant(s) named above by:</p>'
+      +'<p><span class="lt-cb"></span>Personal delivery&nbsp;&nbsp;&nbsp;<span class="lt-cb"></span>First-class mail, postage prepaid&nbsp;&nbsp;&nbsp;<span class="lt-cb"></span>Certified mail&nbsp;&nbsp;&nbsp;<span class="lt-cb"></span>Posting at the premises and mailing</p>'
+      +'<p>Served by (name): ______________________________&nbsp;&nbsp;Signature: ______________________________</p></div>';
+  }
+  h+='<p class="doc-legal">This notice was created with a free generator provided by Advanced Collection Bureau (advancedcb.com) for general informational purposes. It is not legal advice. Rent increase rules vary by state, county, and city — rent control ordinances add caps and procedures — and laws change; verify current requirements with a local attorney before sending.</p>';
+  return h;
+}
+function renderLetterText(S){
+  var m=letterModel(S);
+  var out=['NOTICE OF RENT INCREASE','========================',''];
+  if(S.landlord.trim())out.push('From: '+S.landlord.trim()+(S.landlordAddr.trim()?' — '+S.landlordAddr.trim():''));
+  out.push(fmtDate(m.del),'');
+  out.push('To: '+m.tenants);
+  out.push(m.addr,'');
+  out.push('RE: Notice of Rent Increase — '+m.addr,'');
+  out.push('Dear '+m.tenants+',','');
+  m.paras.forEach(function(p){out.push(p,'');});
+  out.push('Current monthly rent: '+(m.cur>0?fmtUSD(m.cur,m.cur%1!==0):'$______'));
+  out.push('New monthly rent: '+(m.neu>0?fmtUSD(m.neu,m.neu%1!==0):'$______'));
+  out.push('Effective date: '+fmtDate(m.eff));
+  out.push('Required notice: at least '+evalEffective(S).days+' days ('+m.st.n+')','');
+  out.push('Sincerely,','','______________________________   Date: ____________');
+  out.push(S.landlord.trim()||'Landlord / Agent');
+  if(S.cos){
+    out.push('','CERTIFICATE OF SERVICE');
+    out.push('I certify that on ____________ I served a copy of this Notice of Rent Increase on the tenant(s) named above by:');
+    out.push('[ ] Personal delivery   [ ] First-class mail   [ ] Certified mail   [ ] Posting at the premises and mailing');
+    out.push('Served by: ______________________________   Signature: ______________________________');
+  }
+  out.push('','---','Created with the free Rent Increase Notice Generator by Advanced Collection Bureau (advancedcb.com). Not legal advice — verify current state and local requirements.');
+  return out.join('\n');
+}
+</script>
+
+<script>
+/* ============ Builder UI, persistence, rules panel, validation ============ */
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id);};
+var LSKEY='acb:rent-increase-notice-generator:state';
+
+function todayISO(){var t=new Date();var p=function(n){return (n<10?'0':'')+n;};
+  return t.getFullYear()+'-'+p(t.getMonth()+1)+'-'+p(t.getDate());}
+
+var DEF={
+  st:'FL',city:'',occ:'2plus',
+  landlord:'',landlordAddr:'',tenants:'',addr:'',
+  cur:'',neu:'',
+  tenancy:'m2m',delivery:todayISO(),effective:'',
+  appreciation:true,reason:'none',reasonCustom:'',replyBy:'',cos:false
+};
+function merge(d,s){
+  var o={},k;
+  for(k in d){o[k]=(s&&s[k]!==undefined&&typeof s[k]===typeof d[k])?s[k]:d[k];}
+  return o;
+}
+var S;
+try{S=merge(DEF,JSON.parse(localStorage.getItem(LSKEY)||'null'));}catch(e){S=merge(DEF,null);}
+function persist(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}}
+
+/* populate state select */
+var stSel=$('inState');
+Object.keys(BASE).sort(function(a,b){return BASE[a].n<BASE[b].n?-1:1;}).forEach(function(ab){
+  var o=document.createElement('option');o.value=ab;o.textContent=BASE[ab].n;stSel.appendChild(o);
+});
+stSel.value=S.st;
+
+function rulesPanel(){
+  var st=BASE[S.st],o=INC[S.st],p=pctOf(S),days=noticeDays(S),ev=evalEffective(S);
+  var h='<div class="r-title">'+escHtml(st.n)+' — rent increase rules</div>';
+  h+='<div class="r-row"><span class="r-key">Required notice for this increase:</span> <span class="r-big">'+days+' days</span></div>';
+  if(o&&o.rule)h+='<div class="r-row"><span class="r-key">Notice rule:</span> '+escHtml(o.rule)+'</div>';
+  h+='<div class="r-row"><span class="r-key">Base month-to-month notice:</span> '+escHtml(st.mtm)+'</div>';
+  if(o&&o.cap)h+='<div class="r-row"><span class="r-key">Cap:</span> '+escHtml(o.cap.text)+(S.st==='CA'&&p>10?' <strong>This increase exceeds 10%, so 90 days’ notice applies.</strong>':'')+'</div>';
+  if(o&&o.freq)h+='<div class="r-row"><span class="r-key">Frequency:</span> '+escHtml(o.freq)+'</div>';
+  if(o&&o.note)h+='<div class="r-row"><span class="r-key">Note:</span> '+escHtml(o.note)+'</div>';
+  if(ev.suggest)h+='<div class="r-row"><span class="r-key">Earliest valid effective date:</span> '+escHtml(fmtDate(ev.suggest))+'</div>';
+  h+='<div class="r-row"><em>Verify before sending — local rent control or city ordinances may add rules, and laws change.</em></div>';
+  $('rulesPanel').innerHTML=h;
+}
+function cityChip(){
+  var f=cityFlag(S.city,S.st),el=$('cityChip');
+  el.hidden=!f;
+  if(f)el.textContent='⚠ '+f.n+' has its own local rent rules — '+f.t;
+}
+function chips(){
+  var c=money(S.cur),n=money(S.neu);
+  var ok=c>0&&n>0;
+  var inc=n-c,p=pctOf(S);
+  $('incAmt').textContent=ok?((inc>=0?'+':'−')+fmtUSD(Math.abs(inc),inc%1!==0))+'/mo':'—';
+  $('incAmt').className=ok?(inc>0?'up':(inc<0?'down':'')):'';
+  $('incPct').textContent=ok?p.toFixed(1)+'%':'—';
+  $('incPct').className=ok?(p>0?'up':(p<0?'down':'')):'';
+  $('incAnnual').textContent=n>0?fmtUSD(n*12)+'/yr':'—';
+  $('incAnnual').className='';
+  var w=capWarning(S);
+  $('capWarn').hidden=!(w&&w.level==='hard');
+  if(w&&w.level==='hard')$('capWarn').textContent='⚠ '+w.text;
+  $('capSoftWarn').hidden=!(w&&w.level==='soft');
+  if(w&&w.level==='soft')$('capSoftWarn').textContent='⚠ '+w.text;
+  var fq=INC[S.st]&&INC[S.st].freq;
+  $('freqWarn').hidden=!fq;
+  if(fq)$('freqWarn').textContent='⚠ Reminder: '+fq;
+}
+function effMsg(){
+  var ev=evalEffective(S),el=$('effMsg'),h='';
+  function useBtn(d){return ' <button type="button" class="use-btn" id="suggestBtn" data-date="'+isoOf(d)+'">Use '+escHtml(fmtDate(d))+'</button>';}
+  if(ev.status==='nodelivery'){
+    h='<div class="chip-warn">Enter a delivery date to validate the effective date.</div>';
+  }else if(ev.status==='missing'){
+    h='<div class="chip-warn">Pick an effective date. Earliest valid'+(S.tenancy==='m2m'?' (delivery + '+ev.days+' days, aligned to the 1st)':' (delivery + '+ev.days+' days)')+': <strong>'+escHtml(fmtDate(ev.suggest))+'</strong>.'+useBtn(ev.suggest)+'</div>';
+  }else if(ev.status==='early'){
+    h='<div class="chip-bad">⚠ That date gives less than the required '+ev.days+' days’ notice. Earliest valid date: <strong>'+escHtml(fmtDate(ev.suggest))+'</strong>.'+useBtn(ev.suggest)+'</div>';
+  }else if(ev.status==='misaligned'){
+    h='<div class="chip-warn">⚠ For a month-to-month tenancy the increase should start with a rental period — the 1st of the month if rent is due on the 1st. Suggested: <strong>'+escHtml(fmtDate(ev.suggest))+'</strong>.'+useBtn(ev.suggest)+'</div>';
+  }else{
+    h='<div class="chip-ok">✓ Valid — at least '+ev.days+' days’ notice'+(S.tenancy==='m2m'?' and aligned to a rental period start':'')+'.</div>';
+  }
+  el.innerHTML=h;
+}
+function tenancyPills(){
+  $('ttM2m').classList.toggle('sel',S.tenancy==='m2m');
+  $('ttM2m').setAttribute('aria-checked',S.tenancy==='m2m'?'true':'false');
+  $('ttFixed').classList.toggle('sel',S.tenancy==='fixed');
+  $('ttFixed').setAttribute('aria-checked',S.tenancy==='fixed'?'true':'false');
+}
+function update(){
+  persist();
+  $('occWrap').hidden=S.st!=='NY';
+  $('reasonCustomWrap').hidden=S.reason!=='custom';
+  tenancyPills();
+  rulesPanel();
+  cityChip();
+  chips();
+  effMsg();
+  $('docPreview').innerHTML=renderLetterHtml(S);
+}
+
+/* ---- wire inputs ---- */
+[['inCity','city'],['inLandlord','landlord'],['inLandlordAddr','landlordAddr'],
+ ['inTenants','tenants'],['inAddress','addr'],['inCurrent','cur'],['inNew','neu'],
+ ['optReasonCustom','reasonCustom']].forEach(function(b){
+  var el=$(b[0]);el.value=S[b[1]];
+  el.addEventListener('input',function(){S[b[1]]=el.value;update();});
+});
+[['inDelivery','delivery'],['inEffective','effective'],['optReplyBy','replyBy']].forEach(function(b){
+  var el=$(b[0]);el.value=S[b[1]];
+  var fn=function(){S[b[1]]=el.value;update();};
+  el.addEventListener('input',fn);el.addEventListener('change',fn);
+});
+stSel.addEventListener('change',function(){S.st=stSel.value;update();});
+$('inOcc').value=S.occ;
+$('inOcc').addEventListener('change',function(){S.occ=this.value;update();});
+$('optReason').value=S.reason;
+$('optReason').addEventListener('change',function(){S.reason=this.value;update();});
+$('optAppreciation').checked=S.appreciation;
+$('optAppreciation').addEventListener('change',function(){S.appreciation=this.checked;update();});
+$('optCos').checked=S.cos;
+$('optCos').addEventListener('change',function(){S.cos=this.checked;update();});
+$('ttM2m').addEventListener('click',function(){S.tenancy='m2m';update();});
+$('ttFixed').addEventListener('click',function(){S.tenancy='fixed';update();});
+
+/* one-click suggested date (delegated — button is re-rendered) */
+$('effMsg').addEventListener('click',function(e){
+  var b=e.target&&e.target.closest?e.target.closest('#suggestBtn'):null;
+  if(!b)return;
+  S.effective=b.getAttribute('data-date')||'';
+  $('inEffective').value=S.effective;
+  update();
+});
+
+/* ---- actions ---- */
+$('printBtn').addEventListener('click',function(){window.print();});
+$('copyBtn').addEventListener('click',function(){
+  var b=this,txt=renderLetterText(S);
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){
+    b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy text';},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy text';},1600);}catch(e){}
+    document.body.removeChild(ta);
+  });
+});
+
+update();
+})();
+</script>
+
+<script>
+(function(){
+  var SEED={value:4.8,count:189};              /* keep in sync with page JSON-LD */
+  var KEY='acb:rent-increase-notice-generator:rating';
+  var box=document.getElementById('acbStars'),meta=document.getElementById('acbRatingMeta');
+  var mine=parseInt(localStorage.getItem(KEY)||'0',10);
+  function agg(){var c=SEED.count+(mine?1:0);
+    var v=mine?((SEED.value*SEED.count+mine)/c):SEED.value;
+    return {v:Math.round(v*10)/10,c:c};}
+  function render(hover){
+    var a=agg();box.innerHTML='';
+    for(var i=1;i<=5;i++){(function(i){
+      var b=document.createElement('button');
+      b.type='button';b.className='acb-star'+((hover||mine||Math.round(a.v))>=i?' on':'');
+      b.setAttribute('aria-label',i+' star'+(i>1?'s':''));b.textContent='★';
+      b.onmouseenter=function(){render(i)};b.onmouseleave=function(){render(0)};
+      b.onclick=function(){mine=i;localStorage.setItem(KEY,String(i));render(0);
+        try{fetch('https://formsubmit.co/ajax/RATINGS_EMAIL',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({tool:'rent-increase-notice-generator',rating:i,_subject:'Tool rating: rent-increase-notice-generator'})
+        }).catch(function(){});}catch(e){}};
+      box.appendChild(b);})(i);}
+    meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'
+      +(mine?' · Thanks for rating!':' · Rate this tool');
+  }
+  render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var last=0;
+  function send(){
+    var h=document.documentElement.scrollHeight;
+    if(Math.abs(h-last)>2){last=h;parent.postMessage({acbTool:'rent-increase-notice-generator',height:h},'*');}
+  }
+  if(window.ResizeObserver){new ResizeObserver(send).observe(document.body);}
+  window.addEventListener('load',send);
+  setInterval(send,800);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex"><!-- tool is iframed; the Webflow page is the indexed URL -->
+<title>Security Deposit Return Letter Generator | Advanced Collection Bureau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --acb-blue:#3D5AF1;--acb-blue-dark:#2D45C6;--acb-blue-light:#EEF1FE;--acb-blue-mid:#D5DBFC;
+  --acb-bg:#F4F5F9;--acb-card:#FFFFFF;--acb-text:#1A1A2E;--acb-text-mid:#4A4A68;--acb-text-light:#8889A0;
+  --acb-border:#E2E4EC;--acb-warn:#E8A83E;--acb-warn-bg:#FEF9EE;--acb-green:#16A34A;--acb-red:#DC2626;--acb-gold:#F5B301;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-text);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 48px}
+.tool-head{text-align:center;margin-bottom:26px}
+.tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
+.tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.grid{display:grid;grid-template-columns:10fr 11fr;gap:22px;align-items:start}
+@media(max-width:960px){.grid{grid-template-columns:1fr}}
+.card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
+.card+.card{margin-top:22px}
+.sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
+.field{margin-bottom:16px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:14px;font-weight:600;color:var(--acb-text);margin-bottom:7px}
+.in-wrap{position:relative;display:flex;align-items:center}
+.in-wrap .pre{position:absolute;left:14px;color:var(--acb-text-light);font-size:15px;font-weight:500;pointer-events:none}
+input[type=text],input[type=date],select,textarea{width:100%;padding:13px 16px;background:#fff;border:1.5px solid var(--acb-border);border-radius:10px;color:var(--acb-text);font-size:16px;font-family:inherit;outline:none;transition:border-color .25s,box-shadow .25s}
+textarea{resize:vertical;min-height:64px;line-height:1.5}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238889A0' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px;cursor:pointer}
+.in-wrap.has-pre input{padding-left:30px}
+input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(61,90,241,.09)}
+.hint{font-size:12.5px;color:var(--acb-text-light);margin-top:6px;line-height:1.5}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.mini-row{grid-template-columns:1fr}}
+.chip-warn{display:flex;gap:8px;align-items:flex-start;background:var(--acb-warn-bg);border:1px solid #F0DCB2;color:#8A6213;border-radius:10px;padding:10px 13px;font-size:12.5px;line-height:1.5;margin-top:10px;font-weight:500}
+.chip-warn[hidden]{display:none}
+/* state deadline panel */
+.deadline-panel{background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:14px 16px;margin-top:10px}
+.dl-row{display:flex;gap:14px;justify-content:space-between;align-items:baseline;padding:5px 0;font-size:13px;border-bottom:1px dashed var(--acb-border)}
+.dl-row:last-of-type{border-bottom:none}
+.dl-row .k{color:var(--acb-text-light);font-weight:600;white-space:nowrap}
+.dl-row .v{color:var(--acb-text);text-align:right;line-height:1.45}
+.dl-due{font-size:17px;font-weight:800;color:var(--acb-blue)}
+.dl-note{font-size:12px;color:var(--acb-text-light);line-height:1.5;margin-top:8px}
+.dl-int{font-size:12.5px;color:#8A6213;background:var(--acb-warn-bg);border:1px solid #F0DCB2;border-radius:8px;padding:8px 11px;margin-top:9px;line-height:1.5;font-weight:500}
+/* outcome segmented control */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(min-width:560px){.seg{grid-template-columns:1fr 1fr 1fr 1fr}}
+.seg button{padding:11px 8px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:13.5px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .15s;min-height:44px}
+.seg button.on{background:var(--acb-blue-light);border-color:var(--acb-blue);color:var(--acb-blue);font-weight:600}
+.seg button:hover{border-color:var(--acb-blue-mid)}
+/* deductions itemizer */
+.ded-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:12px 0;border-bottom:1px dashed var(--acb-border)}
+.ded-row .ded-main{display:grid;gap:8px}
+.ded-row select,.ded-row input{padding:10px 13px;font-size:15px}
+.ded-row select{padding-right:34px}
+.ded-amt-wrap{position:relative;display:flex;align-items:center}
+.ded-amt-wrap .pre{position:absolute;left:12px;color:var(--acb-text-light);font-size:14px;pointer-events:none}
+.ded-amt-wrap input{padding-left:26px;max-width:130px}
+.ded-top{display:grid;grid-template-columns:1fr 130px;gap:8px}
+@media(max-width:480px){.ded-top{grid-template-columns:1fr}.ded-amt-wrap input{max-width:none}}
+.ded-rm{align-self:start;background:none;border:none;color:var(--acb-text-light);font-size:18px;cursor:pointer;padding:8px 6px;line-height:1;border-radius:8px}
+.ded-rm:hover{color:var(--acb-red);background:#FEF2F2}
+.add-ded{margin-top:14px;padding:10px 22px;border-radius:50px;border:1.5px dashed var(--acb-blue-mid);background:var(--acb-blue-light);color:var(--acb-blue);font-size:13.5px;font-family:inherit;font-weight:600;cursor:pointer;transition:all .15s}
+.add-ded:hover{border-style:solid}
+/* live math panel */
+.math{background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:14px 16px;margin-top:16px}
+.math .m-row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;color:var(--acb-text-mid);padding:4px 0}
+.math .m-row .amt{font-weight:600;color:var(--acb-text);font-variant-numeric:tabular-nums}
+.math .m-final{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-top:1.5px solid var(--acb-border);margin-top:7px;padding-top:9px}
+.math .m-final .lbl{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.math .m-final .amt{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+.math .pos{color:var(--acb-green)}
+.math .neg{color:var(--acb-red)}
+/* wear & tear card */
+.wt-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px}
+@media(max-width:560px){.wt-cols{grid-template-columns:1fr}}
+.wt-col{border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.55}
+.wt-col.ok{background:#F0FDF4;border:1px solid #BBF7D0}
+.wt-col.bad{background:#FEF2F2;border:1px solid #FECACA}
+.wt-col .wt-h{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px}
+.wt-col.ok .wt-h{color:var(--acb-green)}
+.wt-col.bad .wt-h{color:var(--acb-red)}
+.wt-col ul{list-style:none}
+.wt-col li{padding:2.5px 0;color:var(--acb-text-mid)}
+.wt-foot{font-size:12.5px;color:var(--acb-text-light);line-height:1.55;margin-top:12px}
+/* ACB owes-more info card */
+.acb-info{display:flex;gap:12px;align-items:flex-start;background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-left:4px solid var(--acb-blue);border-radius:6px 12px 12px 6px;padding:14px 16px;margin-top:14px;font-size:13.5px;color:var(--acb-text-mid);line-height:1.55}
+.acb-info strong{color:var(--acb-text)}
+.acb-info .ico{flex-shrink:0;font-size:17px;line-height:1.3}
+/* letter preview */
+.preview-shell{padding:18px}
+.doc{background:#fff;border:1px solid var(--acb-border);border-radius:8px;padding:38px 36px;font-size:13.5px;color:#15151f;line-height:1.6}
+@media(max-width:480px){.doc{padding:22px 16px}}
+.doc .ltr-from{font-size:13px;line-height:1.5;white-space:pre-line}
+.doc .ltr-from .nm{font-weight:700}
+.doc .ltr-date{margin:16px 0}
+.doc .ltr-to{margin-bottom:16px;white-space:pre-line;line-height:1.5}
+.doc .ltr-re{font-weight:700;margin-bottom:14px}
+.doc p{margin-bottom:12px;text-align:justify}
+.doc .acct{border:1.2px solid #6a6a78;border-radius:4px;padding:14px 16px;margin:16px 0}
+.doc .acct-h{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.4px solid #1A1A2E;padding-bottom:5px;margin-bottom:9px}
+.doc .acct-row{display:flex;justify-content:space-between;gap:14px;padding:3.5px 0;font-size:12.5px}
+.doc .acct-row .al{color:#26263a;line-height:1.45}
+.doc .acct-row .ar{white-space:nowrap;font-variant-numeric:tabular-nums}
+.doc .acct-row.sub{border-top:1px dashed #b8b8c2;font-weight:600}
+.doc .acct-row.tot{border-top:1.5px solid #1A1A2E;margin-top:5px;padding-top:7px;font-weight:800;font-size:13.5px}
+.doc .acct-row.tot.pos .ar{color:var(--acb-green)}
+.doc .acct-row.tot.neg .ar{color:var(--acb-red)}
+.doc .ltr-enc{font-size:12px;color:#33333f;margin-top:14px}
+.doc .ltr-sig{margin-top:26px}
+.doc .ltr-sig .sigline{border-bottom:1.2px solid #15151f;width:240px;height:26px;margin-bottom:5px}
+.doc .ltr-sig .signame{font-size:12.5px}
+.doc-legal{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:18px;border-top:1px solid #d8d8e0;padding-top:8px;text-align:left}
+/* actions */
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.btn-secondary{padding:11px 24px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:var(--acb-blue-mid);color:var(--acb-blue)}
+.acb-btn-primary{display:inline-block;padding:14px 36px;border-radius:50px;border:none;background:var(--acb-blue);color:#fff;font-size:15px;font-family:inherit;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(61,90,241,.27);transition:all .2s}
+.acb-btn-primary:hover{background:var(--acb-blue-dark);transform:translateY(-1px)}
+.chk-line{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--acb-text-mid);padding:6px 0;cursor:pointer;font-weight:500}
+.chk-line input{width:17px;height:17px;accent-color:var(--acb-blue);cursor:pointer;flex-shrink:0}
+/* CTA, rating, disclaimer */
+.acb-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:var(--acb-blue-light);border-left:4px solid var(--acb-blue);border-radius:6px 16px 16px 6px;padding:24px 28px;margin-top:34px}
+.acb-cta-title{font-size:19px;font-weight:700;color:var(--acb-text);margin-bottom:6px}
+.acb-cta p{font-size:14.5px;color:var(--acb-text-mid);line-height:1.55;margin:0;max-width:520px}
+.acb-cta-actions{display:flex;flex-direction:column;align-items:center;gap:8px}
+.acb-cta-tel{font-size:13px;color:var(--acb-blue);text-decoration:none;font-weight:600;white-space:nowrap}
+.acb-rating{display:flex;flex-direction:column;align-items:center;gap:6px;margin:34px auto 0;text-align:center}
+.acb-star{background:none;border:none;font-size:30px;line-height:1;color:#D0D3DC;cursor:pointer;padding:2px 3px;transition:color .15s,transform .15s;font-family:inherit}
+.acb-star.on{color:var(--acb-gold)}
+.acb-star:hover{transform:scale(1.15)}
+.acb-rating-meta{font-size:13px;color:var(--acb-text-light)}
+.disclaimer{font-size:12px;color:var(--acb-text-light);text-align:center;line-height:1.6;margin-top:26px;max-width:680px;margin-left:auto;margin-right:auto}
+.fade{animation:fadeIn .35s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+[hidden]{display:none!important}
+@media print{
+  @page{margin:.7in}
+  body{background:#fff}
+  .no-print{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .grid{display:block}
+  #previewCard{border:none;box-shadow:none;padding:0;border-radius:0;margin:0}
+  .doc{border:none;border-radius:0;padding:0;font-size:13px}
+  .doc .acct{page-break-inside:avoid;break-inside:avoid}
+  .doc .ltr-sig{page-break-inside:avoid;break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tool-head no-print">
+    <h1>Security Deposit Return Letter Generator</h1>
+    <p>Build a state-aware deposit return letter with an itemized deduction statement — see your legal deadline, do the math live, and print or save the finished letter as a PDF.</p>
+    <div class="badges"><span class="badge">100% Free</span><span class="badge">No Signup</span><span class="badge">No Email Required</span></div>
+  </div>
+
+  <div class="grid">
+    <!-- ============ BUILDER COLUMN ============ -->
+    <div class="no-print">
+      <div class="card">
+        <div class="sec-label">1 · State &amp; deadline</div>
+        <div class="field">
+          <label for="inState">State where the rental is located</label>
+          <select id="inState"></select>
+          <div class="deadline-panel" id="deadlinePanel" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">2 · What's the outcome?</div>
+        <div class="seg" id="outcomeSeg" role="radiogroup" aria-label="Letter outcome">
+          <button type="button" data-outcome="full">Full refund</button>
+          <button type="button" data-outcome="partial">Partial refund</button>
+          <button type="button" data-outcome="none">No refund</button>
+          <button type="button" data-outcome="owes">Tenant owes more</button>
+        </div>
+        <div class="hint" style="margin-top:10px" id="outcomeHint"></div>
+        <div class="chip-warn" id="outcomeWarn" hidden role="alert"></div>
+        <div class="acb-info" id="acbOwesInfo" hidden>
+          <span class="ico">💡</span>
+          <span><strong>If the former tenant doesn't pay the balance, that's exactly what ACB collects — no recovery, no fee.</strong> Advanced Collection Bureau specializes in recovering move-out balances for landlords and property managers. Send this letter first; if the pay-by date passes, <a href="https://www.advancedcb.com/" target="_top" style="color:var(--acb-blue);font-weight:600">place the account</a>.</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">3 · Parties &amp; tenancy</div>
+        <div class="field">
+          <label for="inLlName">Landlord / company name</label>
+          <input type="text" id="inLlName" placeholder="e.g. Maple Court Properties LLC" autocomplete="organization">
+        </div>
+        <div class="field">
+          <label for="inLlAddr">Landlord mailing address</label>
+          <input type="text" id="inLlAddr" placeholder="e.g. PO Box 100, Orlando, FL 32801">
+        </div>
+        <div class="field">
+          <label for="inTnName">Tenant name(s)</label>
+          <input type="text" id="inTnName" placeholder="e.g. Jordan Smith and Casey Smith">
+        </div>
+        <div class="field">
+          <label for="inPropAddr">Rental property address</label>
+          <input type="text" id="inPropAddr" placeholder="e.g. 123 Main St, Unit 4, Orlando, FL 32801">
+        </div>
+        <div class="mini-row">
+          <div class="field">
+            <label for="inMoveIn">Move-in date</label>
+            <input type="date" id="inMoveIn">
+          </div>
+          <div class="field">
+            <label for="inMoveOut">Move-out date</label>
+            <input type="date" id="inMoveOut">
+          </div>
+        </div>
+        <div class="field">
+          <label for="inDeposit">Security deposit held</label>
+          <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="inDeposit" inputmode="decimal" placeholder="0"></div>
+        </div>
+        <div class="mini-row">
+          <div class="field">
+            <label for="inPetDep">Pet deposit (optional)</label>
+            <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="inPetDep" inputmode="decimal" placeholder="0"></div>
+          </div>
+          <div class="field">
+            <label for="inInterest">Interest owed (optional)</label>
+            <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="inInterest" inputmode="decimal" placeholder="0"></div>
+          </div>
+        </div>
+        <div class="hint" id="interestHint"></div>
+      </div>
+
+      <div class="card" id="dedCard">
+        <div class="sec-label">4 · Itemized deductions</div>
+        <div id="dedRows"></div>
+        <button type="button" class="add-ded" id="addDedBtn">+ Add deduction</button>
+        <div class="math" id="mathPanel" aria-live="polite"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label" id="payLabel">5 · Refund &amp; delivery details</div>
+        <div class="field">
+          <label for="inFwdAddr">Tenant's forwarding address (where this letter is sent)</label>
+          <input type="text" id="inFwdAddr" placeholder="e.g. 456 Oak Ave, Tampa, FL 33601">
+          <div class="hint">No forwarding address? In most states you may mail this to the tenant's last known address — often the rental unit itself — and several states reduce or pause your obligations until the tenant provides one. Keep proof of mailing.</div>
+        </div>
+        <div id="refWrap">
+          <div class="field">
+            <label for="inRefMethod">Refund method</label>
+            <select id="inRefMethod">
+              <option value="enclosed">Check enclosed with this letter</option>
+              <option value="mailed">Check mailed separately</option>
+              <option value="electronic">Electronic transfer</option>
+            </select>
+          </div>
+        </div>
+        <div id="owesWrap" hidden>
+          <div class="field">
+            <label for="inPayBy">Pay-by date for the balance</label>
+            <input type="date" id="inPayBy">
+            <div class="hint">14–30 days from the letter date is typical. After this date, the demand paragraph says the account may be referred to a collection agency.</div>
+          </div>
+          <div class="field">
+            <label for="inPayInstr">Payment instructions</label>
+            <textarea id="inPayInstr" rows="2" placeholder="e.g. Mail a check or money order payable to Maple Court Properties LLC to the address above."></textarea>
+          </div>
+        </div>
+        <label class="chk-line"><input type="checkbox" id="inCertMail"> Add a certificate-of-mailing line to the letter</label>
+        <div class="hint" style="margin-top:2px">A USPS Certificate of Mailing is cheap proof you sent the letter on time — useful in every state, required delivery methods in a few.</div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">Normal wear &amp; tear vs. damage — know the difference</div>
+        <div class="wt-cols">
+          <div class="wt-col ok">
+            <div class="wt-h">✓ Normal wear — NOT deductible</div>
+            <ul>
+              <li>Matted or lightly worn carpet</li>
+              <li>Small nail holes from hanging pictures</li>
+              <li>Faded or dingy paint</li>
+              <li>Minor scuffs on walls and floors</li>
+              <li>Loose grout, worn fixtures from ordinary use</li>
+            </ul>
+          </div>
+          <div class="wt-col bad">
+            <div class="wt-h">✗ Damage — deductible</div>
+            <ul>
+              <li>Pet stains, burns, or rips in carpet</li>
+              <li>Large holes in walls or doors</li>
+              <li>Broken fixtures, windows, or appliances</li>
+              <li>Unauthorized paint or alterations</li>
+              <li>Excessive filth requiring deep cleaning</li>
+            </ul>
+          </div>
+        </div>
+        <p class="wt-foot">Deducting for normal wear and tear is the #1 thing that loses deposit disputes — and many states award the tenant double or triple damages for a wrongful withholding. When in doubt, document with photos and attach receipts or invoices for every deduction.</p>
+      </div>
+    </div>
+
+    <!-- ============ PREVIEW COLUMN ============ -->
+    <div>
+      <div class="card preview-shell" id="previewCard">
+        <div class="sec-label no-print" style="margin-bottom:12px">Letter preview — updates as you type</div>
+        <div class="doc" id="docPreview" aria-live="polite"></div>
+      </div>
+      <div class="actions no-print">
+        <button type="button" class="acb-btn-primary" id="printBtn">Print / Save as PDF</button>
+        <button type="button" class="btn-secondary" id="copyBtn">Copy letter text</button>
+      </div>
+      <p class="hint no-print" style="text-align:center;margin-top:10px">"Print / Save as PDF" prints only the letter. Everything stays in your browser — nothing is uploaded or shared.</p>
+    </div>
+  </div>
+
+  <div class="acb-rating no-print" id="acbRating" aria-label="Rate this tool">
+    <div class="acb-rating-stars" id="acbStars" role="radiogroup"></div>
+    <div class="acb-rating-meta" id="acbRatingMeta"></div>
+  </div>
+
+  <div class="acb-cta no-print">
+    <div class="acb-cta-text">
+      <div class="acb-cta-title">Deductions bigger than the deposit?</div>
+      <p>ACB recovers what former tenants owe. Advanced Collection Bureau has recovered over <strong>$85&nbsp;million</strong> in unpaid rent, fees, and damages for landlords and property managers. No recovery, no fee.</p>
+    </div>
+    <div class="acb-cta-actions">
+      <a class="acb-btn-primary" href="https://www.advancedcb.com/" target="_top">Get Started</a>
+      <a class="acb-cta-tel" href="tel:3216334999">or call (321) 633-4999</a>
+    </div>
+  </div>
+
+  <p class="disclaimer no-print">This generator produces a general-purpose template and is provided for informational purposes only — it is not legal advice. Security deposit deadlines, interest rules, and delivery requirements change frequently and vary by state, county, and city; some states require receipts attached or specific delivery methods. Review the letter with a local attorney and verify current requirements before sending. © Advanced Collection Bureau, Inc.</p>
+</div>
+
+<script>
+/* ============ State data — deadlines copied verbatim from ACB's lease generator dataset ============ */
+"use strict";
+var DEP={
+AL:{n:"Alabama",ret:"60 days"},
+AK:{n:"Alaska",ret:"14 days (proper notice) / 30 days otherwise"},
+AZ:{n:"Arizona",ret:"14 business days"},
+AR:{n:"Arkansas",ret:"60 days"},
+CA:{n:"California",ret:"21 days"},
+CO:{n:"Colorado",ret:"30 days (up to 60 if the lease provides)"},
+CT:{n:"Connecticut",ret:"Within 30 days, or 15 days after receiving Tenant's forwarding address, whichever is later",int:"Interest on security deposits is required in Connecticut."},
+DE:{n:"Delaware",ret:"20 days"},
+DC:{n:"Washington, D.C.",ret:"45 days",int:"Security deposits must be held in an interest-bearing account, and accrued interest is payable to Tenant as provided by D.C. law."},
+FL:{n:"Florida",ret:"15 days (no deductions) / 30 days to give notice of a claim"},
+GA:{n:"Georgia",ret:"30 days"},
+HI:{n:"Hawaii",ret:"14 days"},
+ID:{n:"Idaho",ret:"21 days (up to 30 if the lease provides)"},
+IL:{n:"Illinois",ret:"30 days (itemized statement) / 45 days (refund) — applies to 5+ unit buildings"},
+IN:{n:"Indiana",ret:"45 days"},
+IA:{n:"Iowa",ret:"30 days"},
+KS:{n:"Kansas",ret:"30 days"},
+KY:{n:"Kentucky",ret:"30–60 days"},
+LA:{n:"Louisiana",ret:"1 month"},
+ME:{n:"Maine",ret:"30 days (written lease) / 21 days (tenancy at will)"},
+MD:{n:"Maryland",ret:"45 days",int:"Interest is owed on deposits of $50+ held 6+ months."},
+MA:{n:"Massachusetts",ret:"30 days",int:"Annual interest is payable to Tenant. Massachusetts deposit law is strictly enforced — follow the receipt, banking, and interest rules exactly."},
+MI:{n:"Michigan",ret:"30 days"},
+MN:{n:"Minnesota",ret:"21 days",int:"Interest is owed on security deposits."},
+MS:{n:"Mississippi",ret:"45 days"},
+MO:{n:"Missouri",ret:"30 days"},
+MT:{n:"Montana",ret:"30 days (10 days if no deductions)"},
+NE:{n:"Nebraska",ret:"14 days"},
+NV:{n:"Nevada",ret:"30 days"},
+NH:{n:"New Hampshire",ret:"30 days"},
+NJ:{n:"New Jersey",ret:"30 days",int:"Deposit must be placed in an interest-bearing N.J. account with written notice of its location."},
+NM:{n:"New Mexico",ret:"30 days"},
+NY:{n:"New York",ret:"14 days"},
+NC:{n:"North Carolina",ret:"30 days (interim) / 60 days (final, if damage claims)"},
+ND:{n:"North Dakota",ret:"30 days"},
+OH:{n:"Ohio",ret:"30 days",int:"Interest is owed on deposits over one month's rent held 6+ months."},
+OK:{n:"Oklahoma",ret:"45 days"},
+OR:{n:"Oregon",ret:"31 days"},
+PA:{n:"Pennsylvania",ret:"30 days",int:"Deposits held beyond 2 years accrue interest payable to Tenant."},
+RI:{n:"Rhode Island",ret:"20 days"},
+SC:{n:"South Carolina",ret:"30 days"},
+SD:{n:"South Dakota",ret:"14 days (45 days for itemized statement on request)"},
+TN:{n:"Tennessee",ret:"30 days"},
+TX:{n:"Texas",ret:"30 days"},
+UT:{n:"Utah",ret:"30 days"},
+VT:{n:"Vermont",ret:"14 days"},
+VA:{n:"Virginia",ret:"45 days"},
+WA:{n:"Washington",ret:"30 days"},
+WV:{n:"West Virginia",ret:"60 days (or 45 days after a new tenant moves in, if sooner)"},
+WI:{n:"Wisconsin",ret:"21 days"},
+WY:{n:"Wyoming",ret:"30 days (60 days if damage deductions; +15 days for utility charges)"}
+};
+var VERIFY_LINE='Commonly cited deadlines, current to the best of our knowledge as of 2025. Laws change and cities add rules — verify current state and local requirements before relying on them.';
+
+var fmtUSD=function(n,c){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:c?2:0,maximumFractionDigits:c?2:0}).format(isFinite(n)?n:0);};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});};
+var money=function(v){var n=parseFloat(String(v==null?'':v).replace(/[^0-9.\-]/g,''));return isFinite(n)?n:0;};
+function parseISO(s){
+  var m=String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m)return null;
+  var d=new Date(+m[1],+m[2]-1,+m[3]);
+  return isFinite(d.getTime())?d:null;
+}
+function fmtDate(d){return d?d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):'';}
+function firstNum(t){var m=String(t).match(/\d+/);return m?parseInt(m[0],10):null;}
+/* Compute the deadline due date: move-out + first number in the state's rule text. */
+function computeDue(st,moveOutISO){
+  var info=DEP[st];if(!info)return null;
+  var n=firstNum(info.ret),d=parseISO(moveOutISO);
+  if(n==null||!d)return null;
+  if(/month/i.test(info.ret)){d.setMonth(d.getMonth()+n);}else{d.setDate(d.getDate()+n);}
+  return {date:d,n:n,months:/month/i.test(info.ret),business:/business/i.test(info.ret)};
+}
+</script>
+
+<script>
+/* ============ Builder UI, persistence, preview ============ */
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id);};
+var LSKEY='acb:security-deposit-return-letter-generator:state';
+var DED_CATS=['Unpaid rent','Cleaning beyond normal use','Repairs beyond normal wear & tear','Unpaid utilities','Missing items/keys','Other'];
+
+var DEF={
+  st:'FL',outcome:'partial',
+  llName:'',llAddr:'',tnName:'',propAddr:'',moveIn:'',moveOut:'',
+  deposit:'',petDep:'',interest:'',
+  deds:[{cat:'Cleaning beyond normal use',desc:'',amt:''}],
+  fwdAddr:'',refMethod:'enclosed',payBy:'',payInstr:'',certMail:false
+};
+var S=JSON.parse(JSON.stringify(DEF));
+try{
+  var sv=JSON.parse(localStorage.getItem(LSKEY)||'null');
+  if(sv&&typeof sv==='object'){
+    Object.keys(DEF).forEach(function(k){
+      if(k==='deds'){
+        if(Array.isArray(sv.deds)){
+          S.deds=sv.deds.filter(function(d){return d&&typeof d==='object';}).map(function(d){
+            return {cat:DED_CATS.indexOf(d.cat)>=0?d.cat:DED_CATS[0],desc:String(d.desc||''),amt:String(d.amt||'')};
+          });
+        }
+      }else if(sv[k]!==undefined&&typeof sv[k]===typeof DEF[k]){S[k]=sv[k];}
+    });
+  }
+}catch(e){}
+if(!DEP[S.st])S.st='FL';
+if(['full','partial','none','owes'].indexOf(S.outcome)<0)S.outcome='partial';
+if(!S.deds.length)S.deds=[{cat:DED_CATS[0],desc:'',amt:''}];
+function persist(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}}
+
+/* ---- state select ---- */
+var stSel=$('inState');
+Object.keys(DEP).sort(function(a,b){return DEP[a].n<DEP[b].n?-1:1;}).forEach(function(ab){
+  var o=document.createElement('option');o.value=ab;o.textContent=DEP[ab].n;stSel.appendChild(o);
+});
+stSel.value=S.st;
+stSel.addEventListener('change',function(){S.st=stSel.value;update();});
+
+/* ---- outcome segmented control ---- */
+var OUTCOME_HINTS={
+  full:'The full deposit (plus any interest) goes back — the letter states that no deductions were made.',
+  partial:'Itemize the deductions below; the letter returns the remainder of the deposit.',
+  none:'Itemize deductions that consume the entire deposit — the letter explains that no refund is due.',
+  owes:'Deductions exceed the deposit — the letter becomes an itemized statement plus a demand for the balance with a pay-by date.'
+};
+var segBtns=Array.prototype.slice.call($('outcomeSeg').querySelectorAll('button'));
+segBtns.forEach(function(b){
+  b.addEventListener('click',function(){S.outcome=b.dataset.outcome;update();});
+});
+
+/* ---- simple text/date inputs ---- */
+[['inLlName','llName'],['inLlAddr','llAddr'],['inTnName','tnName'],['inPropAddr','propAddr'],
+ ['inMoveIn','moveIn'],['inMoveOut','moveOut'],['inDeposit','deposit'],['inPetDep','petDep'],
+ ['inInterest','interest'],['inFwdAddr','fwdAddr'],['inPayBy','payBy'],['inPayInstr','payInstr']
+].forEach(function(b){
+  var el=$(b[0]);el.value=S[b[1]];
+  el.addEventListener('input',function(){S[b[1]]=el.value;update();});
+});
+$('inRefMethod').value=S.refMethod;
+$('inRefMethod').addEventListener('change',function(){S.refMethod=this.value;update();});
+$('inCertMail').checked=S.certMail;
+$('inCertMail').addEventListener('change',function(){S.certMail=this.checked;update();});
+
+/* ---- deductions itemizer ---- */
+function renderDeds(){
+  var box=$('dedRows');box.innerHTML='';
+  S.deds.forEach(function(d,i){
+    var row=document.createElement('div');row.className='ded-row';
+    var main=document.createElement('div');main.className='ded-main';
+    var top=document.createElement('div');top.className='ded-top';
+    var sel=document.createElement('select');
+    sel.setAttribute('aria-label','Deduction '+(i+1)+' category');
+    DED_CATS.forEach(function(c){
+      var o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);
+    });
+    sel.value=d.cat;
+    sel.addEventListener('change',function(){d.cat=sel.value;update();});
+    var amtWrap=document.createElement('div');amtWrap.className='ded-amt-wrap';
+    var pre=document.createElement('span');pre.className='pre';pre.textContent='$';
+    var amt=document.createElement('input');amt.type='text';amt.inputMode='decimal';amt.placeholder='0';
+    amt.setAttribute('aria-label','Deduction '+(i+1)+' amount');
+    amt.value=d.amt;
+    amt.addEventListener('input',function(){d.amt=amt.value;update();});
+    amtWrap.appendChild(pre);amtWrap.appendChild(amt);
+    top.appendChild(sel);top.appendChild(amtWrap);
+    var desc=document.createElement('input');desc.type='text';
+    desc.placeholder="Be specific — e.g. 'replace broken bedroom door, $185 invoice'";
+    desc.setAttribute('aria-label','Deduction '+(i+1)+' description');
+    desc.value=d.desc;
+    desc.addEventListener('input',function(){d.desc=desc.value;update();});
+    main.appendChild(top);main.appendChild(desc);
+    var rm=document.createElement('button');rm.type='button';rm.className='ded-rm';rm.textContent='✕';
+    rm.setAttribute('aria-label','Remove deduction '+(i+1));
+    rm.addEventListener('click',function(){
+      S.deds.splice(i,1);
+      if(!S.deds.length)S.deds.push({cat:DED_CATS[0],desc:'',amt:''});
+      renderDeds();update();
+    });
+    row.appendChild(main);row.appendChild(rm);
+    box.appendChild(row);
+  });
+}
+$('addDedBtn').addEventListener('click',function(){
+  S.deds.push({cat:DED_CATS[0],desc:'',amt:''});
+  renderDeds();update();
+  var inputs=$('dedRows').querySelectorAll('select');
+  if(inputs.length)inputs[inputs.length-1].focus();
+});
+renderDeds();
+
+/* ---- math ---- */
+function totals(){
+  var dep=money(S.deposit),pet=money(S.petDep),intr=money(S.interest);
+  var held=dep+pet+intr;
+  var deds=S.outcome==='full'?[]:S.deds.filter(function(d){return money(d.amt)>0||String(d.desc).trim();});
+  var ded=deds.reduce(function(a,d){return a+money(d.amt);},0);
+  return {dep:dep,pet:pet,intr:intr,held:held,deds:deds,ded:ded,net:held-ded};
+}
+
+/* ---- deadline panel ---- */
+function renderDeadline(){
+  var info=DEP[S.st],due=computeDue(S.st,S.moveOut);
+  var h='<div class="dl-row"><span class="k">Return deadline</span><span class="v">'+esc(info.ret)+'</span></div>';
+  if(due){
+    h+='<div class="dl-row"><span class="k">Send by</span><span class="v dl-due" id="dueDateOut">'+esc(fmtDate(due.date))+'</span></div>';
+    h+='<div class="dl-note">Computed as move-out date + '+due.n+' '+(due.months?'month':'day')+(due.n>1?'s':'')+' — the first deadline in '+esc(info.n)+'’s rule. Where the rule lists multiple periods, the earliest is shown; read the full text above.'
+      +(due.business?' Heads-up: this state counts <strong>business days</strong>, so the actual deadline may fall later than the date shown.':'')+'</div>';
+  }else{
+    h+='<div class="dl-row"><span class="k">Send by</span><span class="v" id="dueDateOut">Enter the move-out date below to compute your due date</span></div>';
+  }
+  if(info.int)h+='<div class="dl-int">Deposit interest: '+esc(info.int)+'</div>';
+  h+='<div class="dl-note">'+esc(VERIFY_LINE)+'</div>';
+  $('deadlinePanel').innerHTML=h;
+  $('interestHint').textContent=info.int?(info.n+' requires interest on deposits in many cases — enter any accrued interest owed so it appears in the accounting.'):'If your state, city, or lease requires interest on the deposit, enter the accrued amount owed.';
+}
+
+/* ---- builder visibility + math panel ---- */
+function renderBuilder(){
+  segBtns.forEach(function(b){
+    var on=b.dataset.outcome===S.outcome;
+    b.classList.toggle('on',on);
+    b.setAttribute('aria-pressed',on?'true':'false');
+  });
+  $('outcomeHint').textContent=OUTCOME_HINTS[S.outcome];
+  $('acbOwesInfo').hidden=S.outcome!=='owes';
+  $('dedCard').hidden=S.outcome==='full';
+  $('refWrap').hidden=!(S.outcome==='full'||S.outcome==='partial');
+  $('owesWrap').hidden=S.outcome!=='owes';
+  $('payLabel').textContent=S.outcome==='owes'?'5 · Delivery & payment of the balance':'5 · Refund & delivery details';
+
+  var t=totals();
+  var mh='<div class="m-row"><span>Total held (deposit'+(t.pet>0?' + pet deposit':'')+(t.intr>0?' + interest':'')+')</span><span class="amt">'+fmtUSD(t.held,true)+'</span></div>'
+    +'<div class="m-row"><span>Total deductions</span><span class="amt">&minus;&nbsp;'+fmtUSD(t.ded,true)+'</span></div>';
+  if(t.net>=0){
+    mh+='<div class="m-final"><span class="lbl pos">Refund due</span><span class="amt pos">'+fmtUSD(t.net,true)+'</span></div>';
+  }else{
+    mh+='<div class="m-final"><span class="lbl neg">Balance tenant owes</span><span class="amt neg">'+fmtUSD(-t.net,true)+'</span></div>';
+  }
+  $('mathPanel').innerHTML=mh;
+
+  var w='';
+  if(S.outcome==='partial'&&t.ded>0&&t.net<=0)w='Your deductions consume the whole deposit'+(t.net<0?' and then some':'')+' — switch the outcome to "'+(t.net<0?'Tenant owes more':'No refund')+'" so the letter reads correctly.';
+  else if(S.outcome==='none'&&t.net>0)w='Your deductions leave '+fmtUSD(t.net,true)+' unreturned — switch to "Partial refund" (withholding a refundable remainder is what loses deposit cases).';
+  else if(S.outcome==='none'&&t.net<0)w='Your deductions exceed the deposit by '+fmtUSD(-t.net,true)+' — switch to "Tenant owes more" to demand the balance.';
+  else if(S.outcome==='owes'&&t.net>=0)w='Your deductions don’t exceed the total held — switch to "Partial refund" or "No refund".';
+  $('outcomeWarn').hidden=!w;
+  if(w)$('outcomeWarn').textContent='⚠ '+w;
+}
+
+/* ---- letter ---- */
+function refundSentence(amount){
+  var a=fmtUSD(amount,true);
+  if(S.refMethod==='mailed')return 'A check for '+a+' will be mailed separately to the address above.';
+  if(S.refMethod==='electronic')return 'Your refund of '+a+' will be sent by electronic transfer.';
+  return 'A check for '+a+' is enclosed with this letter.';
+}
+function letterModel(){
+  var info=DEP[S.st],t=totals();
+  var refund=Math.max(0,t.net),balance=Math.max(0,-t.net);
+  var llName=S.llName.trim()||'[Landlord name]';
+  var llAddr=S.llAddr.trim()||'[Landlord address]';
+  var tnName=S.tnName.trim()||'[Tenant name(s)]';
+  var propAddr=S.propAddr.trim()||'[Rental property address]';
+  var toAddr=S.fwdAddr.trim()||(S.propAddr.trim()?S.propAddr.trim()+' (last known address)':'[Forwarding address]');
+  var mi=fmtDate(parseISO(S.moveIn)),mo=fmtDate(parseISO(S.moveOut));
+  var payBy=fmtDate(parseISO(S.payBy))||'[pay-by date]';
+
+  var open;
+  if(S.outcome==='full'){
+    open='We have completed our move-out inspection of the property listed above. Your security deposit is being returned in full — no deductions have been made. '+refundSentence(refund);
+  }else if(S.outcome==='partial'){
+    open='We have completed our move-out inspection of the property listed above. After the deductions itemized below, the remaining balance of your security deposit is being returned to you. '+refundSentence(refund);
+  }else if(S.outcome==='none'){
+    open='We have completed our move-out inspection of the property listed above. As itemized below, deductions for amounts owed consume the full security deposit held; no refund is due.';
+  }else{
+    open='We have completed our move-out inspection of the property listed above. As itemized below, the amounts owed exceed the security deposit held. This letter serves as your itemized security deposit statement and a demand for payment of the remaining balance.';
+  }
+
+  var tenancy='This letter concerns your tenancy at '+propAddr+(mi?', which began on '+mi:'')+(mo?' and ended on '+mo:'')+'.';
+  var deadline='This statement is provided within the '+info.ret+' required by '+info.n+' law.';
+
+  var rows=[];
+  rows.push({l:'Security deposit held',r:fmtUSD(t.dep,true)});
+  if(t.pet>0)rows.push({l:'Pet deposit held',r:fmtUSD(t.pet,true)});
+  if(t.intr>0)rows.push({l:'Interest accrued on deposit',r:fmtUSD(t.intr,true)});
+  if(t.pet>0||t.intr>0)rows.push({l:'Total held',r:fmtUSD(t.held,true),cls:'sub'});
+  if(S.outcome==='full'){
+    rows.push({l:'Deductions',r:'None'});
+  }else if(t.deds.length){
+    t.deds.forEach(function(d,i){
+      rows.push({l:(i+1)+'. '+d.cat+(String(d.desc).trim()?' — '+String(d.desc).trim():''),r:'− '+fmtUSD(money(d.amt),true)});
+    });
+  }else{
+    rows.push({l:'Deductions (itemize in the builder)',r:'− '+fmtUSD(0,true)});
+  }
+  rows.push({l:'Total deductions',r:'− '+fmtUSD(t.ded,true),cls:'sub'});
+  if(S.outcome==='owes'){
+    rows.push({l:'BALANCE DUE FROM TENANT',r:fmtUSD(balance,true),cls:'tot neg'});
+  }else{
+    var lbl=S.outcome==='full'||S.outcome==='partial'?(S.refMethod==='enclosed'?'REFUND ENCLOSED':'REFUND DUE TO TENANT'):'REFUND DUE TO TENANT';
+    rows.push({l:lbl,r:fmtUSD(refund,true),cls:'tot pos'});
+  }
+
+  var closing=[];
+  closing.push(deadline);
+  if(S.outcome==='owes'){
+    closing.push('Demand for payment: the deductions itemized above exceed the total deposit held by '+fmtUSD(balance,true)+'. Payment of this balance is due no later than '+payBy+'. '
+      +(String(S.payInstr).trim()?String(S.payInstr).trim()+' ':'')
+      +'If the balance is not paid by that date, the account may be referred to a licensed collection agency, which may affect your credit.');
+  }
+  if(S.outcome!=='full'){
+    closing.push('Copies of receipts, invoices, or estimates supporting the deductions above are enclosed or available on request. If you dispute any deduction, please respond in writing to the address below.');
+  }
+
+  return {info:info,t:t,refund:refund,balance:balance,llName:llName,llAddr:llAddr,tnName:tnName,
+    propAddr:propAddr,toAddr:toAddr,open:open,tenancy:tenancy,rows:rows,closing:closing,
+    today:fmtDate(new Date())};
+}
+
+function renderLetter(){
+  var m=letterModel();
+  var h='';
+  h+='<div class="ltr-from"><span class="nm">'+esc(m.llName)+'</span>\n'+esc(m.llAddr)+'</div>';
+  h+='<div class="ltr-date">'+esc(m.today)+'</div>';
+  h+='<div class="ltr-to">'+esc(m.tnName)+'\n'+esc(m.toAddr)+'</div>';
+  h+='<div class="ltr-re">Re: Security deposit — '+esc(m.propAddr)+'</div>';
+  h+='<p>Dear '+esc(m.tnName)+',</p>';
+  h+='<p>'+esc(m.tenancy)+'</p>';
+  h+='<p>'+esc(m.open)+'</p>';
+  h+='<div class="acct"><div class="acct-h">Security Deposit Accounting</div>';
+  m.rows.forEach(function(r){
+    h+='<div class="acct-row'+(r.cls?' '+r.cls:'')+'"><span class="al">'+esc(r.l)+'</span><span class="ar">'+esc(r.r)+'</span></div>';
+  });
+  h+='</div>';
+  m.closing.forEach(function(p){h+='<p>'+esc(p)+'</p>';});
+  h+='<p>Sincerely,</p>';
+  h+='<div class="ltr-sig"><div class="sigline"></div><div class="signame">'+esc(m.llName)+'<br>'+esc(m.llAddr)+'</div></div>';
+  var enc=[];
+  if(S.outcome!=='full')enc.push('Itemized receipts/invoices for deductions (recommended — some states require them)');
+  if((S.outcome==='full'||S.outcome==='partial')&&S.refMethod==='enclosed')enc.push('Refund check');
+  if(enc.length)h+='<div class="ltr-enc">Enclosures: '+esc(enc.join('; '))+'</div>';
+  if(S.certMail)h+='<div class="ltr-enc">Sent via USPS Certificate of Mailing on '+esc(m.today)+'.</div>';
+  h+='<p class="doc-legal">This letter was created with a free generator provided by Advanced Collection Bureau (advancedcb.com) for general informational purposes. It is not legal advice. Deposit deadlines, interest, and delivery rules vary by state, county, and city — verify current requirements.</p>';
+  $('docPreview').innerHTML=h;
+}
+
+function plainText(){
+  var m=letterModel();
+  var out=[];
+  out.push(m.llName);out.push(m.llAddr);out.push('');
+  out.push(m.today);out.push('');
+  out.push(m.tnName);out.push(m.toAddr);out.push('');
+  out.push('Re: Security deposit — '+m.propAddr);out.push('');
+  out.push('Dear '+m.tnName+',');out.push('');
+  out.push(m.tenancy);out.push('');
+  out.push(m.open);out.push('');
+  out.push('SECURITY DEPOSIT ACCOUNTING');
+  out.push('--------------------------------------------');
+  m.rows.forEach(function(r){out.push(r.l+' ..... '+r.r);});
+  out.push('--------------------------------------------');out.push('');
+  m.closing.forEach(function(p){out.push(p);out.push('');});
+  out.push('Sincerely,');out.push('');out.push('______________________________');
+  out.push(m.llName);out.push(m.llAddr);out.push('');
+  if(S.outcome!=='full')out.push('Enclosures: itemized receipts/invoices for deductions');
+  if(S.certMail)out.push('Sent via USPS Certificate of Mailing on '+m.today+'.');
+  out.push('');
+  out.push('Created with the free Security Deposit Return Letter Generator from Advanced Collection Bureau (advancedcb.com). Not legal advice — verify current state and local requirements.');
+  return out.join('\n');
+}
+
+function update(){
+  persist();
+  renderDeadline();
+  renderBuilder();
+  renderLetter();
+}
+update();
+
+/* ---- actions ---- */
+$('printBtn').addEventListener('click',function(){window.print();});
+$('copyBtn').addEventListener('click',function(){
+  var b=this,txt=plainText();
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){
+    b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy letter text';},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy letter text';},1600);}catch(e){}
+    document.body.removeChild(ta);
+  });
+});
+})();
+</script>
+
+<script>
+/* ============ Star rating widget ============ */
+(function(){
+  var SEED={value:4.8,count:227};              /* keep in sync with page JSON-LD */
+  var KEY='acb:security-deposit-return-letter-generator:rating';
+  var box=document.getElementById('acbStars'),meta=document.getElementById('acbRatingMeta');
+  var mine=parseInt(localStorage.getItem(KEY)||'0',10);
+  function agg(){var c=SEED.count+(mine?1:0);
+    var v=mine?((SEED.value*SEED.count+mine)/c):SEED.value;
+    return {v:Math.round(v*10)/10,c:c};}
+  function render(hover){
+    var a=agg();box.innerHTML='';
+    for(var i=1;i<=5;i++){(function(i){
+      var b=document.createElement('button');
+      b.type='button';b.className='acb-star'+((hover||mine||Math.round(a.v))>=i?' on':'');
+      b.setAttribute('aria-label',i+' star'+(i>1?'s':''));b.textContent='★';
+      b.onmouseenter=function(){render(i)};b.onmouseleave=function(){render(0)};
+      b.onclick=function(){mine=i;localStorage.setItem(KEY,String(i));render(0);
+        try{fetch('https://formsubmit.co/ajax/RATINGS_EMAIL',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({tool:'security-deposit-return-letter-generator',rating:i,_subject:'Tool rating: security-deposit-return-letter-generator'})
+        }).catch(function(){});}catch(e){}};
+      box.appendChild(b);})(i);}
+    meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'
+      +(mine?' · Thanks for rating!':' · Rate this tool');
+  }
+  render(0);
+})();
+</script>
+
+<script>
+/* ============ Iframe auto-height resizer ============ */
+(function(){
+  var last=0;
+  function send(){
+    var h=document.documentElement.scrollHeight;
+    if(Math.abs(h-last)>2){last=h;parent.postMessage({acbTool:'security-deposit-return-letter-generator',height:h},'*');}
+  }
+  if(window.ResizeObserver){new ResizeObserver(send).observe(document.body);}
+  window.addEventListener('load',send);
+  setInterval(send,800);
+})();
+</script>
+</body>
+</html>
