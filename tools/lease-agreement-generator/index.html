@@ -18,6 +18,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-text);-webkit-font-smoothing:antialiased}
 .wrap{max-width:880px;margin:0 auto;padding:28px 16px 48px}
+body.wiz-on .wrap{max-width:1380px}
 .progress{position:sticky;top:0;left:0;right:0;height:4px;z-index:100;background:var(--acb-border);border-radius:2px;margin-bottom:24px;overflow:hidden;display:none}
 .progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--acb-blue),var(--acb-blue-dark));transition:width .5s cubic-bezier(.22,1,.36,1)}
 .tool-head{text-align:center;margin-bottom:26px}
@@ -95,10 +96,55 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .disc-item b{font-size:14.5px;display:block;margin-bottom:3px}
 .disc-item span.d{font-size:13px;color:var(--acb-text-mid);line-height:1.5}
 .req-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--acb-blue);background:#fff;border:1px solid var(--acb-blue-mid);padding:2px 9px;border-radius:50px;margin-left:8px;vertical-align:1px}
-.review-sec{border:1px solid var(--acb-border);border-radius:12px;margin-bottom:10px;overflow:hidden}
-.review-sec>button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;background:#FAFBFD;border:none;font-family:inherit;font-size:14.5px;font-weight:600;color:var(--acb-text);cursor:pointer;text-align:left}
-.review-sec .edit{font-size:12.5px;color:var(--acb-blue);font-weight:600;flex-shrink:0}
-.review-sec .body{padding:6px 18px 14px;font-size:13.5px;color:var(--acb-text-mid);line-height:1.7;border-top:1px solid var(--acb-border)}
+.switch{position:relative;width:46px;height:26px;background:#D0D3DC;border-radius:50px;border:none;cursor:pointer;transition:background .25s;flex-shrink:0;padding:0}
+.switch.on{background:var(--acb-blue)}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .25s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch.on::after{transform:translateX(20px)}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.switch-row>label{margin-bottom:0}
+.pt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:560px){.pt-grid{grid-template-columns:repeat(2,1fr)}}
+.pt-card{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;border:1.5px solid var(--acb-border);border-radius:13px;background:#fff;font-family:inherit;font-size:13.5px;font-weight:500;color:var(--acb-text-mid);cursor:pointer;transition:all .2s}
+.pt-card svg{width:26px;height:26px;color:var(--acb-text-light)}
+.pt-card:hover{border-color:var(--acb-blue-mid)}
+.pt-card.on{border-color:var(--acb-blue);background:var(--acb-blue-light);color:var(--acb-blue);font-weight:600}
+.pt-card.on svg{color:var(--acb-blue)}
+.wiz-layout{display:grid;grid-template-columns:236px minmax(0,1fr) minmax(0,400px);gap:16px;align-items:start}
+@media(max-width:1140px){.wiz-layout{grid-template-columns:208px minmax(0,1fr) minmax(0,330px)}}
+.side{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto;background:var(--acb-card);border:1px solid var(--acb-border);border-radius:14px;padding:8px;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.side-toggle{display:none;width:100%;align-items:center;justify-content:space-between;padding:8px 10px;border:none;background:none;font-family:inherit;font-weight:700;font-size:14px;color:var(--acb-text);cursor:pointer}
+.side-item{display:flex;align-items:center;gap:8px;width:100%;padding:7px 9px;border:none;background:none;border-radius:9px;font-family:inherit;font-size:12.8px;color:var(--acb-text-mid);cursor:pointer;text-align:left;transition:background .15s}
+.side-item:hover{background:var(--acb-bg)}
+.side-item.cur{background:var(--acb-blue-light);color:var(--acb-blue);font-weight:600}
+.side-item svg.si{flex-shrink:0;width:14px;height:14px;opacity:.55}
+.side-item.cur svg.si{opacity:1}
+.side-item .lbl{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side-item .tick{flex-shrink:0;width:15px;height:15px;border-radius:50%;background:var(--acb-green);color:#fff;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.side-item.done .tick{opacity:1}
+.pv{position:sticky;top:12px}
+.pv-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px}
+.pv-head .t{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light)}
+.pv-btn{padding:7px 14px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:12px;font-family:inherit;font-weight:600;cursor:pointer;transition:all .2s}
+.pv-btn:hover{border-color:var(--acb-blue-mid);color:var(--acb-blue)}
+.pv-scroll{max-height:calc(100vh - 76px);overflow:auto;border-radius:6px}
+.pv-paper{padding:36px 32px;font-size:11px;line-height:1.55}
+.pv-paper h2.doc-title{font-size:14px}
+.pv-paper .doc-sub{font-size:10px;margin-bottom:16px}
+.pv-paper h3{font-size:11px;margin:14px 0 6px}
+.pv-paper .sig-grid{gap:22px 24px;margin-top:22px}
+#pvOpen{display:none}
+.jump-hl{box-shadow:0 0 0 3px rgba(61,90,241,.35)!important;border-radius:10px}
+@media(max-width:900px){
+  .wiz-layout{display:block}
+  .side{position:static;max-height:none;margin-bottom:14px}
+  .side-toggle{display:flex}
+  .side-nav{display:none;margin-top:6px}
+  .side.open .side-nav{display:block}
+  .pv{display:none}
+  body.pv-sheet .pv{display:block;position:fixed;left:0;right:0;bottom:0;top:auto;z-index:130;background:#fff;border-top:1px solid var(--acb-border);border-radius:16px 16px 0 0;box-shadow:0 -12px 32px rgba(26,26,46,.18);max-height:74vh;padding:10px 14px 14px}
+  body.pv-sheet .pv-scroll{max-height:calc(74vh - 60px)}
+  #pvOpen{display:block;position:fixed;right:14px;bottom:14px;z-index:140;padding:12px 22px;border-radius:50px;border:none;background:var(--acb-blue);color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(61,90,241,.35)}
+}
 .acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
 .acb-tip:hover,.acb-tip:focus,.acb-tip.open{color:var(--acb-blue)}
 .acb-tip-bubble{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 10px 30px rgba(26,26,46,.14);font-size:12.5px;font-weight:400;line-height:1.6;padding:12px 14px;border-radius:12px;width:270px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;text-transform:none;letter-spacing:normal;text-align:left}
@@ -124,10 +170,13 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .acb-coach-ring{position:relative;z-index:91}
 .acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
 @keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
-.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.55;width:250px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
-.acb-coach::before{content:"";position:absolute;bottom:100%;left:24px;border:8px solid transparent;border-bottom-color:var(--acb-text)}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:12px 15px;font-size:13px;line-height:1.5;width:230px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach.side-r::before{content:"";position:absolute;right:100%;top:18px;border:8px solid transparent;border-right-color:var(--acb-text)}
+.acb-coach.side-l::before{content:"";position:absolute;left:100%;top:18px;border:8px solid transparent;border-left-color:var(--acb-text)}
 .acb-coach b{display:block;margin-bottom:3px}
-.acb-coach button{margin-top:9px;background:#fff;color:var(--acb-text);border:none;border-radius:50px;padding:6px 16px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+.acb-coach .step-dots{font-size:11px;opacity:.7;margin-top:7px}
+.acb-coach .skip{background:none;border:none;color:#fff;opacity:.75;font-size:11.5px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0;margin-top:7px;display:block}
+@media(max-width:840px){.acb-coach{position:absolute;width:210px}}
 .acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
 .acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
 .acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
@@ -145,6 +194,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .doc-paper .blank{display:inline-block;min-width:160px;border-bottom:1px solid #111}
 .doc-paper table.doc-util{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:13px}
 .doc-paper table.doc-util td,.doc-paper table.doc-util th{border:1px solid #999;padding:5px 8px;text-align:left}
+.pv-paper table.doc-util{font-size:10px}
 .sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px 40px;margin-top:36px}
 @media(max-width:560px){.sig-grid{grid-template-columns:1fr}}
 .sig-block .line{border-bottom:1px solid #111;height:34px}
@@ -166,12 +216,15 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .acb-rating-meta{font-size:13px;color:var(--acb-text-light)}
 .disclaimer{font-size:12px;color:var(--acb-text-light);text-align:center;line-height:1.6;margin-top:26px;max-width:660px;margin-left:auto;margin-right:auto}
 @media print{
+  @page{margin:0.75in}
   body{background:#fff}
   .no-print{display:none!important}
   .wrap{max-width:none;padding:0}
+  body.printing #screenDoc{display:block!important}
   .doc-paper{border:none;box-shadow:none;border-radius:0;padding:0;font-size:12.5px}
-  .doc-paper h3{page-break-after:avoid}
-  .sig-grid{page-break-inside:avoid}
+  .doc-paper h3{break-after:avoid;page-break-after:avoid}
+  .doc-paper table,.doc-paper tr,.sig-grid,.sig-block,.doc-foot{break-inside:avoid;page-break-inside:avoid}
+  .doc-paper p{orphans:3;widows:3}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -192,7 +245,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       <div class="entry-card" id="entryBuild" role="button" tabindex="0">
         <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#3D5AF1" stroke-width="2.5" stroke-linecap="round"/></svg></div>
         <h2>Build My Custom Lease</h2>
-        <p>Answer simple questions step by step. We pre-fill your state's deposit limits, late-fee rules, notice periods, and required disclosures as you go.</p>
+        <p>Answer simple questions in any order — every field is optional. Watch the lease write itself in a live preview, with your state's rules pre-filled as you go.</p>
         <span class="tag">Start building →</span>
       </div>
       <div class="entry-card" id="entryBlank" role="button" tabindex="0">
@@ -221,16 +274,35 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     </div>
   </div>
 
-  <!-- WIZARD -->
+  <!-- WIZARD: sidebar | step card | live preview -->
   <div id="screenWizard" class="no-print" style="display:none">
-    <div class="card">
-      <div id="stepBody"></div>
-      <div class="wiz-nav">
-        <button class="btn-secondary" id="wizBack">← Back</button>
-        <span class="steps-dots" id="stepDots"></span>
-        <button class="btn-primary" id="wizNext">Continue</button>
+    <div class="wiz-layout">
+      <aside class="side" id="sideWrap" aria-label="Lease sections">
+        <button type="button" class="side-toggle" id="sideToggle" aria-expanded="false">Sections <span aria-hidden="true">▾</span></button>
+        <nav class="side-nav" id="sideNav"></nav>
+      </aside>
+      <div class="wiz-main">
+        <div class="card">
+          <div id="stepBody"></div>
+          <div class="wiz-nav">
+            <button class="btn-secondary" id="wizBack">← Back</button>
+            <span class="steps-dots" id="stepDots"></span>
+            <button class="btn-primary" id="wizNext">Continue</button>
+          </div>
+        </div>
+      </div>
+      <div class="pv" id="previewPane" aria-label="Live lease preview">
+        <div class="pv-head">
+          <span class="t">Live preview</span>
+          <span>
+            <button type="button" class="pv-btn" id="pvPrint">Print</button>
+            <button type="button" class="pv-btn" id="pvPdf">Download PDF</button>
+          </span>
+        </div>
+        <div class="pv-scroll"><div class="doc-paper pv-paper" id="previewPaper"></div></div>
       </div>
     </div>
+    <button type="button" id="pvOpen">Preview lease</button>
   </div>
 
   <!-- DOCUMENT -->
@@ -380,26 +452,42 @@ function acbTipUpgrade(root){
   });
 }
 document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
-function acbCoach(slug,target,title,body){
+/* Sequential first-run walkthrough (canonical: cap-rate-calculator). Steps that target
+   non-input elements also advance on a click of the target. */
+function acbCoachSeq(slug,steps){
   try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
-  var el=typeof target==='string'?document.querySelector(target):target;
-  if(!el)return;
-  var tip=null;
-  function done(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}
-    el.classList.remove('acb-coach-ring');if(tip)tip.remove();
-    document.removeEventListener('input',done,true);}
-  el.classList.add('acb-coach-ring');
-  var wrap=el.closest('.field')||el.parentNode;
-  if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
-  tip=document.createElement('div');tip.className='acb-coach';
-  tip.innerHTML='<b>'+title+'</b>'+body+'<br><button type="button">Got it</button>';
-  wrap.appendChild(tip);
-  tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';
-  tip.style.left=Math.max(0,Math.min(el.offsetLeft,wrap.clientWidth-260))+'px';
-  tip.querySelector('button').addEventListener('click',done);
-  document.addEventListener('input',done,true);
-  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){done();document.removeEventListener('keydown',esc);}});
+  var i=-1,el=null,tip=null;
+  function markDone(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}}
+  function clear(){if(el)el.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;tip=null;}
+  function stop(){markDone();clear();}
+  function show(n){
+    clear();i=n;
+    if(i>=steps.length){stop();return;}
+    var st=steps[i];
+    el=typeof st.target==='string'?document.querySelector(st.target):st.target;
+    if(!el){show(i+1);return;}
+    el.classList.add('acb-coach-ring');
+    try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
+    var wrap=el.closest('.field')||el.parentNode;
+    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+    tip=document.createElement('div');tip.className='acb-coach';
+    tip.innerHTML='<b>'+st.title+'</b>'+st.body
+      +'<div class="step-dots">Step '+(i+1)+' of '+steps.length+'</div>'
+      +'<button type="button" class="skip">Skip tour</button>';
+    wrap.appendChild(tip);
+    var spaceR=wrap.clientWidth-(el.offsetLeft+el.offsetWidth);
+    if(spaceR>250){tip.classList.add('side-r');tip.style.left=(el.offsetLeft+el.offsetWidth+14)+'px';tip.style.top=el.offsetTop+'px';}
+    else if(el.offsetLeft>250){tip.classList.add('side-l');tip.style.left=(el.offsetLeft-244)+'px';tip.style.top=el.offsetTop+'px';}
+    else{tip.style.left=Math.max(0,Math.min(el.offsetLeft+20,wrap.clientWidth-240))+'px';tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';}
+    tip.querySelector('.skip').addEventListener('click',function(e){e.stopPropagation();stop();});
+    var t=el;
+    var adv=function(){t.removeEventListener('input',adv);t.removeEventListener('change',adv);t.removeEventListener('click',adv);setTimeout(function(){show(i+1);},350);};
+    t.addEventListener('input',adv);t.addEventListener('change',adv);t.addEventListener('click',adv);
+  }
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){stop();document.removeEventListener('keydown',esc);}});
+  show(0);
 }
+function acbCoach(slug,target,title,body){acbCoachSeq(slug,[{target:target,title:title,body:body}]);}
 function acbDate(input){
   var pop=null,view;
   function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
@@ -454,12 +542,41 @@ function acbDate(input){
 window.ACB=window.ACB||{};
 var $=function(id){return document.getElementById(id);};
 var LS='acb:lease-agreement-generator:answers';
+var LSV='acb:lease-agreement-generator:visited';
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 window.ACB.esc=esc;
 var fmtUSD=function(n,c){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:c?2:0,maximumFractionDigits:c?2:0}).format(isFinite(n)?n:0);};
 window.ACB.fmtUSD=fmtUSD;
 function money(s){var v=parseFloat(String(s).replace(/[^0-9.\-]/g,''));return isFinite(v)?v:0;}
 window.ACB.money=money;
+
+/* ---------- inline stroke icons (ui-v3 spec §9) ---------- */
+var IC={
+home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/>',
+doc:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+cal:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+dollar:'<path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',
+pct:'<path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
+key:'<path d="M21 2l-2 2m-7.6 7.6a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m3 3L21 8m-3-3 3 3"/>',
+clip:'<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 13l2 2 4-4"/>',
+mail:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/>',
+shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+bolt:'<path d="M13 2 3 14h7l-1 8 11-13h-7z"/>',
+bed:'<path d="M3 7v11"/><path d="M3 14h18v4"/><path d="M3 11h11v3"/><path d="M21 18v-6a2 2 0 0 0-2-2h-5"/><circle cx="6.5" cy="9" r="1"/>',
+bath:'<path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/><path d="M6 12V5a2 2 0 0 1 4 0"/><path d="M5 21l1-2m13 2-1-2"/>',
+paw:'<circle cx="12" cy="15.5" r="3.5"/><circle cx="5.5" cy="10" r="1.6"/><circle cx="9.5" cy="6.5" r="1.6"/><circle cx="14.5" cy="6.5" r="1.6"/><circle cx="18.5" cy="10" r="1.6"/>',
+car:'<path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11"/><rect x="3" y="11" width="18" height="6" rx="2"/><path d="M6 17v2m12-2v2"/><path d="M7 14h.01M17 14h.01"/>',
+ban:'<circle cx="12" cy="12" r="9"/><path d="M5.5 5.5l13 13"/>',
+user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+apartment:'<rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/><path d="M10 21v-3h4v3"/>',
+condo:'<path d="M3 21h18"/><path d="M5 21V9l5-4v16"/><path d="M10 21V11h9v10"/><path d="M13 14h2M13 17.5h2"/>',
+townhouse:'<path d="M2 21h20"/><path d="M3 21V9l4.5-3L12 9v12"/><path d="M12 9l4.5-3L21 9v12"/><path d="M6 21v-4h3v4M15 21v-4h3v4"/>',
+duplex:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M12 9v12"/><path d="M7 21v-5h3v5M14 21v-5h3v5"/>',
+room:'<path d="M4 21h16"/><path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17"/><path d="M14.5 12h.01"/>',
+other:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.6 2.24c-.7.33-1.1.9-1.1 1.66v.35"/><path d="M12 17h.01"/>'
+};
+function icon(k,sz,cls){return '<svg class="'+(cls||'si')+'" width="'+(sz||14)+'" height="'+(sz||14)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(IC[k]||IC.doc)+'</svg>';}
+var PT_ICON={House:'home',Apartment:'apartment',Condo:'condo',Townhouse:'townhouse',Duplex:'duplex',Room:'room',Other:'other'};
 
 var UTIL_KEYS=['Electricity','Gas','Water / Sewer','Trash Collection','Internet / Cable','Lawn Care','Snow Removal','Pest Control'];
 var CLAUSE_PRESETS=[
@@ -477,24 +594,43 @@ var CLAUSE_PRESETS=[
 {label:'Satellite dish',text:'Satellite dishes and antennas may be installed only in accordance with applicable FCC rules and Landlord’s reasonable placement requirements, and must be removed (with any damage repaired) at move-out.'}
 ];
 var DEFAULT_A={
-  state:'',addr:'',unit:'',city:'',zip:'',ptype:'House',furnished:false,furnishings:'',parking:'',storage:'',
-  llName:'',llAddr:'',tenants:[''],occupants:'',maxOcc:'',
-  termType:'fixed',start:'',end:'',
-  rent:'',dueDay:'1',payMethods:['Check','ACH / Bank Transfer'],grace:'',lateType:'flat',lateAmt:'',nsf:'35',
+  state:'',addr:'',unit:'',city:'',zip:'',ptype:'',bedrooms:'',bathrooms:'',furnished:false,furnishings:'',appliances:'',parking:'',storage:'',
+  llName:'',llAddr:'',tenants:[''],occupants:'',maxOcc:'',authPersons:'',cosigner:'',
+  termType:'fixed',start:'',end:'',earlyMoveIn:'',earlyNote:'',prepaidAmt:'',prepaidMonths:'',
+  rent:'',dueDay:'1',payMethods:[],grace:'',lateType:'flat',lateAmt:'',nsf:'',
   deposit:'',petDeposit:'',petRent:'',lastMonth:false,
   utils:{},
   pets:'Not allowed',petDesc:'',smoking:'Prohibited anywhere on the property',sublet:'Only with Landlord’s prior written consent',alterations:'Only with Landlord’s prior written consent',
-  insurance:true,insAmt:'100,000',quietHours:true,earlyTerm:'none',etFee:'',
+  insurance:true,insAmt:'100,000',quietHours:true,earlyTerm:'none',etFee:'',moveInInspect:true,
   pre1978:'no',extraDisc:{},clauses:[]
 };
 UTIL_KEYS.forEach(function(k){DEFAULT_A.utils[k]=(k==='Trash Collection'||k==='Pest Control')?'Landlord':'Tenant';});
+/* Load + migrate saved answers (older schemas get new keys with defaults; bad shapes are repaired). */
 var A;
 try{A=JSON.parse(localStorage.getItem(LS)||'null');}catch(e){A=null;}
-if(!A||typeof A!=='object')A=JSON.parse(JSON.stringify(DEFAULT_A));
-UTIL_KEYS.forEach(function(k){if(!A.utils||!A.utils[k]){A.utils=A.utils||{};A.utils[k]=DEFAULT_A.utils[k];}});
-Object.keys(DEFAULT_A).forEach(function(k){if(A[k]===undefined)A[k]=DEFAULT_A[k];});
+if(!A||typeof A!=='object'||Array.isArray(A))A=JSON.parse(JSON.stringify(DEFAULT_A));
+(function normalize(){
+  if(!Array.isArray(A.tenants)||!A.tenants.length)A.tenants=[''];
+  A.tenants=A.tenants.map(function(t){return t==null?'':String(t);});
+  if(!Array.isArray(A.payMethods))A.payMethods=[];
+  if(!Array.isArray(A.clauses))A.clauses=[];
+  A.clauses=A.clauses.map(function(c){return c==null?'':String(c);});
+  if(!A.utils||typeof A.utils!=='object'||Array.isArray(A.utils))A.utils={};
+  if(!A.extraDisc||typeof A.extraDisc!=='object'||Array.isArray(A.extraDisc))A.extraDisc={};
+  UTIL_KEYS.forEach(function(k){if(!A.utils[k])A.utils[k]=DEFAULT_A.utils[k];});
+  Object.keys(DEFAULT_A).forEach(function(k){if(A[k]===undefined||A[k]===null)A[k]=JSON.parse(JSON.stringify(DEFAULT_A[k]));});
+})();
 window.ACB.A=A;
-function save(){try{localStorage.setItem(LS,JSON.stringify(A));}catch(e){}}
+var pvT=null;
+function schedulePreview(){
+  clearTimeout(pvT);
+  pvT=setTimeout(function(){
+    updateSidebar();
+    if(window.ACB.renderPreview)window.ACB.renderPreview();
+  },300);
+}
+window.ACB.schedulePreview=schedulePreview;
+function save(){try{localStorage.setItem(LS,JSON.stringify(A));}catch(e){}schedulePreview();}
 window.ACB.save=save;
 
 function stateOptions(sel){
@@ -515,7 +651,7 @@ function stateFacts(ab,forBlank){
   h+='<div class="sf-row"><span class="k">Late fee rules</span><span class="v">'+esc(s.late)+'</span></div>';
   h+='<div class="sf-row"><span class="k">Month-to-month termination</span><span class="v">'+esc(s.mtm)+'</span></div>';
   h+='<div class="sf-row"><span class="k">State-specific disclosures</span><span class="v">'+(s.disc.length?s.disc.length+' required':'None beyond federal')+'</span></div>';
-  if(s.note)h+='<p class="sf-note">⚠ '+esc(s.note)+'</p>';
+  if(s.note)h+='<p class="sf-note">Note: '+esc(s.note)+'</p>';
   h+='<p class="sf-note">Commonly cited rules, current to the best of our knowledge as of 2025. Laws change and cities add rules — verify before relying on them.</p></div>';
   return h;
 }
@@ -552,88 +688,66 @@ function bindVal(root,id,key,obj){
   if(!el)return;
   el.addEventListener('input',function(){(obj||A)[key]=el.value;save();});
 }
+function switchRow(id,label,on,hint){
+  return '<div class="field switch-row"><label for="'+id+'">'+label+(hint?'<p class="hint" style="font-weight:400">'+hint+'</p>':'')+'</label><button type="button" class="switch'+(on?' on':'')+'" id="'+id+'" role="switch" aria-checked="'+(on?'true':'false')+'"></button></div>';
+}
+function bindSwitch(root,id,fn){
+  var b=root.querySelector('#'+id);
+  if(!b)return;
+  b.addEventListener('click',function(){
+    var on=!b.classList.contains('on');
+    b.classList.toggle('on',on);
+    b.setAttribute('aria-checked',String(on));
+    fn(on);
+    save();
+  });
+}
 
-/* ---------- steps ---------- */
+/* ---------- steps (every field optional — no gates) ---------- */
 var steps=[
-{id:'state',title:'Which state is the rental property in?',
- sub:'Lease rules are set state by state. We’ll tailor deposit limits, notice periods, late-fee rules, and required disclosures automatically.',
+{id:'ptype',title:'What type of property is it?',
+ sub:'Pick the option that best matches the rental. You can change it any time.',
  html:function(){
-   return '<div class="field"><label for="wState">State</label><select id="wState">'+stateOptions(A.state)+'</select></div><div id="wStateFacts">'+stateFacts(A.state)+'</div>';
+   var t='<div class="pt-grid" id="ptGrid">';
+   ['House','Apartment','Condo','Townhouse','Duplex','Room','Other'].forEach(function(p){
+     t+='<button type="button" class="pt-card'+(A.ptype===p?' on':'')+'" data-pt="'+p+'" aria-pressed="'+(A.ptype===p?'true':'false')+'">'+icon(PT_ICON[p],26,'pt')+'<span>'+p+'</span></button>';
+   });
+   return t+'</div>';
  },
  bind:function(root){
-   root.querySelector('#wState').addEventListener('change',function(){
-     A.state=this.value;save();
-     var box=root.querySelector('#wStateFacts');
-     smoothResize(box.closest('.card')||box,function(){box.innerHTML=stateFacts(A.state);});
+   root.querySelectorAll('[data-pt]').forEach(function(b){
+     b.addEventListener('click',function(){
+       A.ptype=(A.ptype===b.dataset.pt)?'':b.dataset.pt;
+       root.querySelectorAll('[data-pt]').forEach(function(x){
+         x.classList.toggle('on',A.ptype===x.dataset.pt);
+         x.setAttribute('aria-pressed',String(A.ptype===x.dataset.pt));
+       });
+       save();
+     });
    });
- },
- valid:function(){return A.state?true:'Please choose a state to continue.';}},
+ }},
 
-{id:'property',title:'Tell us about the property',
- sub:'This describes the “Premises” in your lease.',
+{id:'lease',title:'What type of lease?',
+ sub:'Fixed-term leases end on a set date. Month-to-month continues until either side gives notice.',
  html:function(){
-   return '<div class="field"><label for="wAddr">Street address</label><input type="text" id="wAddr" value="'+esc(A.addr)+'" placeholder="123 Main Street"></div>'
-   +'<div class="row3"><div class="field"><label for="wUnit">Unit / Apt (optional)</label><input type="text" id="wUnit" value="'+esc(A.unit)+'" placeholder="Unit 2B"></div>'
-   +'<div class="field"><label for="wCity">City</label><input type="text" id="wCity" value="'+esc(A.city)+'"></div>'
-   +'<div class="field"><label for="wZip">ZIP code</label><input type="text" id="wZip" value="'+esc(A.zip)+'" inputmode="numeric" maxlength="10"></div></div>'
-   +'<div class="field"><label>Property type</label>'+chipRow('ptype',['House','Apartment','Condo','Townhouse','Duplex','Room','Other'],A.ptype)+'</div>'
-   +'<div class="field"><label>Is it furnished?</label>'+chipRow('furn',['Unfurnished','Furnished'],A.furnished?'Furnished':'Unfurnished')
-   +'<div id="wFurnWrap" style="display:'+(A.furnished?'block':'none')+';margin-top:10px"><input type="text" id="wFurnishings" value="'+esc(A.furnishings)+'" placeholder="e.g. refrigerator, range, washer/dryer, sofa, two beds"><p class="hint">List the included furnishings and appliances — they’ll appear in the lease.</p></div></div>'
-   +'<div class="row2"><div class="field"><label for="wParking">Parking included (optional)</label><input type="text" id="wParking" value="'+esc(A.parking)+'" placeholder="e.g. 1 driveway space, garage stall #4"></div>'
-   +'<div class="field"><label for="wStorage">Storage included (optional)</label><input type="text" id="wStorage" value="'+esc(A.storage)+'" placeholder="e.g. basement storage unit"></div></div>';
- },
- bind:function(root){
-   bindVal(root,'wAddr','addr');bindVal(root,'wUnit','unit');bindVal(root,'wCity','city');bindVal(root,'wZip','zip');
-   bindVal(root,'wFurnishings','furnishings');bindVal(root,'wParking','parking');bindVal(root,'wStorage','storage');
-   bindChips(root,'ptype',function(v){A.ptype=v;});
-   bindChips(root,'furn',function(v){A.furnished=(v==='Furnished');root.querySelector('#wFurnWrap').style.display=A.furnished?'block':'none';});
- },
- valid:function(){return (A.addr.trim()&&A.city.trim())?true:'Please enter at least a street address and city.';}},
-
-{id:'parties',title:'Who’s on the lease?',
- sub:'The landlord (or management company) and every adult tenant who will sign.',
- html:function(){
-   var t='<div class="field"><label for="wLl">Landlord / property owner or company</label><input type="text" id="wLl" value="'+esc(A.llName)+'" placeholder="e.g. Smith Properties LLC"></div>'
-   +'<div class="field"><label for="wLlAddr">Landlord’s address for notices'+tip('Where the tenant sends legal notices and, in many states, where you must be reachable. A business or P.O. address is fine.')+'</label><input type="text" id="wLlAddr" value="'+esc(A.llAddr)+'" placeholder="Street, City, State ZIP"></div>'
-   +'<div class="field"><label>Tenant(s) — adults who will sign</label><div id="wTenants">';
-   A.tenants.forEach(function(name,i){
-     t+='<div class="tenant-row"><input type="text" data-tenant="'+i+'" value="'+esc(name)+'" placeholder="Full legal name">'+(A.tenants.length>1?'<button type="button" class="rm-btn" data-rm="'+i+'" aria-label="Remove tenant">×</button>':'')+'</div>';
-   });
-   t+='</div><button type="button" class="add-btn" id="wAddTenant">+ Add another tenant</button></div>'
-   +'<div class="row2"><div class="field"><label for="wOcc">Other occupants (optional)'+tip('People who will live there but not sign — like minor children. Listing them keeps the “who may live here” clause enforceable.')+'</label><input type="text" id="wOcc" value="'+esc(A.occupants)+'" placeholder="e.g. two minor children"></div>'
-   +'<div class="field"><label for="wMaxOcc">Maximum occupants (optional)</label><input type="number" id="wMaxOcc" value="'+esc(A.maxOcc)+'" min="1" max="20" placeholder="e.g. 4"></div></div>';
+   var s=SD[A.state];
+   var t='<div class="field"><label>Lease type</label>'+chipRow('term',['Fixed term','Month-to-month'],A.termType==='fixed'?'Fixed term':'Month-to-month')+'</div>';
+   if(A.termType!=='fixed'&&s)t+='<div class="infobox">In '+esc(s.n)+', month-to-month termination notice: <strong>&nbsp;'+esc(s.mtm)+'</strong>. We’ll write that into the lease.</div>';
    return t;
  },
  bind:function(root){
-   bindVal(root,'wLl','llName');bindVal(root,'wLlAddr','llAddr');bindVal(root,'wOcc','occupants');bindVal(root,'wMaxOcc','maxOcc');
-   root.querySelectorAll('[data-tenant]').forEach(function(inp){
-     inp.addEventListener('input',function(){A.tenants[+inp.dataset.tenant]=inp.value;save();});
-   });
-   root.querySelectorAll('[data-rm]').forEach(function(b){
-     b.addEventListener('click',function(){A.tenants.splice(+b.dataset.rm,1);save();rerender();});
-   });
-   root.querySelector('#wAddTenant').addEventListener('click',function(){A.tenants.push('');save();rerender();});
- },
- valid:function(){
-   if(!A.llName.trim())return 'Please enter the landlord’s name.';
-   if(!A.tenants.some(function(t){return t.trim();}))return 'Please enter at least one tenant’s name.';
-   A.tenants=A.tenants.filter(function(t,i){return t.trim()||i===0;});
-   return true;
+   bindChips(root,'term',function(v){A.termType=(v==='Fixed term')?'fixed':'mtm';rerender();});
  }},
 
-{id:'term',title:'How long is the lease?',
- sub:'Fixed-term leases end on a set date. Month-to-month continues until either side gives notice.',
+{id:'dates',title:'Start & end dates',
+ sub:'When does the tenancy begin — and, for a fixed term, when does it end?',
  html:function(){
-   var s=SD[A.state]||{};
-   var t='<div class="field"><label>Lease type</label>'+chipRow('term',['Fixed term','Month-to-month'],A.termType==='fixed'?'Fixed term':'Month-to-month')+'</div>'
-   +'<div class="row2"><div class="field"><label for="wStart">Start date</label><input type="date" id="wStart" value="'+esc(A.start)+'"></div>'
-   +'<div class="field" id="wEndWrap" style="display:'+(A.termType==='fixed'?'block':'none')+'"><label for="wEnd">End date</label><input type="date" id="wEnd" value="'+esc(A.end)+'"><p class="hint"><a href="#" id="wYear" style="color:var(--acb-blue);font-weight:600;text-decoration:none">Set to 12 months →</a></p></div></div>';
-   if(A.termType!=='fixed'&&A.state)t+='<div class="infobox">ℹ️ In '+esc(s.n)+', month-to-month termination notice: <strong>&nbsp;'+esc(s.mtm)+'</strong>. We’ll write that into the lease.</div>';
+   var t='<div class="row2"><div class="field"><label for="wStart">Start date</label><input type="date" id="wStart" value="'+esc(A.start)+'"></div>'
+   +'<div class="field"><label for="wEnd">End date</label><input type="date" id="wEnd" value="'+esc(A.end)+'"><p class="hint">'+(A.termType==='fixed'?'<a href="#" id="wYear" style="color:var(--acb-blue);font-weight:600;text-decoration:none">Set to 12 months →</a>':'Ignored for month-to-month leases.')+'</p></div></div>';
    return t;
  },
  bind:function(root){
    bindVal(root,'wStart','start');bindVal(root,'wEnd','end');
-   bindChips(root,'term',function(v){A.termType=(v==='Fixed term')?'fixed':'mtm';rerender();});
    var yr=root.querySelector('#wYear');
    if(yr)yr.addEventListener('click',function(e){
      e.preventDefault();
@@ -643,41 +757,110 @@ var steps=[
      A.end=d.toISOString().slice(0,10);
      root.querySelector('#wEnd').value=A.end;save();
    });
- },
- valid:function(){
-   if(!A.start)return 'Please choose a start date.';
-   if(A.termType==='fixed'){
-     if(!A.end)return 'Please choose an end date (or switch to month-to-month).';
-     if(A.end<=A.start)return 'The end date must be after the start date.';
-   }
-   return true;
  }},
 
-{id:'rent',title:'Rent & late fees',
- sub:'We’ve pre-filled your state’s rules where they exist.',
+{id:'beds',title:'Bedrooms & bathrooms',
+ sub:'These describe the Premises in the lease.',
  html:function(){
-   var s=SD[A.state]||{};
-   if(A.grace===''&&s.graceReq)A.grace=String(s.graceReq);
-   if(A.grace==='')A.grace='3';
+   return '<div class="row2"><div class="field"><label for="wBeds">Bedrooms</label><input type="number" id="wBeds" value="'+esc(A.bedrooms)+'" min="0" max="20" placeholder="e.g. 3"></div>'
+   +'<div class="field"><label for="wBaths">Bathrooms</label><input type="number" id="wBaths" value="'+esc(A.bathrooms)+'" min="0" max="20" step="0.5" placeholder="e.g. 2"></div></div>';
+ },
+ bind:function(root){
+   bindVal(root,'wBeds','bedrooms');bindVal(root,'wBaths','bathrooms');
+ }},
+
+{id:'address',title:'Where is the property?',
+ sub:'The address of the Premises. Choosing a state tailors deposit limits, notice periods, late-fee rules, and required disclosures.',
+ html:function(){
+   return '<div class="field"><label for="wAddr">Street address</label><input type="text" id="wAddr" value="'+esc(A.addr)+'" placeholder="123 Main Street"></div>'
+   +'<div class="row3"><div class="field"><label for="wUnit">Unit / Apt</label><input type="text" id="wUnit" value="'+esc(A.unit)+'" placeholder="Unit 2B"></div>'
+   +'<div class="field"><label for="wCity">City</label><input type="text" id="wCity" value="'+esc(A.city)+'"></div>'
+   +'<div class="field"><label for="wZip">ZIP code</label><input type="text" id="wZip" value="'+esc(A.zip)+'" inputmode="numeric" maxlength="10"></div></div>'
+   +'<div class="field"><label for="wState">State</label><select id="wState">'+stateOptions(A.state)+'</select></div>'
+   +'<div id="wStateFacts">'+stateFacts(A.state)+'</div>';
+ },
+ bind:function(root){
+   bindVal(root,'wAddr','addr');bindVal(root,'wUnit','unit');bindVal(root,'wCity','city');bindVal(root,'wZip','zip');
+   root.querySelector('#wState').addEventListener('change',function(){
+     A.state=this.value;save();
+     var box=root.querySelector('#wStateFacts');
+     smoothResize(box.closest('.card')||box,function(){box.innerHTML=stateFacts(A.state);});
+   });
+ }},
+
+{id:'landlord',title:'The landlord',
+ sub:'The property owner or management company that will sign the lease.',
+ html:function(){
+   return '<div class="field"><label for="wLl">Landlord / property owner or company</label><input type="text" id="wLl" value="'+esc(A.llName)+'" placeholder="e.g. Smith Properties LLC"></div>';
+ },
+ bind:function(root){bindVal(root,'wLl','llName');}},
+
+{id:'tenant',title:'The tenant',
+ sub:'Every adult who will sign and be responsible for the lease.',
+ html:function(){
+   var t='<div class="field"><label>Tenant(s) — adults who will sign</label><div id="wTenants">';
+   A.tenants.forEach(function(name,i){
+     t+='<div class="tenant-row"><input type="text" data-tenant="'+i+'" value="'+esc(name)+'" placeholder="Full legal name">'+(A.tenants.length>1?'<button type="button" class="rm-btn" data-rm="'+i+'" aria-label="Remove tenant">×</button>':'')+'</div>';
+   });
+   t+='</div><button type="button" class="add-btn" id="wAddTenant">+ Add another tenant</button></div>';
+   return t;
+ },
+ bind:function(root){
+   root.querySelectorAll('[data-tenant]').forEach(function(inp){
+     inp.addEventListener('input',function(){A.tenants[+inp.dataset.tenant]=inp.value;save();});
+   });
+   root.querySelectorAll('[data-rm]').forEach(function(b){
+     b.addEventListener('click',function(){A.tenants.splice(+b.dataset.rm,1);save();rerender();});
+   });
+   root.querySelector('#wAddTenant').addEventListener('click',function(){A.tenants.push('');save();rerender();});
+ }},
+
+{id:'notices',title:'Notices to tenant',
+ sub:'The landlord’s official address for notices — where the tenant sends legal notices, and where you can be reached.',
+ html:function(){
+   return '<div class="field"><label for="wLlAddr">Landlord’s address for notices'+tip('Where the tenant sends legal notices and, in many states, where you must be reachable. A business or P.O. address is fine.')+'</label><input type="text" id="wLlAddr" value="'+esc(A.llAddr)+'" placeholder="Street, City, State ZIP"></div>'
+   +'<div class="infobox">Notices to the tenant are delivered to the Premises — the lease says so automatically.</div>';
+ },
+ bind:function(root){bindVal(root,'wLlAddr','llAddr');}},
+
+{id:'occupants',title:'Occupants & authorized persons',
+ sub:'Who may live in the property besides the signing tenants.',
+ html:function(){
+   return '<div class="row2"><div class="field"><label for="wOcc">Other occupants'+tip('People who will live there but not sign — like minor children. Listing them keeps the “who may live here” clause enforceable.')+'</label><input type="text" id="wOcc" value="'+esc(A.occupants)+'" placeholder="e.g. two minor children"></div>'
+   +'<div class="field"><label for="wMaxOcc">Maximum occupants</label><input type="number" id="wMaxOcc" value="'+esc(A.maxOcc)+'" min="1" max="20" placeholder="e.g. 4"></div></div>'
+   +'<div class="field"><label for="wAuth">Persons authorized to occupy'+tip('Anyone else expressly authorized to occupy the Premises — e.g. an adult child away at college, a live-in caregiver. Distinct from guests.')+'</label><input type="text" id="wAuth" value="'+esc(A.authPersons)+'" placeholder="e.g. Jane Doe (caregiver)"></div>';
+ },
+ bind:function(root){
+   bindVal(root,'wOcc','occupants');bindVal(root,'wMaxOcc','maxOcc');bindVal(root,'wAuth','authPersons');
+ }},
+
+{id:'furnish',title:'Furnishings & appliances',
+ sub:'What comes with the property. Listing items makes move-out deductions enforceable.',
+ html:function(){
+   return '<div class="field"><label>Is it furnished?</label>'+chipRow('furn',['Unfurnished','Furnished'],A.furnished?'Furnished':'Unfurnished')
+   +'<div id="wFurnWrap" style="display:'+(A.furnished?'block':'none')+';margin-top:10px"><input type="text" id="wFurnishings" value="'+esc(A.furnishings)+'" placeholder="e.g. sofa, dining table, two beds"><p class="hint">List the included furnishings — they’ll appear in the lease.</p></div></div>'
+   +'<div class="field"><label for="wAppl">Included appliances</label><input type="text" id="wAppl" value="'+esc(A.appliances)+'" placeholder="e.g. refrigerator, range, dishwasher, washer/dryer"></div>';
+ },
+ bind:function(root){
+   bindVal(root,'wFurnishings','furnishings');bindVal(root,'wAppl','appliances');
+   bindChips(root,'furn',function(v){A.furnished=(v==='Furnished');root.querySelector('#wFurnWrap').style.display=A.furnished?'block':'none';});
+ }},
+
+{id:'rent',title:'Monthly rent & payment',
+ sub:'How much, when it’s due, and how the tenant can pay.',
+ html:function(){
    var t='<div class="row2"><div class="field"><label for="wRent">Monthly rent</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wRent" inputmode="decimal" value="'+esc(A.rent)+'" placeholder="2,200"></div></div>'
    +'<div class="field"><label for="wDue">Rent due on the</label><select id="wDue">';
    for(var i=1;i<=28;i++){t+='<option value="'+i+'"'+(String(A.dueDay)===String(i)?' selected':'')+'>'+i+(i===1?'st':i===2?'nd':i===3?'rd':i===21?'st':i===22?'nd':i===23?'rd':'th')+' of the month</option>';}
    t+='</select></div></div>'
    +'<div class="field"><label>Accepted payment methods</label><div class="chips" data-chips="pay">'+['Check','Cash','ACH / Bank Transfer','Online Portal','Money Order','Zelle / Venmo'].map(function(o){return '<button type="button" class="chip'+(A.payMethods.indexOf(o)>=0?' on':'')+'" data-val="'+esc(o)+'">'+esc(o)+'</button>';}).join('')+'</div></div>'
-   +'<div id="wProrate"></div>'
-   +'<div class="row3"><div class="field"><label for="wGrace">Grace period (days)'+tip('Days after the due date before a late fee applies.'+(s.graceReq?' '+(SD[A.state].n)+' requires at least '+s.graceReq+' day(s).':''))+'</label><input type="number" id="wGrace" value="'+esc(A.grace)+'" min="0" max="30"></div>'
-   +'<div class="field"><label>Late fee type</label>'+chipRow('lateType',['Flat $','% of rent'],A.lateType==='flat'?'Flat $':'% of rent')+'</div>'
-   +'<div class="field"><label for="wLate">Late fee amount</label><div class="in-wrap '+(A.lateType==='flat'?'has-pre':'has-suf')+'">'+(A.lateType==='flat'?'<span class="pre">$</span>':'')+'<input type="text" id="wLate" inputmode="decimal" value="'+esc(A.lateAmt)+'" placeholder="'+(A.lateType==='flat'?'50':'5')+'">'+(A.lateType!=='flat'?'<span class="suf">%</span>':'')+'</div></div></div>'
-   +'<div id="wLateWarn"></div>'
-   +'<div class="row2"><div class="field"><label for="wNsf">Returned payment (NSF) fee</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wNsf" inputmode="decimal" value="'+esc(A.nsf)+'"></div><p class="hint">Many states cap NSF fees around $25–$40.</p></div></div>'
-   +(s.late?'<div class="infobox">ℹ️ '+esc(s.n)+' late-fee rule: <strong>&nbsp;'+esc(s.late)+'</strong></div>':'');
+   +'<div id="wProrate"></div>';
    return t;
  },
  bind:function(root){
-   bindVal(root,'wRent','rent');bindVal(root,'wGrace','grace');bindVal(root,'wLate','lateAmt');bindVal(root,'wNsf','nsf');
+   bindVal(root,'wRent','rent');
    root.querySelector('#wDue').addEventListener('change',function(){A.dueDay=this.value;save();prorate();});
    bindMultiChips(root,'pay',A.payMethods);
-   bindChips(root,'lateType',function(v){A.lateType=(v==='Flat $')?'flat':'pct';rerender();});
    function prorate(){
      var box=root.querySelector('#wProrate'),r=money(A.rent),h='';
      if(A.start&&r){
@@ -686,49 +869,88 @@ var steps=[
          var dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
          var remain=dim-d.getDate()+1;
          var p=r/dim*remain;
-         h='<div class="infobox">ℹ️ Mid-month start detected: first month’s prorated rent is <strong>&nbsp;'+fmtUSD(p,true)+'&nbsp;</strong> ('+remain+' of '+dim+' days). We’ll include it in the lease.</div>';
+         h='<div class="infobox">Mid-month start detected: first month’s prorated rent is <strong>&nbsp;'+fmtUSD(p,true)+'&nbsp;</strong> ('+remain+' of '+dim+' days). We’ll include it in the lease.</div>';
        }
      }
      if(box.innerHTML!==h)smoothResize(box,function(){box.innerHTML=h;});
    }
-   function lateWarn(){
-     var s=SD[A.state]||{},box=root.querySelector('#wLateWarn'),r=money(A.rent),amt=money(A.lateAmt),h='';
-     if(s.lateCapPct&&amt){
-       var pct=A.lateType==='flat'?(r?amt/r*100:0):amt;
-       if(pct>s.lateCapPct)h='<div class="warnbox">⚠️ That late fee looks higher than '+esc(s.n)+'’s rule ('+esc(s.late)+'). Courts may not enforce it — consider lowering it.</div>';
-     }
-     if(box.innerHTML!==h)smoothResize(box,function(){box.innerHTML=h;});
-   }
-   ['wRent','wLate'].forEach(function(id){root.querySelector('#'+id).addEventListener('input',function(){prorate();lateWarn();});});
-   prorate();lateWarn();
- },
- valid:function(){return money(A.rent)>0?true:'Please enter the monthly rent.';}},
+   root.querySelector('#wRent').addEventListener('input',prorate);
+   prorate();
+ }},
 
 {id:'deposit',title:'Security deposit',
  sub:'We’ll flag anything over your state’s limit and write the return deadline into the lease.',
  html:function(){
    var s=SD[A.state]||{};
-   return '<div class="row2"><div class="field"><label for="wDep">Security deposit'+tip('Refundable deposit held against damage and unpaid amounts. '+(s.dep?('Limit in '+s.n+': '+s.dep+'.'):''))+'</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wDep" inputmode="decimal" value="'+esc(A.deposit)+'" placeholder="'+esc(A.rent||'2,200')+'"></div><div id="wDepWarn"></div></div>'
-   +'<div class="field"><label for="wPetDep">Pet deposit (optional)</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wPetDep" inputmode="decimal" value="'+esc(A.petDeposit)+'" placeholder="0"></div><p class="hint">Some states count pet deposits toward the overall cap.</p></div></div>'
-   +'<div class="row2"><div class="field"><label for="wPetRent">Monthly pet rent (optional)</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wPetRent" inputmode="decimal" value="'+esc(A.petRent)+'" placeholder="0"></div></div>'
-   +'<div class="field"><label>Collect last month’s rent up front?</label>'+chipRow('lastMo',['No','Yes'],A.lastMonth?'Yes':'No')+'</div></div>'
-   +(s.ret?'<div class="infobox">ℹ️ '+esc(s.n)+' deposit return deadline after move-out: <strong>&nbsp;'+esc(s.ret)+'</strong></div>':'');
+   return '<div class="row2"><div class="field"><label for="wDep">Security deposit'+tip('Refundable deposit held against damage and unpaid amounts. '+(s.dep?('Limit in '+s.n+': '+s.dep+'.'):'Many states cap deposits — pick a state on the address step to see your limit.'))+'</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wDep" inputmode="decimal" value="'+esc(A.deposit)+'" placeholder="'+esc(A.rent||'2,200')+'"></div><div id="wDepWarn"></div></div>'
+   +'<div class="field">'+switchRow('wLastMo','Collect last month’s rent up front?',A.lastMonth)+'</div></div>'
+   +(s.ret?'<div class="infobox">'+esc(s.n)+' deposit return deadline after move-out: <strong>&nbsp;'+esc(s.ret)+'</strong></div>':'');
  },
  bind:function(root){
-   bindVal(root,'wDep','deposit');bindVal(root,'wPetDep','petDeposit');bindVal(root,'wPetRent','petRent');
-   bindChips(root,'lastMo',function(v){A.lastMonth=(v==='Yes');});
+   bindVal(root,'wDep','deposit');
+   bindSwitch(root,'wLastMo',function(on){A.lastMonth=on;});
    function warn(){
      var s=SD[A.state]||{},box=root.querySelector('#wDepWarn'),h='';
      var r=money(A.rent),d=money(A.deposit)+money(A.petDeposit);
-     if(s.depM&&r&&d>s.depM*r)h='<div class="warnbox">⚠️ Total deposits ('+fmtUSD(d)+') exceed '+esc(s.n)+'’s limit of '+esc(s.dep)+' ('+fmtUSD(s.depM*r)+' at this rent).</div>';
+     if(s.depM&&r&&d>s.depM*r)h='<div class="warnbox">Total deposits ('+fmtUSD(d)+') exceed '+esc(s.n)+'’s limit of '+esc(s.dep)+' ('+fmtUSD(s.depM*r)+' at this rent).</div>';
      if(box.innerHTML!==h)smoothResize(box,function(){box.innerHTML=h;});
    }
-   ['wDep','wPetDep'].forEach(function(id){root.querySelector('#'+id).addEventListener('input',warn);});
+   root.querySelector('#wDep').addEventListener('input',warn);
    warn();
- },
- valid:function(){return true;}},
+ }},
 
-{id:'utils',title:'Who pays for what?',
+{id:'movein',title:'Early move-in & prepaid rent',
+ sub:'Optional — skip this screen if neither applies.',
+ html:function(){
+   return '<div class="field"><label for="wEarly">Early move-in date'+tip('If the tenant gets keys before the lease term begins, set the date — the lease will state that all terms apply during the early-occupancy period.')+'</label><input type="date" id="wEarly" value="'+esc(A.earlyMoveIn)+'"></div>'
+   +'<div class="field"><label for="wEarlyNote">Early move-in note</label><input type="text" id="wEarlyNote" value="'+esc(A.earlyNote)+'" placeholder="e.g. prorated daily rent of $70 applies to the early-occupancy period"></div>'
+   +'<div class="row2"><div class="field"><label for="wPreAmt">Prepaid rent'+tip('Rent collected in advance beyond the current month — some states restrict how much you may collect and how it must be held.')+'</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wPreAmt" inputmode="decimal" value="'+esc(A.prepaidAmt)+'" placeholder="0"></div></div>'
+   +'<div class="field"><label for="wPreMon">Months covered</label><input type="number" id="wPreMon" value="'+esc(A.prepaidMonths)+'" min="1" max="24" placeholder="e.g. 2"></div></div>';
+ },
+ bind:function(root){
+   bindVal(root,'wEarly','earlyMoveIn');bindVal(root,'wEarlyNote','earlyNote');
+   bindVal(root,'wPreAmt','prepaidAmt');bindVal(root,'wPreMon','prepaidMonths');
+ }},
+
+{id:'fees',title:'Late fee & NSF fee',
+ sub:'We’ve pre-filled your state’s rules where they exist.',
+ html:function(){
+   var s=SD[A.state]||{};
+   if(A.grace===''&&s.graceReq)A.grace=String(s.graceReq);
+   var t='<div class="row3"><div class="field"><label for="wGrace">Grace period (days)'+tip('Days after the due date before a late fee applies.'+(s.graceReq?' '+s.n+' requires at least '+s.graceReq+' day(s).':''))+'</label><input type="number" id="wGrace" value="'+esc(A.grace)+'" min="0" max="30" placeholder="3"></div>'
+   +'<div class="field"><label>Late fee type</label>'+chipRow('lateType',['Flat $','% of rent'],A.lateType==='flat'?'Flat $':'% of rent')+'</div>'
+   +'<div class="field"><label for="wLate">Late fee amount</label><div class="in-wrap '+(A.lateType==='flat'?'has-pre':'has-suf')+'">'+(A.lateType==='flat'?'<span class="pre">$</span>':'')+'<input type="text" id="wLate" inputmode="decimal" value="'+esc(A.lateAmt)+'" placeholder="'+(A.lateType==='flat'?'50':'5')+'">'+(A.lateType!=='flat'?'<span class="suf">%</span>':'')+'</div></div></div>'
+   +'<div id="wLateWarn"></div>'
+   +'<div class="row2"><div class="field"><label for="wNsf">Returned payment (NSF) fee</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wNsf" inputmode="decimal" value="'+esc(A.nsf)+'" placeholder="35"></div><p class="hint">Many states cap NSF fees around $25–$40.</p></div></div>'
+   +(s.late?'<div class="infobox">'+esc(s.n)+' late-fee rule: <strong>&nbsp;'+esc(s.late)+'</strong></div>':'');
+   return t;
+ },
+ bind:function(root){
+   bindVal(root,'wGrace','grace');bindVal(root,'wLate','lateAmt');bindVal(root,'wNsf','nsf');
+   bindChips(root,'lateType',function(v){A.lateType=(v==='Flat $')?'flat':'pct';rerender();});
+   function lateWarn(){
+     var s=SD[A.state]||{},box=root.querySelector('#wLateWarn'),r=money(A.rent),amt=money(A.lateAmt),h='';
+     if(s.lateCapPct&&amt){
+       var pct=A.lateType==='flat'?(r?amt/r*100:0):amt;
+       if(pct>s.lateCapPct)h='<div class="warnbox">That late fee looks higher than '+esc(s.n)+'’s rule ('+esc(s.late)+'). Courts may not enforce it — consider lowering it.</div>';
+     }
+     if(box.innerHTML!==h)smoothResize(box,function(){box.innerHTML=h;});
+   }
+   root.querySelector('#wLate').addEventListener('input',lateWarn);
+   lateWarn();
+ }},
+
+{id:'parking',title:'Parking & storage',
+ sub:'What comes with the Premises — leave blank if none.',
+ html:function(){
+   return '<div class="row2"><div class="field"><label for="wParking">Parking included</label><input type="text" id="wParking" value="'+esc(A.parking)+'" placeholder="e.g. 1 driveway space, garage stall #4"></div>'
+   +'<div class="field"><label for="wStorage">Storage included</label><input type="text" id="wStorage" value="'+esc(A.storage)+'" placeholder="e.g. basement storage unit"></div></div>';
+ },
+ bind:function(root){
+   bindVal(root,'wParking','parking');bindVal(root,'wStorage','storage');
+ }},
+
+{id:'utils',title:'Utilities and services',
  sub:'Anything marked “Tenant” must be put in the tenant’s name and kept current.',
  html:function(){
    var t='<table class="util-table"><thead><tr><th>Utility / service</th><th>Who pays</th></tr></thead><tbody>';
@@ -749,39 +971,67 @@ var steps=[
        });
      });
    });
- },
- valid:function(){return true;}},
+ }},
 
-{id:'policies',title:'House policies',
- sub:'These become enforceable lease clauses.',
+{id:'pets',title:'Pets',
+ sub:'Pet policy, limits, and pet charges.',
  html:function(){
    return '<div class="field"><label>Pets</label>'+chipRow('pets',['Not allowed','Allowed with written approval','Allowed'],A.pets)
    +'<div id="wPetDescWrap" style="display:'+(A.pets==='Not allowed'?'none':'block')+';margin-top:10px"><input type="text" id="wPetDesc" value="'+esc(A.petDesc)+'" placeholder="e.g. up to 2 cats or 1 dog under 40 lbs"><p class="hint">Limits on number, type, breed, or weight.</p></div></div>'
-   +'<div class="field"><label>Smoking</label>'+chipRow('smoke',['Prohibited anywhere on the property','Allowed outside only','Allowed'],A.smoking)+'</div>'
-   +'<div class="row2"><div class="field"><label>Subletting / Airbnb</label>'+chipRow('sublet',['Not allowed','Only with Landlord’s prior written consent'],A.sublet)+'</div>'
-   +'<div class="field"><label>Alterations (painting, fixtures)</label>'+chipRow('alter',['Not allowed','Only with Landlord’s prior written consent'],A.alterations)+'</div></div>'
-   +'<div class="field"><label>Renters insurance'+tip('Requiring renters insurance protects both sides — the tenant’s belongings and liability claims. Typical requirement: $100,000 liability.')+'</label>'+chipRow('ins',['Required','Not required'],A.insurance?'Required':'Not required')
-   +'<div id="wInsWrap" style="display:'+(A.insurance?'block':'none')+';margin-top:10px"><div class="in-wrap has-pre" style="max-width:240px"><span class="pre">$</span><input type="text" id="wInsAmt" inputmode="decimal" value="'+esc(A.insAmt)+'"></div><p class="hint">Minimum liability coverage.</p></div></div>'
-   +'<div class="row2"><div class="field"><label>Quiet hours clause (10 p.m. – 8 a.m.)</label>'+chipRow('quiet',['Include','Skip'],A.quietHours?'Include':'Skip')+'</div>'
-   +'<div class="field"><label>Early termination option'+tip('A buyout clause lets the tenant leave early by paying a set fee (commonly 1–2 months’ rent) with notice — cleaner than a broken lease.')+'</label>'+chipRow('early',['None','Buyout fee'],A.earlyTerm==='none'?'None':'Buyout fee')
-   +'<div id="wEtWrap" style="display:'+(A.earlyTerm==='none'?'none':'block')+';margin-top:10px"><div class="in-wrap has-pre" style="max-width:240px"><span class="pre">$</span><input type="text" id="wEtFee" inputmode="decimal" value="'+esc(A.etFee)+'" placeholder="e.g. 2 months’ rent"></div><p class="hint">Buyout amount (60-day written notice is included automatically).</p></div></div></div>';
+   +'<div class="row2"><div class="field"><label for="wPetDep">Pet deposit'+tip('Some states count pet deposits toward the overall security-deposit cap.')+'</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wPetDep" inputmode="decimal" value="'+esc(A.petDeposit)+'" placeholder="0"></div></div>'
+   +'<div class="field"><label for="wPetRent">Monthly pet rent</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wPetRent" inputmode="decimal" value="'+esc(A.petRent)+'" placeholder="0"></div></div></div>';
  },
  bind:function(root){
-   bindVal(root,'wPetDesc','petDesc');bindVal(root,'wInsAmt','insAmt');bindVal(root,'wEtFee','etFee');
+   bindVal(root,'wPetDesc','petDesc');bindVal(root,'wPetDep','petDeposit');bindVal(root,'wPetRent','petRent');
    bindChips(root,'pets',function(v){A.pets=v;root.querySelector('#wPetDescWrap').style.display=(v==='Not allowed')?'none':'block';});
+ }},
+
+{id:'inspect',title:'Move-in inspection',
+ sub:'A joint move-in checklist documents condition at the start — and protects your deposit deductions at the end.',
+ html:function(){
+   return switchRow('wInspect','Include a joint move-in inspection checklist clause',A.moveInInspect,'Landlord and tenant walk the unit together, note its condition, and both sign the checklist. Several states require this when a deposit is collected.');
+ },
+ bind:function(root){
+   bindSwitch(root,'wInspect',function(on){A.moveInInspect=on;});
+ }},
+
+{id:'smoking',title:'Smoking policy',
+ sub:'Includes vaping and e-cigarettes.',
+ html:function(){
+   return '<div class="field"><label>Smoking</label>'+chipRow('smoke',['Prohibited anywhere on the property','Allowed outside only','Allowed'],A.smoking)+'</div>'
+   +switchRow('wQuiet','Include a quiet hours clause (10 p.m. – 8 a.m.)',A.quietHours);
+ },
+ bind:function(root){
    bindChips(root,'smoke',function(v){A.smoking=v;});
+   bindSwitch(root,'wQuiet',function(on){A.quietHours=on;});
+ }},
+
+{id:'insurance',title:'Renters insurance',
+ sub:'Requiring coverage protects both sides — the tenant’s belongings and liability claims.',
+ html:function(){
+   return '<div class="field"><label>Renters insurance'+tip('Typical requirement: $100,000 personal liability coverage, with proof on request.')+'</label>'+chipRow('ins',['Required','Not required'],A.insurance?'Required':'Not required')
+   +'<div id="wInsWrap" style="display:'+(A.insurance?'block':'none')+';margin-top:10px"><div class="in-wrap has-pre" style="max-width:240px"><span class="pre">$</span><input type="text" id="wInsAmt" inputmode="decimal" value="'+esc(A.insAmt)+'"></div><p class="hint">Minimum liability coverage.</p></div></div>';
+ },
+ bind:function(root){
+   bindVal(root,'wInsAmt','insAmt');
+   bindChips(root,'ins',function(v){A.insurance=(v==='Required');root.querySelector('#wInsWrap').style.display=A.insurance?'block':'none';});
+ }},
+
+{id:'sublet',title:'Subletting & alterations',
+ sub:'These become enforceable lease clauses.',
+ html:function(){
+   return '<div class="field"><label>Subletting / Airbnb</label>'+chipRow('sublet',['Not allowed','Only with Landlord’s prior written consent'],A.sublet)+'</div>'
+   +'<div class="field"><label>Alterations (painting, fixtures)</label>'+chipRow('alter',['Not allowed','Only with Landlord’s prior written consent'],A.alterations)+'</div>';
+ },
+ bind:function(root){
    bindChips(root,'sublet',function(v){A.sublet=v;});
    bindChips(root,'alter',function(v){A.alterations=v;});
-   bindChips(root,'ins',function(v){A.insurance=(v==='Required');root.querySelector('#wInsWrap').style.display=A.insurance?'block':'none';});
-   bindChips(root,'quiet',function(v){A.quietHours=(v==='Include');});
-   bindChips(root,'early',function(v){A.earlyTerm=(v==='None')?'none':'buyout';root.querySelector('#wEtWrap').style.display=(A.earlyTerm==='none')?'none':'block';});
- },
- valid:function(){return true;}},
+ }},
 
-{id:'disclosures',title:'Required disclosures',
- sub:'Federal and state law require certain notices in or with the lease. We’ve pre-checked what applies — required ones are locked on.',
+{id:'lead',title:'Lead-based paint & disclosures',
+ sub:'Federal and state law require certain notices in or with the lease. Required ones are locked on.',
  html:function(){
-   var s=SD[A.state]||{disc:[]};
+   var s=SD[A.state]||{disc:[],n:''};
    var t='<div class="field"><label>Was the building built before 1978?'+tip('Federal law (Title X) requires a lead-based paint disclosure and the EPA pamphlet “Protect Your Family From Lead in Your Home” for housing built before 1978.')+'</label>'+chipRow('built',['Yes / Not sure','No — 1978 or later'],A.pre1978==='no'?'No — 1978 or later':'Yes / Not sure')+'</div>';
    t+='<div id="wDiscList">';
    if(A.pre1978!=='no'){
@@ -819,13 +1069,22 @@ var steps=[
      el.addEventListener('click',toggle);
      el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
    });
- },
- valid:function(){return true;}},
+ }},
 
-{id:'extras',title:'Anything else?',
- sub:'Tap a popular clause to insert it (the wording stays editable), or write your own. Each becomes its own numbered clause. Optional.',
+{id:'cosigner',title:'Co-signer',
+ sub:'Optional — a guarantor who signs alongside the tenant and guarantees the tenant’s obligations.',
  html:function(){
-   var t='<div class="field"><label>Popular clauses</label><div class="chips">';
+   return '<div class="field"><label for="wCosigner">Co-signer / guarantor (full legal name)'+tip('A co-signer doesn’t live in the unit but guarantees rent and other obligations — common for students or thin credit files.')+'</label><input type="text" id="wCosigner" value="'+esc(A.cosigner)+'" placeholder="e.g. Robert Smith"></div>'
+   +'<div class="infobox">If you name a co-signer, the lease adds a guaranty clause and a co-signer signature line.</div>';
+ },
+ bind:function(root){bindVal(root,'wCosigner','cosigner');}},
+
+{id:'extras',title:'Additional terms or conditions',
+ sub:'Tap a popular clause to insert it, or write your own. Each becomes its own numbered clause. Optional.',
+ html:function(){
+   var t='<div class="row2"><div class="field"><label>Early termination option'+tip('A buyout clause lets the tenant leave early by paying a set fee (commonly 1–2 months’ rent) with notice — cleaner than a broken lease.')+'</label>'+chipRow('early',['None','Buyout fee'],A.earlyTerm==='none'?'None':'Buyout fee')
+   +'<div id="wEtWrap" style="display:'+(A.earlyTerm==='none'?'none':'block')+';margin-top:10px"><div class="in-wrap has-pre" style="max-width:240px"><span class="pre">$</span><input type="text" id="wEtFee" inputmode="decimal" value="'+esc(A.etFee)+'" placeholder="e.g. 2 months’ rent"></div><p class="hint">Buyout amount (60-day written notice is included automatically).</p></div></div></div>';
+   t+='<div class="field"><label>Popular clauses</label><div class="chips">';
    CLAUSE_PRESETS.forEach(function(p,i){
      var added=A.clauses.indexOf(p.text)>=0;
      t+='<button type="button" class="chip'+(added?' on':'')+'" data-preset="'+i+'">'+esc(p.label)+'</button>';
@@ -838,6 +1097,8 @@ var steps=[
    return t;
  },
  bind:function(root){
+   bindVal(root,'wEtFee','etFee');
+   bindChips(root,'early',function(v){A.earlyTerm=(v==='None')?'none':'buyout';root.querySelector('#wEtWrap').style.display=(A.earlyTerm==='none')?'none':'block';});
    root.querySelectorAll('[data-preset]').forEach(function(b){
      b.addEventListener('click',function(){
        var p=CLAUSE_PRESETS[+b.dataset.preset];
@@ -853,36 +1114,83 @@ var steps=[
      b.addEventListener('click',function(){A.clauses.splice(+b.dataset.crm,1);save();rerender();});
    });
    root.querySelector('#wAddClause').addEventListener('click',function(){A.clauses.push('');save();rerender();});
- },
- valid:function(){A.clauses=A.clauses.filter(function(c){return c.trim();});return true;}},
-
-{id:'review',title:'Review your lease',
- sub:'Check each section — tap Edit to change anything. Then generate your document.',
- html:function(){
-   var s=SD[A.state]||{n:'—'};
-   function sec(i,t,b){return '<div class="review-sec"><button type="button" data-go="'+i+'"><span>'+esc(t)+'</span><span class="edit">Edit ✎</span></button><div class="body">'+b+'</div></div>';}
-   var addr=esc(A.addr+(A.unit?', '+A.unit:'')+', '+A.city+', '+(A.state||'')+' '+A.zip);
-   var h='';
-   h+=sec(0,'State',esc(s.n));
-   h+=sec(1,'Property',addr+' · '+esc(A.ptype)+(A.furnished?' · Furnished':''));
-   h+=sec(2,'Parties','Landlord: '+esc(A.llName)+'<br>Tenant(s): '+esc(A.tenants.filter(function(t){return t.trim();}).join(', ')));
-   h+=sec(3,'Term',A.termType==='fixed'?('Fixed: '+esc(A.start)+' → '+esc(A.end)):('Month-to-month from '+esc(A.start)));
-   h+=sec(4,'Rent',fmtUSD(money(A.rent))+'/mo, due the '+esc(A.dueDay)+(A.grace?' · '+esc(A.grace)+'-day grace':'')+(money(A.lateAmt)?' · late fee '+(A.lateType==='flat'?fmtUSD(money(A.lateAmt)):esc(A.lateAmt)+'% of rent'):''));
-   h+=sec(5,'Deposits','Security: '+fmtUSD(money(A.deposit))+(money(A.petDeposit)?' · Pet: '+fmtUSD(money(A.petDeposit)):'')+(A.lastMonth?' · Last month’s rent collected':''));
-   h+=sec(6,'Utilities',UTIL_KEYS.map(function(k){return esc(k)+': '+esc(A.utils[k]);}).join(' · '));
-   h+=sec(7,'Policies','Pets: '+esc(A.pets)+' · Smoking: '+esc(A.smoking)+' · Insurance: '+(A.insurance?'required':'not required')+(A.earlyTerm!=='none'?' · Early-termination buyout':''));
-   var dn=(SD[A.state]?SD[A.state].disc.length:0)+(A.pre1978!=='no'?1:0)+Object.keys(A.extraDisc).filter(function(k){return A.extraDisc[k];}).length;
-   h+=sec(8,'Disclosures',dn+' included');
-   h+=sec(9,'Custom clauses',A.clauses.length?A.clauses.length+' added':'None');
-   return h;
- },
- bind:function(root){
-   root.querySelectorAll('[data-go]').forEach(function(b){
-     b.addEventListener('click',function(){cur=+b.dataset.go;rerender();});
-   });
- },
- valid:function(){return true;}}
+ }}
 ];
+var STEP_IDX={};
+steps.forEach(function(s,i){STEP_IDX[s.id]=i;});
+
+/* ---------- sidebar: 31 jump targets -> (step, field) ---------- */
+function hasTenant(){return A.tenants.some(function(t){return t.trim();});}
+var NAV=[
+{l:'Type of Property',s:'ptype',f:'#ptGrid',ic:'home',a:function(){return !!A.ptype;}},
+{l:'Type of Lease',s:'lease',f:'[data-chips=term]',ic:'doc'},
+{l:'Start Date',s:'dates',f:'#wStart',ic:'cal',a:function(){return !!A.start;}},
+{l:'End Date',s:'dates',f:'#wEnd',ic:'cal',a:function(){return !!A.end;}},
+{l:'Bedrooms',s:'beds',f:'#wBeds',ic:'bed',a:function(){return A.bedrooms!=='';}},
+{l:'Bathrooms',s:'beds',f:'#wBaths',ic:'bath',a:function(){return A.bathrooms!=='';}},
+{l:'Property Address',s:'address',f:'#wAddr',ic:'home',a:function(){return !!(A.addr.trim()||A.city.trim()||A.state);}},
+{l:'The Landlord',s:'landlord',f:'#wLl',ic:'key',a:function(){return !!A.llName.trim();}},
+{l:'The Tenant',s:'tenant',f:'#wTenants input',ic:'user',a:hasTenant},
+{l:'Notices to Tenant',s:'notices',f:'#wLlAddr',ic:'mail',a:function(){return !!A.llAddr.trim();}},
+{l:'Occupants',s:'occupants',f:'#wOcc',ic:'user',a:function(){return !!(A.occupants.trim()||A.maxOcc);}},
+{l:'Furnishings',s:'furnish',f:'[data-chips=furn]',ic:'home',a:function(){return A.furnished||!!A.furnishings.trim();}},
+{l:'Appliances',s:'furnish',f:'#wAppl',ic:'bolt',a:function(){return !!A.appliances.trim();}},
+{l:'Monthly Rent',s:'rent',f:'#wRent',ic:'dollar',a:function(){return money(A.rent)>0;}},
+{l:'Payment Methods',s:'rent',f:'[data-chips=pay]',ic:'dollar',a:function(){return A.payMethods.length>0;}},
+{l:'Security Deposit',s:'deposit',f:'#wDep',ic:'shield',a:function(){return money(A.deposit)>0;}},
+{l:'Early Move-In',s:'movein',f:'#wEarly',ic:'cal',a:function(){return !!A.earlyMoveIn;}},
+{l:'Prepaid Rent',s:'movein',f:'#wPreAmt',ic:'dollar',a:function(){return !!(money(A.prepaidAmt)>0||A.prepaidMonths);}},
+{l:'Late Fee',s:'fees',f:'#wLate',ic:'pct',a:function(){return money(A.lateAmt)>0;}},
+{l:'NSF Fee',s:'fees',f:'#wNsf',ic:'dollar',a:function(){return money(A.nsf)>0;}},
+{l:'Parking',s:'parking',f:'#wParking',ic:'car',a:function(){return !!(A.parking.trim()||A.storage.trim());}},
+{l:'Utilities and Services',s:'utils',f:'.util-table',ic:'bolt'},
+{l:'Pets',s:'pets',f:'[data-chips=pets]',ic:'paw'},
+{l:'Move-In Inspection',s:'inspect',f:'#wInspect',ic:'clip'},
+{l:'Smoking Policy',s:'smoking',f:'[data-chips=smoke]',ic:'ban'},
+{l:'Renters Insurance',s:'insurance',f:'[data-chips=ins]',ic:'shield'},
+{l:'Subletting',s:'sublet',f:'[data-chips=sublet]',ic:'key'},
+{l:'Authorized Persons',s:'occupants',f:'#wAuth',ic:'user',a:function(){return !!A.authPersons.trim();}},
+{l:'Lead-Based Paint Disclosure',s:'lead',f:'[data-chips=built]',ic:'doc'},
+{l:'Co-Signer',s:'cosigner',f:'#wCosigner',ic:'user',a:function(){return !!A.cosigner.trim();}},
+{l:'Additional Terms or Conditions',s:'extras',f:'#wClauses',ic:'doc',a:function(){return A.clauses.some(function(c){return c.trim();})||A.earlyTerm!=='none';}}
+];
+var visited=[];
+try{visited=JSON.parse(localStorage.getItem(LSV)||'[]');}catch(e){visited=[];}
+if(!Array.isArray(visited))visited=[];
+function markVisited(id){
+  if(visited.indexOf(id)<0){
+    visited.push(id);
+    try{localStorage.setItem(LSV,JSON.stringify(visited));}catch(e){}
+  }
+}
+var TICK='<span class="tick" aria-hidden="true"><svg width="9" height="9" viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4L16 6" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+function updateSidebar(){
+  var nav=$('sideNav');
+  if(!nav)return;
+  nav.innerHTML=NAV.map(function(it,i){
+    var done=it.a?!!it.a():visited.indexOf(it.s)>=0;
+    var curIt=steps[cur]&&steps[cur].id===it.s;
+    return '<button type="button" class="side-item'+(curIt?' cur':'')+(done?' done':'')+'" data-nav="'+i+'"'+(curIt?' aria-current="step"':'')+'>'+icon(it.ic)+'<span class="lbl">'+it.l+'</span>'+TICK+'</button>';
+  }).join('');
+  nav.querySelectorAll('[data-nav]').forEach(function(b){
+    b.addEventListener('click',function(){jumpTo(+b.dataset.nav);});
+  });
+}
+function jumpTo(i){
+  var it=NAV[i];
+  if(!it)return;
+  cur=STEP_IDX[it.s];
+  rerender();
+  $('sideWrap').classList.remove('open');
+  setTimeout(function(){
+    var el=document.querySelector(it.f);
+    if(!el)return;
+    if(el.scrollIntoView)try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
+    if(el.focus&&/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName))try{el.focus({preventScroll:true});}catch(e){}
+    el.classList.add('jump-hl');
+    setTimeout(function(){el.classList.remove('jump-hl');},1300);
+  },60);
+}
 
 /* ---------- engine ---------- */
 var cur=0;
@@ -891,6 +1199,8 @@ function show(name){
   Object.keys(screens).forEach(function(k){screens[k].style.display=(k===name)?'':'none';});
   $('progress').style.display=(name==='wizard')?'':'none';
   $('toolHead').style.display=(name==='doc')?'none':'';
+  document.body.classList.toggle('wiz-on',name==='wizard');
+  if(name!=='wizard')document.body.classList.remove('pv-sheet');
   window.scrollTo({top:0});
 }
 window.ACB.show=show;
@@ -898,7 +1208,7 @@ function rerender(){
   var st=steps[cur];
   var body=$('stepBody');
   smoothResize(body.closest('.card'),function(){
-    body.innerHTML='<div class="fade"><div class="step-title">'+st.title+'</div><p class="step-sub">'+st.sub+'</p><div id="stepErr"></div>'+st.html()+'</div>';
+    body.innerHTML='<div class="fade"><div class="step-title">'+st.title+'</div><p class="step-sub">'+st.sub+'</p>'+st.html()+'</div>';
     st.bind(body);
     acbTipUpgrade(body);
     body.querySelectorAll('input[type=date]').forEach(acbDate);
@@ -907,14 +1217,12 @@ function rerender(){
   $('stepDots').textContent='Step '+(cur+1)+' of '+steps.length;
   $('wizNext').textContent=(cur===steps.length-1)?'Generate My Lease →':'Continue';
   $('progressBar').style.width=((cur+1)/steps.length*100)+'%';
+  markVisited(st.id);
+  updateSidebar();
+  schedulePreview();
 }
 window.ACB.rerender=rerender;
 $('wizNext').addEventListener('click',function(){
-  var v=steps[cur].valid();
-  if(v!==true){
-    $('stepErr').innerHTML='<div class="warnbox" role="alert">⚠️ '+esc(v)+'</div>';
-    return;
-  }
   save();
   if(cur===steps.length-1){window.ACB.renderDoc();show('doc');return;}
   cur++;rerender();
@@ -926,22 +1234,42 @@ document.addEventListener('keydown',function(e){
   }
 });
 
+/* sidebar drawer (mobile) + preview sheet */
+$('sideToggle').addEventListener('click',function(){
+  var open=$('sideWrap').classList.toggle('open');
+  this.setAttribute('aria-expanded',String(open));
+});
+$('pvOpen').addEventListener('click',function(){
+  var on=document.body.classList.toggle('pv-sheet');
+  this.textContent=on?'Close preview':'Preview lease';
+  if(on&&window.ACB.renderPreview)window.ACB.renderPreview();
+});
+
 /* entry routing */
-function coachDismiss(){document.dispatchEvent(new Event('input'));}
-$('entryBuild').addEventListener('click',function(){coachDismiss();show('wizard');rerender();});
-$('entryBuild').addEventListener('keydown',function(e){if(e.key==='Enter'){coachDismiss();show('wizard');rerender();}});
-$('entryBlank').addEventListener('click',function(){coachDismiss();window.ACB.initBlank();show('blank');});
-$('entryBlank').addEventListener('keydown',function(e){if(e.key==='Enter'){coachDismiss();window.ACB.initBlank();show('blank');}});
+function startWizard(){
+  show('wizard');
+  rerender();
+  setTimeout(function(){
+    acbCoachSeq('lease-agreement-generator',[
+      {target:'#sideNav',title:'Jump to any section',body:'Fill what you know, skip what you don’t — every field is optional, in any order.'},
+      {target:'#ptGrid',title:'Type of property',body:'Pick the option that matches your rental.'},
+      {target:'#previewPane',title:'Live preview',body:'Watch your lease build itself — download or print when ready.'}
+    ]);
+  },120);
+}
+$('entryBuild').addEventListener('click',startWizard);
+$('entryBuild').addEventListener('keydown',function(e){if(e.key==='Enter')startWizard();});
+$('entryBlank').addEventListener('click',function(){window.ACB.initBlank();show('blank');});
+$('entryBlank').addEventListener('keydown',function(e){if(e.key==='Enter'){window.ACB.initBlank();show('blank');}});
 $('blankBack').addEventListener('click',function(){show('entry');});
-$('docEdit').addEventListener('click',function(){cur=steps.length-1;show('wizard');rerender();});
+$('docEdit').addEventListener('click',function(){show('wizard');rerender();});
 $('docRestart').addEventListener('click',function(){
   if(!confirm('Clear all your answers and start over?'))return;
-  try{localStorage.removeItem(LS);}catch(e){}
+  try{localStorage.removeItem(LS);localStorage.removeItem(LSV);}catch(e){}
   location.reload();
 });
 
 acbTipUpgrade(document);
-acbCoach('lease-agreement-generator','#entryBuild','Two ways to start','Build a custom lease step by step — or grab a blank fillable PDF on the right. Your progress saves automatically.');
 })();
 </script>
 <script>
@@ -956,31 +1284,47 @@ function fmtDate(iso){
   var d=new Date(iso+'T00:00:00');
   return d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
 }
-function ord(n){n=+n;var s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+function ord(n){n=+n;if(!isFinite(n)||n<1)return '____';var s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+function bl(n){var s='';n=n||12;while(s.length<n)s+='_';return s;}
+function usd(v,n){return v>0?fmtUSD(v,true):'$'+bl(n||8);}
+function txt(v,n){return (v&&String(v).trim())?esc(v):bl(n||12);}
 
 function buildSections(){
-  var A=window.ACB.A,s=SD[A.state],secs=[];
+  var A=window.ACB.A,s=SD[A.state]||null,secs=[];
+  var sn=s?s.n:null;
+  var lawOf=sn?(esc(sn)+' law'):'applicable state law';
+  var retTxt=s?esc(s.ret):'the period required by applicable state law';
+  var mtmTxt=s?esc(s.mtm):'the notice period required by applicable state law';
+  var entTxt=s?esc(s.entL):'reasonable advance';
   var rent=money(A.rent),dep=money(A.deposit),petDep=money(A.petDeposit),petRent=money(A.petRent);
   var tenants=A.tenants.filter(function(t){return t.trim();});
-  var tenantNames=tenants.map(function(t){return esc(t);}).join(', ');
-  var addr=esc(A.addr)+(A.unit?', '+esc(A.unit):'')+', '+esc(A.city)+', '+esc(s.n)+' '+esc(A.zip);
+  var tenantNames=tenants.length?tenants.map(function(t){return esc(t);}).join(', '):bl(24);
+  var addr=txt(A.addr,18)+(A.unit?', '+esc(A.unit):'')+', '+txt(A.city,12)+', '+(sn?esc(sn):bl(12))+' '+txt(A.zip,7);
 
-  secs.push({h:'PARTIES',b:'<p>This Residential Lease Agreement (“Agreement”) is made between <strong>'+esc(A.llName)+'</strong> (“Landlord”) and <strong>'+tenantNames+'</strong> ('+(tenants.length>1?'collectively, ':'')+'“Tenant”). Each Tenant is jointly and severally liable for all obligations under this Agreement.</p>'});
+  secs.push({h:'PARTIES',b:'<p>This Residential Lease Agreement (“Agreement”) is made between <strong>'+txt(A.llName,22)+'</strong> (“Landlord”) and <strong>'+tenantNames+'</strong> ('+(tenants.length>1?'collectively, ':'')+'“Tenant”). Each Tenant is jointly and severally liable for all obligations under this Agreement.</p>'});
 
-  var prem='<p>Landlord leases to Tenant the residential premises located at <strong>'+addr+'</strong> (the “Premises”), a '+esc(A.ptype.toLowerCase())+(A.furnished?', furnished':', unfurnished')+'.';
-  if(A.furnished&&A.furnishings.trim())prem+=' The following furnishings and appliances are included: '+esc(A.furnishings)+'.';
-  if(A.parking.trim())prem+=' Parking included: '+esc(A.parking)+'.';
+  var prem='<p>Landlord leases to Tenant the residential premises located at <strong>'+addr+'</strong> (the “Premises”), a '+(A.ptype?esc(A.ptype.toLowerCase()):bl(10))+' consisting of '+(A.bedrooms!==''?esc(A.bedrooms):bl(3))+' bedroom(s) and '+(A.bathrooms!==''?esc(A.bathrooms):bl(3))+' bathroom(s), '+(A.furnished?'furnished':'unfurnished')+'.';
+  if(A.furnished)prem+=' The following furnishings are included: '+txt(A.furnishings,26)+'.';
+  if(A.appliances.trim())prem+=' The following appliances are included: '+esc(A.appliances)+'.';
+  prem+=' Parking included: '+txt(A.parking,16)+'.';
   if(A.storage.trim())prem+=' Storage included: '+esc(A.storage)+'.';
   prem+='</p>';
   secs.push({h:'PREMISES',b:prem});
 
   if(A.termType==='fixed'){
-    secs.push({h:'TERM',b:'<p>The lease term begins on <strong>'+fmtDate(A.start)+'</strong> and ends on <strong>'+fmtDate(A.end)+'</strong>. If Tenant remains in possession after the end date with Landlord’s consent but without a new written lease, the tenancy converts to month-to-month on the same terms, terminable per the notice rules of '+esc(s.n)+' ('+esc(s.mtm)+').</p>'});
+    secs.push({h:'TERM',b:'<p>The lease term begins on <strong>'+fmtDate(A.start)+'</strong> and ends on <strong>'+fmtDate(A.end)+'</strong>. If Tenant remains in possession after the end date with Landlord’s consent but without a new written lease, the tenancy converts to month-to-month on the same terms, terminable on written notice of '+mtmTxt+'.</p>'});
   }else{
-    secs.push({h:'TERM',b:'<p>The tenancy begins on <strong>'+fmtDate(A.start)+'</strong> and continues month-to-month until terminated. Termination notice: <strong>'+esc(s.mtm)+'</strong>, given in writing.</p>'});
+    secs.push({h:'TERM',b:'<p>The tenancy begins on <strong>'+fmtDate(A.start)+'</strong> and continues month-to-month until terminated. Termination notice: <strong>'+mtmTxt+'</strong>, given in writing.</p>'});
   }
 
-  var rentB='<p>Tenant shall pay rent of <strong>'+fmtUSD(rent,true)+'</strong> per month, due in advance on the <strong>'+ord(A.dueDay)+'</strong> day of each month'+(petRent?', plus monthly pet rent of '+fmtUSD(petRent,true):'')+'. Payment shall be made to Landlord at the address for notices below'+(A.payMethods.length?' by '+A.payMethods.map(esc).join(', ').replace(/, ([^,]*)$/,' or $1'):'')+'.</p>';
+  if(A.earlyMoveIn){
+    var em='<p>Landlord grants Tenant possession of the Premises beginning <strong>'+fmtDate(A.earlyMoveIn)+'</strong>, before the first day of the Term. All terms of this Agreement apply in full during the early-occupancy period.';
+    if(A.earlyNote.trim())em+=' '+esc(A.earlyNote)+(/[.!?]$/.test(A.earlyNote.trim())?'':'.');
+    em+='</p>';
+    secs.push({h:'EARLY MOVE-IN',b:em});
+  }
+
+  var rentB='<p>Tenant shall pay rent of <strong>'+usd(rent)+'</strong> per month, due in advance on the <strong>'+ord(A.dueDay)+'</strong> day of each month'+(petRent?', plus monthly pet rent of '+fmtUSD(petRent,true):'')+'. Payment shall be made to Landlord at the address for notices below by '+(A.payMethods.length?A.payMethods.map(esc).join(', ').replace(/, ([^,]*)$/,' or $1'):bl(18))+'.</p>';
   if(A.start){
     var d=new Date(A.start+'T00:00:00');
     if(d.getDate()!==1&&rent){
@@ -989,23 +1333,28 @@ function buildSections(){
       rentB+='<p>Prorated rent for the first partial month ('+remain+' days) of <strong>'+fmtUSD(rent/dim*remain,true)+'</strong> is due on or before the start date.</p>';
     }
   }
-  if(A.lastMonth)rentB+='<p>Tenant shall pay the last month’s rent of '+fmtUSD(rent,true)+' in advance at signing, to be applied to the final month of the tenancy.</p>';
+  if(A.lastMonth)rentB+='<p>Tenant shall pay the last month’s rent of '+usd(rent)+' in advance at signing, to be applied to the final month of the tenancy.</p>';
   secs.push({h:'RENT',b:rentB});
+
+  if(money(A.prepaidAmt)>0||String(A.prepaidMonths).trim()){
+    secs.push({h:'PREPAID RENT',b:'<p>Tenant shall pay prepaid rent of <strong>'+usd(money(A.prepaidAmt))+'</strong> at signing, covering <strong>'+(String(A.prepaidMonths).trim()?esc(A.prepaidMonths):bl(3))+'</strong> month(s) of the tenancy in advance. Prepaid rent will be applied to rent as it comes due for the covered month(s), is not a security deposit, and will be held and credited as required by '+lawOf+'.</p>'});
+  }
 
   var late='<p>';
   if(money(A.lateAmt)){
-    late+='If rent is not received within <strong>'+esc(A.grace||'0')+'</strong> day(s) after the due date, Tenant shall pay a late charge of <strong>'+(A.lateType==='flat'?fmtUSD(money(A.lateAmt),true):esc(A.lateAmt)+'% of the monthly rent')+'</strong>. ';
+    late+='If rent is not received within <strong>'+(String(A.grace).trim()?esc(A.grace):bl(3))+'</strong> day(s) after the due date, Tenant shall pay a late charge of <strong>'+(A.lateType==='flat'?fmtUSD(money(A.lateAmt),true):esc(A.lateAmt)+'% of the monthly rent')+'</strong>. ';
   }else{
-    late+='Rent received after the due date'+(A.grace?' plus a grace period of '+esc(A.grace)+' day(s)':'')+' is late. ';
+    late+='Rent received after the due date'+(String(A.grace).trim()?' plus a grace period of '+esc(A.grace)+' day(s)':'')+' is late, and a late charge of $'+bl(8)+' applies. ';
   }
-  late+='Tenant shall pay a returned-payment fee of <strong>'+fmtUSD(money(A.nsf)||35,true)+'</strong> for any payment returned for insufficient funds. Acceptance of late rent does not waive Landlord’s rights. State rule: '+esc(s.late)+'.</p>';
+  late+='Tenant shall pay a returned-payment fee of <strong>'+usd(money(A.nsf),6)+'</strong> for any payment returned for insufficient funds. Acceptance of late rent does not waive Landlord’s rights. Late charges are enforceable only to the extent permitted by '+lawOf+'.</p>';
   secs.push({h:'LATE CHARGES; RETURNED PAYMENTS',b:late});
 
-  var depB='<p>Tenant shall pay a security deposit of <strong>'+fmtUSD(dep,true)+'</strong>'+(petDep?' and a pet deposit of <strong>'+fmtUSD(petDep,true)+'</strong>':'')+' at signing, held as security for Tenant’s performance. The deposit may be applied to unpaid rent, damages beyond normal wear and tear, and other amounts owed, as permitted by law. Within <strong>'+esc(s.ret)+'</strong> after the tenancy ends and possession is returned, Landlord shall return the deposit less any lawful deductions with an itemized statement, as required by '+esc(s.n)+' law. The deposit may not be applied by Tenant to the last month’s rent. '+(s.dep!=='No statutory cap'?('State deposit limit: '+esc(s.dep)+'.'):'')+'</p>';
-  secs.push({h:'SECURITY DEPOSIT',b:depB});
+  secs.push({h:'SECURITY DEPOSIT',b:'<p>Tenant shall pay a security deposit of <strong>'+usd(dep)+'</strong>'+(petDep?' and a pet deposit of <strong>'+fmtUSD(petDep,true)+'</strong>':'')+' at signing, held as security for Tenant’s performance. The deposit may be applied to unpaid rent, damages beyond normal wear and tear, and other amounts owed, as permitted by law. Within <strong>'+retTxt+'</strong> after the tenancy ends and possession is returned, Landlord shall return the deposit less any lawful deductions with an itemized statement, as required by '+lawOf+'. The deposit may not be applied by Tenant to the last month’s rent.</p>'});
 
-  var occ='<p>The Premises shall be occupied only by Tenant'+(A.occupants.trim()?' and the following additional occupants: '+esc(A.occupants):'')+(A.maxOcc?', not to exceed '+esc(A.maxOcc)+' total occupants':'')+'. The Premises shall be used solely as a private residence. Guests staying more than fourteen (14) consecutive days require Landlord’s written consent. Tenant shall not use the Premises for any unlawful purpose or in a manner that disturbs neighbors or other tenants.</p>';
-  secs.push({h:'OCCUPANTS; USE OF PREMISES',b:occ});
+  var occ='<p>The Premises shall be occupied only by Tenant'+(A.occupants.trim()?' and the following additional occupants: '+esc(A.occupants):'')+(A.maxOcc?', not to exceed '+esc(A.maxOcc)+' total occupants':'')+'.';
+  occ+=' The following persons are additionally authorized to occupy the Premises: '+txt(A.authPersons,24)+'.';
+  occ+=' The Premises shall be used solely as a private residence. Guests staying more than fourteen (14) consecutive days require Landlord’s written consent. Tenant shall not use the Premises for any unlawful purpose or in a manner that disturbs neighbors or other tenants.</p>';
+  secs.push({h:'OCCUPANTS; AUTHORIZED PERSONS; USE OF PREMISES',b:occ});
 
   var ut='<p>Responsibility for utilities and services is allocated as follows. Services marked “Tenant” must be placed in Tenant’s name and kept current throughout the tenancy.</p><table class="doc-util"><tr><th>Utility / Service</th><th>Paid by</th></tr>';
   Object.keys(A.utils).forEach(function(k){
@@ -1017,7 +1366,11 @@ function buildSections(){
 
   secs.push({h:'CONDITION; MAINTENANCE AND REPAIRS',b:'<p>Tenant accepts the Premises in good order and repair, except as noted on any move-in checklist. Tenant shall keep the Premises clean and sanitary, dispose of waste properly, use fixtures and appliances reasonably, promptly report needed repairs and any water intrusion to Landlord, and not commit waste or damage. Landlord shall maintain the Premises in habitable condition and comply with applicable building and housing codes. Tenant is responsible for the cost of repairing damage caused by the negligence or misuse of Tenant, occupants, or guests.</p>'});
 
-  secs.push({h:'LANDLORD’S RIGHT OF ENTRY',b:'<p>Except in emergencies, Landlord shall give Tenant '+esc(s.entL)+' notice before entering the Premises, and shall enter only at reasonable times to inspect, make repairs or improvements, supply services, or show the Premises to prospective tenants, buyers, or lenders. State rule: '+esc(s.ent)+'.</p>'});
+  if(A.moveInInspect){
+    secs.push({h:'MOVE-IN INSPECTION',b:'<p>Landlord and Tenant shall jointly complete a move-in inspection checklist documenting the condition of the Premises at the start of the tenancy. Both parties shall sign the checklist, and a copy will be provided to Tenant. The checklist will be used at move-out to assess damages beyond normal wear and tear.</p>'});
+  }
+
+  secs.push({h:'LANDLORD’S RIGHT OF ENTRY',b:'<p>Except in emergencies, Landlord shall give Tenant '+entTxt+' notice before entering the Premises, and shall enter only at reasonable times to inspect, make repairs or improvements, supply services, or show the Premises to prospective tenants, buyers, or lenders.</p>'});
 
   var pets;
   if(A.pets==='Not allowed'){pets='<p>No animals of any kind may be kept on the Premises without Landlord’s prior written consent, except properly documented assistance animals as required by fair-housing law (which are not pets and are not subject to pet deposits or pet rent).</p>';}
@@ -1031,70 +1384,89 @@ function buildSections(){
   secs.push({h:'ALTERATIONS',b:'<p>Alterations, painting, wallpaper, fixture changes, and installation of equipment (including satellite dishes, security devices, and wall anchors beyond ordinary picture hanging): <strong>'+esc(A.alterations)+'</strong>. Approved alterations become part of the Premises unless Landlord requires restoration at move-out.</p>'});
 
   if(A.insurance){
-    secs.push({h:'RENTERS INSURANCE',b:'<p>Tenant shall obtain and maintain renters insurance with personal liability coverage of at least <strong>$'+esc(A.insAmt||'100,000')+'</strong> for the duration of the tenancy, and shall provide proof of coverage upon request. Landlord’s insurance does not cover Tenant’s personal property.</p>'});
+    secs.push({h:'RENTERS INSURANCE',b:'<p>Tenant shall obtain and maintain renters insurance with personal liability coverage of at least <strong>$'+(String(A.insAmt).trim()?esc(A.insAmt):'100,000')+'</strong> for the duration of the tenancy, and shall provide proof of coverage upon request. Landlord’s insurance does not cover Tenant’s personal property.</p>'});
   }
 
-  var quiet='<p>Tenant is entitled to quiet enjoyment of the Premises. Tenant shall not disturb the quiet enjoyment of neighbors'+(A.quietHours?', and shall observe quiet hours between 10:00 p.m. and 8:00 a.m.':'.')+'</p>';
-  secs.push({h:'QUIET ENJOYMENT',b:quiet});
+  secs.push({h:'QUIET ENJOYMENT',b:'<p>Tenant is entitled to quiet enjoyment of the Premises. Tenant shall not disturb the quiet enjoyment of neighbors'+(A.quietHours?', and shall observe quiet hours between 10:00 p.m. and 8:00 a.m.':'.')+'</p>'});
 
   if(A.earlyTerm==='buyout'){
-    secs.push({h:'EARLY TERMINATION OPTION',b:'<p>Tenant may terminate this Agreement before the end of the term by (a) giving at least sixty (60) days’ written notice, (b) paying an early-termination fee of <strong>'+(money(A.etFee)?fmtUSD(money(A.etFee),true):'$________')+'</strong>, and (c) paying all rent due through the termination date. This option does not waive Landlord’s rights regarding damage or other amounts owed, and does not apply where Tenant has a statutory right to terminate (e.g., active-duty military orders under the SCRA, or other rights under state law).</p>'});
+    secs.push({h:'EARLY TERMINATION OPTION',b:'<p>Tenant may terminate this Agreement before the end of the term by (a) giving at least sixty (60) days’ written notice, (b) paying an early-termination fee of <strong>'+usd(money(A.etFee))+'</strong>, and (c) paying all rent due through the termination date. This option does not waive Landlord’s rights regarding damage or other amounts owed, and does not apply where Tenant has a statutory right to terminate (e.g., active-duty military orders under the SCRA, or other rights under state law).</p>'});
   }
 
-  secs.push({h:'DEFAULT; REMEDIES',b:'<p>If Tenant fails to pay rent or breaches any other provision of this Agreement, Landlord may pursue all remedies available under '+esc(s.n)+' law, including termination of the tenancy and recovery of possession after any legally required notice, recovery of unpaid rent and damages, and reasonable costs as allowed by law or this Agreement. <strong>Any amounts remaining unpaid after the tenancy ends may be referred to a licensed collection agency and reported as permitted by law, which may affect Tenant’s credit.</strong> Tenant shall also reimburse Landlord’s reasonable costs of re-renting to the extent allowed by law. Landlord shall mitigate damages as required by law.</p>'});
+  secs.push({h:'DEFAULT; REMEDIES',b:'<p>If Tenant fails to pay rent or breaches any other provision of this Agreement, Landlord may pursue all remedies available under '+lawOf+', including termination of the tenancy and recovery of possession after any legally required notice, recovery of unpaid rent and damages, and reasonable costs as allowed by law or this Agreement. <strong>Any amounts remaining unpaid after the tenancy ends may be referred to a licensed collection agency and reported as permitted by law, which may affect Tenant’s credit.</strong> Tenant shall also reimburse Landlord’s reasonable costs of re-renting to the extent allowed by law. Landlord shall mitigate damages as required by law.</p>'});
 
-  secs.push({h:'ABANDONMENT',b:'<p>If Tenant abandons the Premises before the end of the term, Landlord may retake possession and re-rent as permitted by law. Personal property left behind will be handled according to '+esc(s.n)+'’s abandoned-property procedures.</p>'});
+  secs.push({h:'ABANDONMENT',b:'<p>If Tenant abandons the Premises before the end of the term, Landlord may retake possession and re-rent as permitted by law. Personal property left behind will be handled according to the abandoned-property procedures of '+lawOf+'.</p>'});
 
-  secs.push({h:'NOTICES',b:'<p>Official notices to Landlord shall be delivered to: <strong>'+(A.llAddr.trim()?esc(A.llAddr):'________________________________')+'</strong>. Notices to Tenant shall be delivered to the Premises. Notices must be in writing; the parties may additionally agree to electronic delivery where permitted by law.</p>'});
+  secs.push({h:'NOTICES',b:'<p>Official notices to Landlord shall be delivered to: <strong>'+(A.llAddr.trim()?esc(A.llAddr):bl(40))+'</strong>. Notices to Tenant shall be delivered to the Premises. Notices must be in writing; the parties may additionally agree to electronic delivery where permitted by law.</p>'});
 
   /* Disclosures */
   var disc='';
   if(A.pre1978!=='no'){
     disc+='<p><strong>Lead-Based Paint Disclosure (Federal).</strong> The Premises was built before 1978. Housing built before 1978 may contain lead-based paint. Lead from paint, paint chips, and dust can pose health hazards if not managed properly. Lead exposure is especially harmful to young children and pregnant women. Before renting pre-1978 housing, lessors must disclose the presence of known lead-based paint and/or lead-based paint hazards in the dwelling. Tenants must also receive the federally approved pamphlet “Protect Your Family From Lead in Your Home.” Landlord has no knowledge of lead-based paint and/or lead-based paint hazards in the housing except as otherwise disclosed in writing, and Tenant acknowledges receipt of the EPA pamphlet.</p>';
   }
-  s.disc.forEach(function(d){disc+='<p><strong>'+esc(d.t)+' ('+esc(s.n)+').</strong> '+esc(d.b)+'</p>';});
+  if(s)s.disc.forEach(function(d){disc+='<p><strong>'+esc(d.t)+' ('+esc(s.n)+').</strong> '+esc(d.b)+'</p>';});
   var XD={mold:{t:'Mold Disclosure & Reporting',b:'Landlord has no knowledge of mold contamination at the Premises beyond ordinary household levels. Tenant agrees to keep the Premises ventilated and clean and to promptly report any visible mold, moisture intrusion, or water damage to Landlord in writing.'},
     bedbug:{t:'Bed Bug Disclosure',b:'Landlord represents that the Premises is not known to be infested with bed bugs. Tenant agrees to promptly report suspected bed bug activity and to cooperate with inspection and treatment.'},
     alarm:{t:'Smoke & Carbon Monoxide Alarm Acknowledgment',b:'Tenant acknowledges that smoke alarms (and carbon monoxide alarms where required) are present and operational at move-in, and agrees to test them periodically, replace batteries as needed, never disable them, and report any malfunction to Landlord immediately.'},
     video:{t:'Move-In Documentation',b:'Either party may document the condition of the Premises by photographs or video at move-in and move-out, and such documentation may be used in assessing damages.'}};
   Object.keys(XD).forEach(function(k){
-    var dup=s.disc.some(function(d){return d.t.indexOf(XD[k].t.split(' ')[0])===0;});
+    var dup=s?s.disc.some(function(d){return d.t.indexOf(XD[k].t.split(' ')[0])===0;}):false;
     if(A.extraDisc[k]&&!dup)disc+='<p><strong>'+XD[k].t+'.</strong> '+XD[k].b+'</p>';
   });
   if(!disc)disc='<p>No additional disclosures apply beyond the general terms of this Agreement.</p>';
   secs.push({h:'DISCLOSURES',b:disc});
 
-  if(A.clauses.length){
+  var liveClauses=A.clauses.filter(function(c){return c.trim();});
+  if(liveClauses.length){
     var extra='';
-    A.clauses.forEach(function(c,i){extra+='<p>'+String.fromCharCode(97+i)+'. '+esc(c)+'</p>';});
+    liveClauses.forEach(function(c,i){extra+='<p>'+String.fromCharCode(97+i)+'. '+esc(c)+'</p>';});
     secs.push({h:'ADDITIONAL TERMS',b:extra});
   }
 
-  secs.push({h:'GOVERNING LAW',b:'<p>This Agreement is governed by the laws of '+esc(s.n)+'. If any provision conflicts with applicable law, that provision is modified to the minimum extent necessary to comply, and the remainder stays in effect.</p>'});
+  if(A.cosigner.trim()){
+    secs.push({h:'GUARANTY (CO-SIGNER)',b:'<p><strong>'+esc(A.cosigner)+'</strong> (“Co-Signer”) absolutely and unconditionally guarantees to Landlord the full and timely payment and performance of all of Tenant’s obligations under this Agreement, including rent, fees, and damages. This guaranty remains in effect for the entire term and any renewal, extension, or holdover period, and Landlord may proceed directly against Co-Signer without first exhausting remedies against Tenant. Co-Signer signs below as guarantor only, not as a tenant or occupant.</p>'});
+  }
+
+  secs.push({h:'GOVERNING LAW',b:'<p>This Agreement is governed by the laws of the State of '+(sn?esc(sn):bl(16))+'. If any provision conflicts with applicable law, that provision is modified to the minimum extent necessary to comply, and the remainder stays in effect.</p>'});
   secs.push({h:'SEVERABILITY; ENTIRE AGREEMENT',b:'<p>If any provision of this Agreement is held invalid, the remaining provisions remain in full force. This Agreement, together with any attached addenda and disclosures, is the entire agreement between the parties and may be amended only in a writing signed by both parties.</p>'});
   return secs;
 }
 
-window.ACB.renderDoc=function(){
-  var A=window.ACB.A,s=SD[A.state];
+function docHTML(){
+  var A=window.ACB.A,s=SD[A.state]||null;
   var secs=buildSections();
   var tenants=A.tenants.filter(function(t){return t.trim();});
   var h='<h2 class="doc-title">Residential Lease Agreement</h2>';
-  h+='<p class="doc-sub">State of '+esc(s.n)+'</p>';
+  h+='<p class="doc-sub">State of '+(s?esc(s.n):bl(16))+'</p>';
   secs.forEach(function(sec,i){h+='<h3>'+(i+1)+'. '+sec.h+'</h3>'+sec.b;});
   h+='<p style="margin-top:26px">IN WITNESS WHEREOF, the parties execute this Agreement as of the dates written below.</p>';
   h+='<div class="sig-grid">';
-  h+='<div class="sig-block"><div class="line"></div><div class="lbl">Landlord: '+esc(A.llName)+' — Signature / Date</div></div>';
-  tenants.forEach(function(t){h+='<div class="sig-block"><div class="line"></div><div class="lbl">Tenant: '+esc(t)+' — Signature / Date</div></div>';});
+  h+='<div class="sig-block"><div class="line"></div><div class="lbl">Landlord: '+txt(A.llName,18)+' — Signature / Date</div></div>';
+  if(tenants.length){
+    tenants.forEach(function(t){h+='<div class="sig-block"><div class="line"></div><div class="lbl">Tenant: '+esc(t)+' — Signature / Date</div></div>';});
+  }else{
+    h+='<div class="sig-block"><div class="line"></div><div class="lbl">Tenant: '+bl(18)+' — Signature / Date</div></div>';
+  }
+  if(A.cosigner.trim())h+='<div class="sig-block"><div class="line"></div><div class="lbl">Co-Signer (Guarantor): '+esc(A.cosigner)+' — Signature / Date</div></div>';
   h+='</div>';
   h+='<div class="doc-foot"><div style="font-size:12.5px;color:#333">This Lease Agreement was created with Advanced Collection Bureau, Inc. (advancedcb.com)</div><div style="font-size:9.5px;margin-top:4px">This resource from Advanced Collection Bureau, Inc. is for general informational purposes. It is not legal advice. Lease requirements vary by state, county, and city, and laws change; verify current requirements with a local attorney before using it.</div></div>';
-  $('docPaper').innerHTML=h;
+  return h;
+}
+window.ACB.docHTML=docHTML;
+
+window.ACB.renderDoc=function(){
+  $('docPaper').innerHTML=docHTML();
+};
+window.ACB.renderPreview=function(){
+  var pp=$('previewPaper');
+  if(pp)pp.innerHTML=docHTML();
 };
 
 /* Word download */
 $('docWord').addEventListener('click',function(){
   var A=window.ACB.A;
   var head='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Residential Lease Agreement</title><style>body{font-family:Georgia,"Times New Roman",serif;font-size:12pt;line-height:1.5}h2{text-align:center;text-transform:uppercase}h3{text-transform:uppercase;font-size:12pt}table{border-collapse:collapse}td,th{border:1px solid #999;padding:4pt 8pt}.line{border-bottom:1px solid #000;height:24pt}.lbl{font-size:9pt;color:#444}.doc-foot{font-size:8pt;color:#666;margin-top:24pt;border-top:1px solid #ccc;padding-top:8pt;text-align:center}</style></head><body>';
+  if(!$('docPaper').innerHTML)window.ACB.renderDoc();
   var blob=new Blob(['﻿'+head+$('docPaper').innerHTML+'</body></html>'],{type:'application/msword'});
   var a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -1148,32 +1520,39 @@ $('blankDownload').addEventListener('click',function(){
 
 /* Pre-filled fillable PDF from the wizard's answers */
 function buildFill(){
-  var A=window.ACB.A;
+  var A=window.ACB.A,money=window.ACB.money;
   var t=A.tenants.filter(function(x){return x.trim();});
   return {
-    ll:A.llName,t1:t[0]||'',t2:t[1]||'',t3:t.slice(2).join('; '),
+    ll:A.llName,llAddr:A.llAddr,t1:t[0]||'',t2:t[1]||'',t3:t.slice(2).join('; '),
+    occ:A.occupants,auth:A.authPersons,maxOcc:String(A.maxOcc||''),
     addr:A.addr+(A.unit?', '+A.unit:''),city:A.city,st:A.state,zip:A.zip,
-    ptHouse:A.ptype==='House',ptApt:A.ptype==='Apartment',ptCondo:A.ptype==='Condo',ptTown:A.ptype==='Townhouse',ptDuplex:A.ptype==='Duplex',ptOther:A.ptype==='Room'||A.ptype==='Other',
+    beds:String(A.bedrooms||''),baths:String(A.bathrooms||''),
+    furnishings:A.furnished?A.furnishings:'',appliances:A.appliances,parking:A.parking,storage:A.storage,
+    ptHouse:A.ptype==='House',ptApt:A.ptype==='Apartment',ptCondo:A.ptype==='Condo',ptTown:A.ptype==='Townhouse',ptDuplex:A.ptype==='Duplex',ptRoom:A.ptype==='Room',ptOther:A.ptype==='Other',
     fixed:A.termType==='fixed',mtm:A.termType!=='fixed',
     start:A.start?fmtDate(A.start):'',end:(A.termType==='fixed'&&A.end)?fmtDate(A.end):'',
+    earlyIn:A.earlyMoveIn?fmtDate(A.earlyMoveIn):'',
     rent:A.rent?('$'+A.rent):'',due:String(A.dueDay||''),pay:A.payMethods.join(', '),
+    preAmt:money(A.prepaidAmt)?('$'+A.prepaidAmt):'',preMon:String(A.prepaidMonths||''),
     grace:String(A.grace||''),late:money(A.lateAmt)?(A.lateType==='flat'?('$'+A.lateAmt):(A.lateAmt+'% of rent')):'',nsf:money(A.nsf)?('$'+A.nsf):'',
-    dep:A.deposit?('$'+A.deposit):'',petDep:A.petDeposit?('$'+A.petDeposit):'',
+    dep:A.deposit?('$'+A.deposit):'',petDep:A.petDeposit?('$'+A.petDeposit):'',lastMonth:!!A.lastMonth,
     utils:A.utils,
     petsNo:A.pets==='Not allowed',petsYes:A.pets!=='Not allowed',
     smokeNo:A.smoking==='Prohibited anywhere on the property',smokeOut:A.smoking==='Allowed outside only',
-    ins:!!A.insurance,quiet:!!A.quietHours,
+    ins:!!A.insurance,quiet:!!A.quietHours,inspect:!!A.moveInInspect,
     petLimits:[A.petDesc.trim(),money(A.petRent)?('Pet rent: $'+A.petRent+'/mo'):''].filter(Boolean).join(' — '),
     lead:A.pre1978!=='no',
-    addl:A.clauses.join('\n\n')
+    cosigner:A.cosigner,
+    addl:A.clauses.filter(function(c){return c.trim();}).join('\n\n')
   };
 }
 window.ACB.buildFill=buildFill;
 
-$('docPdf').addEventListener('click',function(){
-  var b=this,A=window.ACB.A;
+function downloadPdf(btn){
+  var A=window.ACB.A;
   if(typeof PDFLib==='undefined'){alert('PDF library failed to load — check your connection and refresh.');return;}
-  b.disabled=true;b.textContent='Building PDF…';
+  var orig=btn.textContent;
+  btn.disabled=true;btn.textContent='Building PDF…';
   generatePdf(A.state,buildFill()).then(function(bytes){
     var blob=new Blob([bytes],{type:'application/pdf'});
     var a=document.createElement('a');
@@ -1181,16 +1560,28 @@ $('docPdf').addEventListener('click',function(){
     a.download='Lease-Agreement-'+(A.state||'XX')+'.pdf';
     document.body.appendChild(a);a.click();
     setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);
-    b.disabled=false;b.textContent='Download PDF';
+    btn.disabled=false;btn.textContent=orig;
   }).catch(function(e){
-    b.disabled=false;b.textContent='Download PDF';
+    btn.disabled=false;btn.textContent=orig;
     alert('Sorry, something went wrong building the PDF.');
   });
+}
+$('docPdf').addEventListener('click',function(){downloadPdf(this);});
+$('pvPdf').addEventListener('click',function(){downloadPdf(this);});
+$('pvPrint').addEventListener('click',function(){
+  window.ACB.renderDoc();
+  document.body.classList.add('printing');
+  window.print();
 });
+window.addEventListener('afterprint',function(){document.body.classList.remove('printing');});
 
-/* Fillable AcroForm PDF — blank template when `fill` is omitted, pre-filled from the wizard otherwise */
+/* Fillable AcroForm PDF — blank template when `fill` is omitted, pre-filled from the wizard
+   otherwise. Values that appear in more than one place (tenant names, landlord, property
+   address, monthly rent, state, co-signer) are ONE AcroForm field added to multiple
+   positions, so every widget stays in sync when one is edited. */
 function generatePdf(ab,fill){
-  var s=SD[ab];
+  var s=SD[ab]||null;
+  var SX=s||{n:'',dep:'varies by state — verify your state’s statute',ret:'the period required by state law',ent:'as required by state law',entL:'reasonable advance',late:'as limited by state law',mtm:'the period required by state law',disc:[]};
   var F=fill||{};
   var P=PDFLib,W=612,H=792,M=54;
   return P.PDFDocument.create().then(function(doc){
@@ -1199,14 +1590,16 @@ function generatePdf(ab,fill){
       var form=doc.getForm();
       var page=doc.addPage([W,H]),y=H-M,fc=0;
       var BLUE=P.rgb(0.24,0.353,0.945),INK=P.rgb(0.1,0.1,0.18),GRAY=P.rgb(0.45,0.45,0.55),LINE=P.rgb(0.7,0.72,0.8);
+      var shared={};
 
       function footer(p){
         p.drawText('This Lease Agreement was created with Advanced Collection Bureau, Inc. (advancedcb.com)',{x:M,y:30,size:7,font:ital,color:GRAY});
       }
       function newPage(){footer(page);page=doc.addPage([W,H]);y=H-M;}
       function need(h){if(y-h<M+20)newPage();}
-      function heading(t){
-        need(30);
+      /* keepWith = height of the unit that must stay with the heading (default: one field) */
+      function heading(t,keepWith){
+        need(30+(keepWith===undefined?34:keepWith));
         page.drawText(t,{x:M,y:y-12,size:10.5,font:bold,color:INK});
         page.drawLine({start:{x:M,y:y-17},end:{x:W-M,y:y-17},thickness:0.6,color:LINE});
         y-=30;
@@ -1224,6 +1617,7 @@ function generatePdf(ab,fill){
       function para(text,size,f,color){
         size=size||9;f=f||font;
         var lines=wrap(text,size,f,W-2*M);
+        need(size+4);
         lines.forEach(function(l){
           need(size+4);
           page.drawText(l,{x:M,y:y-size,size:size,font:f,color:color||INK});
@@ -1231,13 +1625,23 @@ function generatePdf(ab,fill){
         });
         y-=4;
       }
-      function field(label,w,h,val){
+      /* Create-or-reuse a named text field; named fields are the tied (multi-widget) ones. */
+      function mkText(name){
+        if(name&&shared[name])return shared[name];
+        var tf=form.createTextField(name||('f'+(fc++)));
+        if(name)shared[name]=tf;
+        return tf;
+      }
+      function place(tf,x,yy,w,h){
+        tf.addToPage(page,{x:x,y:yy,width:w,height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:P.rgb(0.975,0.98,0.995)});
+        tf.setFontSize(9);
+      }
+      function field(label,w,h,val,name){
         h=h||16;
         need(h+18);
         page.drawText(label,{x:M,y:y-8,size:8,font:bold,color:GRAY});
-        var tf=form.createTextField('f'+(fc++));
-        tf.addToPage(page,{x:M,y:y-12-h,width:w||(W-2*M),height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:P.rgb(0.975,0.98,0.995)});
-        tf.setFontSize(9);
+        var tf=mkText(name);
+        place(tf,M,y-12-h,w||(W-2*M),h);
         if(val)tf.setText(String(val));
         y-=h+22;
       }
@@ -1248,19 +1652,20 @@ function generatePdf(ab,fill){
         items.forEach(function(it){
           var w=totalW*it.w;
           page.drawText(it.l,{x:x,y:y-8,size:8,font:bold,color:GRAY});
-          var tf=form.createTextField('f'+(fc++));
-          tf.addToPage(page,{x:x,y:y-12-h,width:w,height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:P.rgb(0.975,0.98,0.995)});
-          tf.setFontSize(9);
+          var tf=mkText(it.n);
+          place(tf,x,y-12-h,w,h);
           if(it.v)tf.setText(String(it.v));
           x+=w+gap;
         });
         y-=h+24;
       }
+      /* whole checkbox group reserved up front so it never straddles pages */
       function checks(items,perRow){
         perRow=perRow||3;
+        var rows=Math.ceil(items.length/perRow);
+        need(rows*20+4);
         var w=(W-2*M)/perRow;
         for(var i=0;i<items.length;i+=perRow){
-          need(20);
           for(var j=0;j<perRow&&i+j<items.length;j++){
             var x=M+j*w;
             var it=items[i+j],lb=typeof it==='string'?it:it.l;
@@ -1274,52 +1679,62 @@ function generatePdf(ab,fill){
         y-=4;
       }
 
-      /* Title */
-      page.drawText(s.n.toUpperCase()+' RESIDENTIAL LEASE AGREEMENT',{x:M,y:y-16,size:15,font:bold,color:INK});
-      page.drawText('Fillable template — complete on your computer or by hand',{x:M,y:y-32,size:9,font:ital,color:GRAY});
-      y-=48;
+      /* Title + premises (shared field, first widget) */
+      page.drawText((s?(s.n.toUpperCase()+' '):'')+'RESIDENTIAL LEASE AGREEMENT',{x:M,y:y-16,size:15,font:bold,color:INK});
+      y-=30;
+      field('Premises (street address & unit)',0,0,F.addr,'propAddr');
 
-      /* State facts box */
-      var facts=['Security deposit limit: '+s.dep,'Deposit return deadline: '+s.ret,'Notice before entry: '+s.ent,'Late fees: '+s.late,'Month-to-month termination notice: '+s.mtm];
-      var fh=14;
-      var lineCounts=facts.map(function(f){return wrap(f,8,font,W-2*M-24).length;});
-      var boxH=lineCounts.reduce(function(a,b){return a+b*11;},0)+22;
-      page.drawRectangle({x:M,y:y-boxH,width:W-2*M,height:boxH,borderWidth:0.8,borderColor:BLUE,color:P.rgb(0.933,0.945,0.996)});
-      var fy=y-16;
-      page.drawText(s.n+' quick rules (verify current law):',{x:M+12,y:fy,size:8.5,font:bold,color:BLUE});
-      fy-=12;
-      facts.forEach(function(f){
-        wrap(f,8,font,W-2*M-24).forEach(function(l){
-          page.drawText('•  '+l,{x:M+12,y:fy,size:8,font:font,color:INK});
-          fy-=11;
+      /* State facts box (legal reference) */
+      if(s){
+        var facts=['Security deposit limit: '+s.dep,'Deposit return deadline: '+s.ret,'Notice before entry: '+s.ent,'Late fees: '+s.late,'Month-to-month termination notice: '+s.mtm];
+        var lineCounts=facts.map(function(f){return wrap(f,8,font,W-2*M-24).length;});
+        var boxH=lineCounts.reduce(function(a,b){return a+b*11;},0)+22;
+        need(boxH+10);
+        page.drawRectangle({x:M,y:y-boxH,width:W-2*M,height:boxH,borderWidth:0.8,borderColor:BLUE,color:P.rgb(0.933,0.945,0.996)});
+        var fy=y-16;
+        page.drawText(s.n+' rules in brief (verify current law):',{x:M+12,y:fy,size:8.5,font:bold,color:BLUE});
+        fy-=12;
+        facts.forEach(function(f){
+          wrap(f,8,font,W-2*M-24).forEach(function(l){
+            page.drawText('•  '+l,{x:M+12,y:fy,size:8,font:font,color:INK});
+            fy-=11;
+          });
         });
-      });
-      y-=boxH+16;
+        y-=boxH+16;
+      }
 
       heading('1. PARTIES');
-      field('Landlord / Property Owner or Company',0,0,F.ll);
-      field('Tenant #1 (full legal name)',0,0,F.t1);
-      fieldRow([{l:'Tenant #2 (if any)',w:.5,v:F.t2},{l:'Tenant #3 (if any)',w:.5,v:F.t3}]);
+      field('Landlord / property owner or company',0,0,F.ll,'landlord');
+      field('Landlord’s address for notices',0,0,F.llAddr);
+      field('Tenant #1 (full legal name)',0,0,F.t1,'tenant1');
+      fieldRow([{l:'Tenant #2 (if any)',w:.5,v:F.t2,n:'tenant2'},{l:'Tenant #3 (if any)',w:.5,v:F.t3}]);
+      fieldRow([{l:'Additional occupants (non-signing)',w:.4,v:F.occ},{l:'Persons authorized to occupy',w:.4,v:F.auth},{l:'Max. occupants',w:.2,v:F.maxOcc}]);
 
       heading('2. PREMISES');
-      field('Street address & unit',0,0,F.addr);
-      fieldRow([{l:'City',w:.45,v:F.city},{l:'State',w:.2,v:F.st},{l:'ZIP',w:.35,v:F.zip}]);
-      checks([{l:'House',on:F.ptHouse},{l:'Apartment',on:F.ptApt},{l:'Condo',on:F.ptCondo},{l:'Townhouse',on:F.ptTown},{l:'Duplex',on:F.ptDuplex},{l:'Other',on:F.ptOther}],3);
+      field('Street address & unit',0,0,F.addr,'propAddr');
+      fieldRow([{l:'City',w:.45,v:F.city},{l:'State',w:.2,v:F.st,n:'state'},{l:'ZIP',w:.35,v:F.zip}]);
+      fieldRow([{l:'Bedrooms',w:.25,v:F.beds},{l:'Bathrooms',w:.25,v:F.baths},{l:'Parking included',w:.5,v:F.parking}]);
+      checks([{l:'House',on:F.ptHouse},{l:'Apartment',on:F.ptApt},{l:'Condo',on:F.ptCondo},{l:'Townhouse',on:F.ptTown},{l:'Duplex',on:F.ptDuplex},{l:'Room',on:F.ptRoom},{l:'Other',on:F.ptOther}],4);
+      fieldRow([{l:'Included furnishings (if furnished)',w:.5,v:F.furnishings},{l:'Included appliances',w:.5,v:F.appliances}]);
 
       heading('3. TERM');
-      fieldRow([{l:'Start date',w:.5,v:F.start},{l:'End date (leave blank if month-to-month)',w:.5,v:F.end}]);
-      checks([{l:'Fixed term',on:F.fixed},{l:'Month-to-month ('+s.mtm+' notice)',on:F.mtm}],2);
+      fieldRow([{l:'Start date',w:1/3,v:F.start},{l:'End date (blank if month-to-month)',w:1/3,v:F.end},{l:'Early move-in date (if any)',w:1/3,v:F.earlyIn}]);
+      checks([{l:'Fixed term',on:F.fixed},{l:'Month-to-month ('+SX.mtm+' notice)',on:F.mtm}],2);
 
       heading('4. RENT');
-      fieldRow([{l:'Monthly rent ($)',w:.34,v:F.rent},{l:'Due on day of month',w:.3,v:F.due},{l:'Payable to / method',w:.36,v:F.pay}]);
+      fieldRow([{l:'Monthly rent ($)',w:.34,v:F.rent,n:'rent'},{l:'Due on day of month',w:.3,v:F.due},{l:'Payment methods',w:.36,v:F.pay}]);
+      fieldRow([{l:'Prepaid rent collected ($, if any)',w:.34,v:F.preAmt},{l:'Months covered by prepaid rent',w:.3,v:F.preMon},{l:'Monthly rent ($, same as above)',w:.36,v:F.rent,n:'rent'}]);
+
+      heading('5. LATE & RETURNED-PAYMENT CHARGES');
       fieldRow([{l:'Grace period (days)',w:.34,v:F.grace},{l:'Late fee ($ or %)',w:.3,v:F.late},{l:'Returned-payment fee ($)',w:.36,v:F.nsf}]);
-      para('State late-fee rule: '+s.late+'.',8,ital,GRAY);
+      if(s)para(s.n+' late-fee rule: '+s.late+'.',8,ital,GRAY);
 
-      heading('5. SECURITY DEPOSIT');
+      heading('6. SECURITY DEPOSIT');
       fieldRow([{l:'Security deposit ($)',w:.5,v:F.dep},{l:'Pet deposit ($, if any)',w:.5,v:F.petDep}]);
-      para('Limit in '+s.n+': '+s.dep+'. Must be returned within '+s.ret+' after move-out, less lawful deductions, with an itemized statement where required.',8,ital,GRAY);
+      if(s)para('Limit in '+s.n+': '+s.dep+'. Must be returned within '+s.ret+' after move-out, less lawful deductions, with an itemized statement where required.',8,ital,GRAY);
+      checks([{l:'Last month’s rent collected at signing',on:F.lastMonth}],1);
 
-      heading('6. UTILITIES & SERVICES — who pays');
+      heading('7. UTILITIES & SERVICES — WHO PAYS',26);
       ['Electricity','Gas','Water / Sewer','Trash Collection','Internet / Cable','Lawn Care','Snow Removal','Pest Control'].forEach(function(u){
         need(20);
         var who=F.utils?F.utils[u]:'';
@@ -1340,43 +1755,68 @@ function generatePdf(ab,fill){
       });
       y-=6;
 
-      heading('7. POLICIES');
-      checks([{l:'Pets: not allowed',on:F.petsNo},{l:'Pets: allowed (see below)',on:F.petsYes},{l:'Smoking prohibited',on:F.smokeNo},{l:'Smoking outside only',on:F.smokeOut},{l:'Renters insurance required',on:F.ins},{l:'Quiet hours 10pm–8am',on:F.quiet}],2);
+      heading('8. POLICIES',88);
+      checks([{l:'Pets: not allowed',on:F.petsNo},{l:'Pets: allowed (see below)',on:F.petsYes},{l:'Smoking prohibited',on:F.smokeNo},{l:'Smoking outside only',on:F.smokeOut},{l:'Renters insurance required',on:F.ins},{l:'Quiet hours 10 p.m.–8 a.m.',on:F.quiet},{l:'Joint move-in inspection checklist',on:F.inspect}],2);
       field('Pet limits (number / type / weight) and pet rent, if any',0,0,F.petLimits);
 
-      heading('8. STANDARD TERMS');
-      para('OCCUPANCY & USE: The Premises shall be used only as a private residence by the tenants and occupants listed in this Agreement. Guests staying more than 14 consecutive days require Landlord’s written consent.',8.5);
+      heading('9. STANDARD TERMS',20);
+      para('OCCUPANCY & USE: The Premises shall be used only as a private residence by the tenants, occupants, and authorized persons listed in this Agreement. Guests staying more than 14 consecutive days require Landlord’s written consent.',8.5);
       para('MAINTENANCE: Tenant shall keep the Premises clean and promptly report needed repairs and any water intrusion. Landlord shall maintain the Premises in habitable condition as required by law. Tenant pays for damage caused by Tenant’s negligence or misuse.',8.5);
-      para('ENTRY: Except in emergencies, Landlord will give '+s.entL+' notice before entry, at reasonable times, for inspection, repairs, services, or showings. ('+s.n+': '+s.ent+'.)',8.5);
+      para('MOVE-IN INSPECTION: If selected above, Landlord and Tenant will jointly complete and sign a move-in inspection checklist documenting the condition of the Premises, to be used at move-out to assess damages beyond normal wear and tear.',8.5);
+      para('EARLY MOVE-IN: If an early move-in date is set above, all terms of this Agreement apply in full during the early-occupancy period.',8.5);
+      para('PREPAID RENT: Any prepaid rent stated above is applied to rent as it comes due for the covered months, is not a security deposit, and is held and credited as required by law.',8.5);
+      para('ENTRY: Except in emergencies, Landlord will give '+SX.entL+' notice before entry, at reasonable times, for inspection, repairs, services, or showings.',8.5);
       para('ASSIGNMENT & SUBLETTING: Not permitted without Landlord’s prior written consent, including short-term and vacation rentals.',8.5);
-      para('DEFAULT: If rent or other amounts go unpaid, Landlord may pursue all remedies allowed by '+s.n+' law. Unpaid balances remaining after the tenancy ends may be referred to a licensed collection agency, which may affect Tenant’s credit.',8.5);
+      para('DEFAULT: If rent or other amounts go unpaid, Landlord may pursue all remedies allowed by '+(s?s.n:'applicable state')+' law. Unpaid balances remaining after the tenancy ends may be referred to a licensed collection agency, which may affect Tenant’s credit.',8.5);
       para('SEVERABILITY; ENTIRE AGREEMENT: Invalid provisions are severed and the remainder stays in effect. This document plus attached addenda is the entire agreement; changes must be in writing and signed.',8.5);
-      para('GOVERNING LAW: This Agreement is governed by the laws of '+s.n+'.',8.5);
+      /* governing law with the shared state field inline (second widget) */
+      (function(){
+        need(30);
+        var glt='GOVERNING LAW: This Agreement is governed by the laws of the state of';
+        page.drawText(glt,{x:M,y:y-9,size:8.5,font:font,color:INK});
+        var gw=font.widthOfTextAtSize(glt,8.5);
+        var gl=mkText('state');
+        place(gl,M+gw+6,y-14,Math.min(130,W-M-(M+gw+6)),14);
+        if(F.st)gl.setText(String(F.st));
+        y-=26;
+      })();
 
       var discTitles=[];
-      if(s.disc.length)s.disc.forEach(function(d){discTitles.push(d.t);});
-      heading('9. DISCLOSURES');
+      SX.disc.forEach(function(d){discTitles.push(d.t);});
+      heading('10. DISCLOSURES',20);
       para('LEAD-BASED PAINT (federal): If the building was built before 1978, the lead-based paint disclosure and the EPA pamphlet “Protect Your Family From Lead in Your Home” must be provided and acknowledged.',8.5);
-      if(discTitles.length)para(s.n+' also requires: '+discTitles.join('; ')+'. Attach or include these disclosures.',8.5);
+      if(discTitles.length)para(SX.n+' also requires: '+discTitles.join('; ')+'. Attach or include these disclosures.',8.5);
+      need(24);
       var cbL=form.createCheckBox('c'+(fc++));
-      need(20);
       cbL.addToPage(page,{x:M,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
       if(F.lead)cbL.check();
       page.drawText('Built before 1978 — lead disclosure & EPA pamphlet attached',{x:M+16,y:y-11.5,size:8.5,font:font,color:INK});
       y-=24;
 
-      heading('10. ADDITIONAL TERMS');
-      var ta=form.createTextField('f'+(fc++));
+      heading('11. CO-SIGNER (GUARANTOR)',60);
+      para('The Co-Signer named below absolutely and unconditionally guarantees the full and timely payment and performance of all of Tenant’s obligations under this Agreement, for the entire term and any renewal or holdover period. Landlord may proceed directly against Co-Signer without first exhausting remedies against Tenant. Co-Signer signs as guarantor only, not as a tenant or occupant.',8.5);
+      field('Co-Signer (full legal name, if any)',0,0,F.cosigner,'cosigner');
+
+      heading('12. ADDITIONAL TERMS',96);
+      var ta=mkText();
       ta.enableMultiline();
       need(90);
-      ta.addToPage(page,{x:M,y:y-84,width:W-2*M,height:80,borderWidth:0.75,borderColor:LINE,backgroundColor:P.rgb(0.975,0.98,0.995)});
-      ta.setFontSize(9);
+      place(ta,M,y-84,W-2*M,80);
       if(F.addl)ta.setText(String(F.addl));
       y-=96;
 
-      heading('SIGNATURES');
-      [['Landlord signature','Date'],['Tenant #1 signature','Date'],['Tenant #2 signature','Date']].forEach(function(r){
-        fieldRow([{l:r[0],w:.68},{l:r[1],w:.32}]);
+      /* SIGNATURES — entire block reserved so it never splits across pages.
+         Printed-name fields reuse the shared party fields (second widgets). */
+      var sigRows=[
+        ['Landlord signature','landlord',F.ll],
+        ['Tenant #1 signature','tenant1',F.t1],
+        ['Tenant #2 signature','tenant2',F.t2],
+        ['Co-Signer signature','cosigner',F.cosigner]
+      ];
+      need(30+sigRows.length*40+10);
+      heading('SIGNATURES',0);
+      sigRows.forEach(function(r){
+        fieldRow([{l:r[0],w:.4},{l:'Printed name',w:.35,v:r[2],n:r[1]},{l:'Date',w:.25}]);
       });
 
       footer(page);
