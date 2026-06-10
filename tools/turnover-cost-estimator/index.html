@@ -26,9 +26,9 @@ body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-te
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
 @media(max-width:840px){.grid{grid-template-columns:1fr}}
 .card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
-.sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
+.sec-label{font-size:15.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--acb-text);margin-bottom:16px;padding-bottom:9px;border-bottom:2px solid var(--acb-blue-light);display:flex;align-items:center;gap:8px}
 .group{margin-bottom:0}
-.sec-divider{display:flex;align-items:center;gap:8px;margin:22px 0 12px;padding-top:18px;border-top:1px solid var(--acb-border);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light)}
+.sec-divider{display:flex;align-items:center;gap:8px;margin:22px 0 12px;padding-top:18px;border-top:1px solid var(--acb-border);font-size:15.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--acb-text)}
 .sec-divider:first-child{margin-top:0;padding-top:0;border-top:none}
 .sec-divider svg{width:15px;height:15px;color:var(--acb-blue);flex-shrink:0}
 .sec-divider .sub{margin-left:auto;font-size:12px;font-weight:700;color:var(--acb-text);letter-spacing:normal;text-transform:none;font-variant-numeric:tabular-nums}
@@ -100,13 +100,19 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 @media (max-width:720px){.acb-tip-bubble{left:auto;right:-12px;transform:none}.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{transform:none}.acb-tip-bubble::after{left:auto;right:14px;transform:none}}
 .acb-coach-ring{position:relative;z-index:91}
 .acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
-@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
-.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:12px 15px;font-size:13px;line-height:1.5;width:230px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
-.acb-coach.side-r::before{content:"";position:absolute;right:100%;top:18px;border:8px solid transparent;border-right-color:var(--acb-text)}
-.acb-coach.side-l::before{content:"";position:absolute;left:100%;top:18px;border:8px solid transparent;border-left-color:var(--acb-text)}
-.acb-coach b{display:block;margin-bottom:3px}
-.acb-coach .step-dots{font-size:11px;opacity:.7;margin-top:7px}
-.acb-coach .skip{background:none;border:none;color:#fff;opacity:.75;font-size:11.5px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0;margin-top:7px;display:block}
+.acb-coach-ring::before{content:"";position:absolute;inset:-6px;border-radius:14px;box-shadow:0 0 0 4px rgba(61,90,241,.14);pointer-events:none}
+@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.045)}100%{opacity:0}}
+.acb-coach{position:absolute;z-index:140;background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 14px 40px rgba(26,26,46,.18);border-radius:14px;padding:16px 18px;font-size:13.5px;line-height:1.6;width:290px;text-align:left;font-family:'Outfit',sans-serif}
+.acb-coach b{display:block;font-size:12.5px;font-weight:700;color:var(--acb-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.acb-coach::after{content:"";position:absolute;border:9px solid transparent}
+.acb-coach.side-r::after{right:100%;top:22px;border-right-color:#fff;filter:drop-shadow(-1.5px 0 0 var(--acb-border))}
+.acb-coach.side-l::after{left:100%;top:22px;border-left-color:#fff;filter:drop-shadow(1.5px 0 0 var(--acb-border))}
+.acb-coach.below::after{bottom:100%;left:26px;border-bottom-color:#fff;filter:drop-shadow(0 -1.5px 0 var(--acb-border))}
+.acb-coach-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px}
+.acb-coach .step-dots{font-size:11.5px;color:var(--acb-text-light);font-weight:600}
+.acb-coach .nextb{background:var(--acb-blue);color:#fff;border:none;border-radius:50px;padding:8px 22px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;box-shadow:0 3px 10px rgba(61,90,241,.25)}
+.acb-coach .nextb:hover{background:var(--acb-blue-dark)}
+.acb-coach .skip{background:none;border:none;color:var(--acb-text-light);font-size:11.5px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0;margin-top:9px;display:block}
 .acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
 .acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
 .acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
@@ -494,8 +500,21 @@ function acbCoachSeq(slug,steps){
   try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
   var i=-1,el=null,tip=null;
   function markDone(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}}
-  function clear(){if(el)el.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;tip=null;}
+  function clear(){if(el)el.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;tip=null;window.removeEventListener('resize',rePlace);}
   function stop(){markDone();clear();}
+  function place(){
+    if(!el||!tip)return;
+    var r=el.getBoundingClientRect();
+    var sx=window.scrollX||document.documentElement.scrollLeft||0;
+    var sy=window.scrollY||document.documentElement.scrollTop||0;
+    var W=290,vw=document.documentElement.clientWidth;
+    tip.classList.remove('side-r','side-l','below');
+    /* prefer hanging in the side margins so nothing is covered */
+    if(vw-r.right>=W+30){tip.classList.add('side-r');tip.style.left=(r.right+sx+18)+'px';tip.style.top=Math.max(8,r.top+sy-10)+'px';}
+    else if(r.left>=W+30){tip.classList.add('side-l');tip.style.left=(r.left+sx-W-18)+'px';tip.style.top=Math.max(8,r.top+sy-10)+'px';}
+    else{tip.classList.add('below');tip.style.left=Math.max(8+sx,Math.min(r.left+sx,vw-W-8+sx))+'px';tip.style.top=(r.bottom+sy+16)+'px';}
+  }
+  function rePlace(){place();}
   function show(n){
     clear();i=n;
     if(i>=steps.length){stop();return;}
@@ -504,19 +523,18 @@ function acbCoachSeq(slug,steps){
     if(!el){show(i+1);return;}
     el.classList.add('acb-coach-ring');
     try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
-    var wrap=el.closest('.field')||el.parentNode;
-    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
     tip=document.createElement('div');tip.className='acb-coach';
     tip.innerHTML='<b>'+st.title+'</b>'+st.body
-      +'<div class="step-dots">Step '+(i+1)+' of '+steps.length+'</div>'
+      +'<div class="acb-coach-foot"><span class="step-dots">Step '+(i+1)+' of '+steps.length+'</span>'
+      +'<button type="button" class="nextb">'+(i+1>=steps.length?'Done ✓':'Next →')+'</button></div>'
       +'<button type="button" class="skip">Skip tour</button>';
-    wrap.appendChild(tip);
-    var spaceR=wrap.clientWidth-(el.offsetLeft+el.offsetWidth);
-    if(spaceR>250){tip.classList.add('side-r');tip.style.left=(el.offsetLeft+el.offsetWidth+14)+'px';tip.style.top=el.offsetTop+'px';}
-    else if(el.offsetLeft>250){tip.classList.add('side-l');tip.style.left=(el.offsetLeft-244)+'px';tip.style.top=el.offsetTop+'px';}
-    else{tip.style.left=Math.max(0,Math.min(el.offsetLeft+20,wrap.clientWidth-240))+'px';tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';}
+    document.body.appendChild(tip);
+    place();
+    setTimeout(place,380); /* re-place after smooth scroll settles */
+    window.addEventListener('resize',rePlace);
     tip.querySelector('.skip').addEventListener('click',stop);
-    var adv=function(){el.removeEventListener('input',adv);el.removeEventListener('change',adv);setTimeout(function(){show(i+1);},350);};
+    tip.querySelector('.nextb').addEventListener('click',function(){show(i+1);});
+    var adv=function(){el.removeEventListener('input',adv);el.removeEventListener('change',adv);setTimeout(function(){if(i===n)show(i+1);},400);};
     el.addEventListener('input',adv);el.addEventListener('change',adv);
   }
   document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){stop();document.removeEventListener('keydown',esc);}});
@@ -801,9 +819,9 @@ $('daysRange').value=clamp(numVal($('days')),0,120);
 setLeaseMode(leaseMode);
 acbTipUpgrade(document);
 acbCoachSeq('turnover-cost-estimator',[
-  {target:'#rent',title:'1. Monthly rent',body:'What the unit rents for \u2014 e.g. 1,800.'},
-  {target:'#daysRange',title:'2. Days vacant',body:'Drag to set how long the unit sits empty \u2014 e.g. 21 days.'},
-  {target:'.hero',title:'3. Total turnover cost',body:'Your total cost of this turnover shows here. Click it to finish.'}
+  {target:'#rent',title:'Monthly rent',body:'What the unit rents for \u2014 e.g. 1,800.'},
+  {target:'#daysRange',title:'Days vacant',body:'Drag to set how long the unit sits empty \u2014 e.g. 21 days.'},
+  {target:'.hero',title:'Total turnover cost',body:'Your total cost of this turnover shows here. Click it to finish.'}
 ]);
 (function(){var h=document.querySelector('.hero');if(!h)return;h.addEventListener('click',function adv(){if(!h.classList.contains('acb-coach-ring'))return;h.removeEventListener('click',adv);h.dispatchEvent(new Event('change'));});})();
 })();

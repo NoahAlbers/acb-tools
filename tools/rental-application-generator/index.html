@@ -28,7 +28,7 @@ body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-te
 @media(max-width:960px){.grid{grid-template-columns:1fr}}
 .card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
 .card+.card{margin-top:22px}
-.sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
+.sec-label{font-size:15.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--acb-text);margin-bottom:16px;padding-bottom:9px;border-bottom:2px solid var(--acb-blue-light);display:flex;align-items:center;gap:8px}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:14px;font-weight:600;color:var(--acb-text);margin-bottom:7px}
 .in-wrap{position:relative;display:flex;align-items:center}
@@ -49,7 +49,7 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 .sec:last-child{border-bottom:none;padding-bottom:0}
 .sec-head{display:flex;align-items:center;gap:12px}
 .sec-title{flex:1;min-width:0}
-.sec-title .tt{font-size:14.5px;font-weight:600}
+.sec-title .tt{font-size:15.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--acb-text)}
 .sec-title .ts{font-size:12px;color:var(--acb-text-light);margin-top:2px;line-height:1.4}
 .sw{position:relative;width:46px;height:26px;flex-shrink:0}
 .sw input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2}
@@ -137,14 +137,19 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 @media(max-width:720px){.acb-tip-bubble{left:auto;right:-12px;transform:none}.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{transform:none}.acb-tip-bubble::after{left:auto;right:14px;transform:none}}
 .acb-coach-ring{position:relative;z-index:91}
 .acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
-@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
-.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:12px 15px;font-size:13px;line-height:1.5;width:230px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
-.acb-coach.side-r::before{content:"";position:absolute;right:100%;top:18px;border:8px solid transparent;border-right-color:var(--acb-text)}
-.acb-coach.side-l::before{content:"";position:absolute;left:100%;top:18px;border:8px solid transparent;border-left-color:var(--acb-text)}
-.acb-coach b{display:block;margin-bottom:3px}
-.acb-coach .step-dots{font-size:11px;opacity:.7;margin-top:7px}
-.acb-coach .skip{background:none;border:none;color:#fff;opacity:.75;font-size:11.5px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0;margin-top:7px;display:block}
-@media(max-width:840px){.acb-coach{position:absolute;width:210px}}
+.acb-coach-ring::before{content:"";position:absolute;inset:-6px;border-radius:14px;box-shadow:0 0 0 4px rgba(61,90,241,.14);pointer-events:none}
+@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.045)}100%{opacity:0}}
+.acb-coach{position:absolute;z-index:140;background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 14px 40px rgba(26,26,46,.18);border-radius:14px;padding:16px 18px;font-size:13.5px;line-height:1.6;width:290px;text-align:left;font-family:'Outfit',sans-serif}
+.acb-coach b{display:block;font-size:12.5px;font-weight:700;color:var(--acb-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.acb-coach::after{content:"";position:absolute;border:9px solid transparent}
+.acb-coach.side-r::after{right:100%;top:22px;border-right-color:#fff;filter:drop-shadow(-1.5px 0 0 var(--acb-border))}
+.acb-coach.side-l::after{left:100%;top:22px;border-left-color:#fff;filter:drop-shadow(1.5px 0 0 var(--acb-border))}
+.acb-coach.below::after{bottom:100%;left:26px;border-bottom-color:#fff;filter:drop-shadow(0 -1.5px 0 var(--acb-border))}
+.acb-coach-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px}
+.acb-coach .step-dots{font-size:11.5px;color:var(--acb-text-light);font-weight:600}
+.acb-coach .nextb{background:var(--acb-blue);color:#fff;border:none;border-radius:50px;padding:8px 22px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;box-shadow:0 3px 10px rgba(61,90,241,.25)}
+.acb-coach .nextb:hover{background:var(--acb-blue-dark)}
+.acb-coach .skip{background:none;border:none;color:var(--acb-text-light);font-size:11.5px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0;margin-top:9px;display:block}
 .acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
 .acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
 .acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
@@ -236,7 +241,6 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
                 <option value="last4">Collect last 4 digits only</option>
                 <option value="none">Don't collect SSN</option>
               </select>
-              <div class="hint">Privacy tip: paper forms with full SSNs create real data-security obligations if lost or breached. Most screening services can match on last-4 + date of birth, or collect the full SSN from the applicant through their own secure portal.</div>
             </div>
           </div>
         </div>
@@ -457,8 +461,21 @@ function acbCoachSeq(slug,steps){
   try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
   var i=-1,el=null,tip=null;
   function markDone(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}}
-  function clear(){if(el)el.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;tip=null;}
+  function clear(){if(el)el.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;tip=null;window.removeEventListener('resize',rePlace);}
   function stop(){markDone();clear();}
+  function place(){
+    if(!el||!tip)return;
+    var r=el.getBoundingClientRect();
+    var sx=window.scrollX||document.documentElement.scrollLeft||0;
+    var sy=window.scrollY||document.documentElement.scrollTop||0;
+    var W=290,vw=document.documentElement.clientWidth;
+    tip.classList.remove('side-r','side-l','below');
+    /* prefer hanging in the side margins so nothing is covered */
+    if(vw-r.right>=W+30){tip.classList.add('side-r');tip.style.left=(r.right+sx+18)+'px';tip.style.top=Math.max(8,r.top+sy-10)+'px';}
+    else if(r.left>=W+30){tip.classList.add('side-l');tip.style.left=(r.left+sx-W-18)+'px';tip.style.top=Math.max(8,r.top+sy-10)+'px';}
+    else{tip.classList.add('below');tip.style.left=Math.max(8+sx,Math.min(r.left+sx,vw-W-8+sx))+'px';tip.style.top=(r.bottom+sy+16)+'px';}
+  }
+  function rePlace(){place();}
   function show(n){
     clear();i=n;
     if(i>=steps.length){stop();return;}
@@ -467,19 +484,18 @@ function acbCoachSeq(slug,steps){
     if(!el){show(i+1);return;}
     el.classList.add('acb-coach-ring');
     try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
-    var wrap=el.closest('.field')||el.parentNode;
-    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
     tip=document.createElement('div');tip.className='acb-coach';
     tip.innerHTML='<b>'+st.title+'</b>'+st.body
-      +'<div class="step-dots">Step '+(i+1)+' of '+steps.length+'</div>'
+      +'<div class="acb-coach-foot"><span class="step-dots">Step '+(i+1)+' of '+steps.length+'</span>'
+      +'<button type="button" class="nextb">'+(i+1>=steps.length?'Done ✓':'Next →')+'</button></div>'
       +'<button type="button" class="skip">Skip tour</button>';
-    wrap.appendChild(tip);
-    var spaceR=wrap.clientWidth-(el.offsetLeft+el.offsetWidth);
-    if(spaceR>250){tip.classList.add('side-r');tip.style.left=(el.offsetLeft+el.offsetWidth+14)+'px';tip.style.top=el.offsetTop+'px';}
-    else if(el.offsetLeft>250){tip.classList.add('side-l');tip.style.left=(el.offsetLeft-244)+'px';tip.style.top=el.offsetTop+'px';}
-    else{tip.style.left=Math.max(0,Math.min(el.offsetLeft+20,wrap.clientWidth-240))+'px';tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';}
+    document.body.appendChild(tip);
+    place();
+    setTimeout(place,380); /* re-place after smooth scroll settles */
+    window.addEventListener('resize',rePlace);
     tip.querySelector('.skip').addEventListener('click',stop);
-    var adv=function(){el.removeEventListener('input',adv);el.removeEventListener('change',adv);el.removeEventListener('click',adv);setTimeout(function(){show(i+1);},350);};
+    tip.querySelector('.nextb').addEventListener('click',function(){show(i+1);});
+    var adv=function(){el.removeEventListener('input',adv);el.removeEventListener('change',adv);el.removeEventListener('click',adv);setTimeout(function(){if(i===n)show(i+1);},400);};
     el.addEventListener('input',adv);el.addEventListener('change',adv);
     if(!/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName))el.addEventListener('click',adv); /* non-input targets advance on click */
   }
@@ -770,7 +786,7 @@ var $=function(id){return document.getElementById(id);};
 var LSKEY='acb:rental-application-generator:state';
 
 var DEF={
-  property:'',address:'',fee:'',retEmail:'',retPhone:'',retAddr:'',st:'FL',ssn:'last4',
+  property:'',address:'',fee:'',retEmail:'',retPhone:'',retAddr:'',st:'FL',ssn:'full',
   sec:{coapp:true,res:true,emp:true,oinc:true,ref:true,veh:true,pet:true,bg:true},
   coappCount:1,occCount:2,resCount:2,llRefs:true,prevEmp:true,proof:true,
   refCount:2,vehCount:2,petCount:1,
@@ -786,6 +802,7 @@ function merge(d,s){
 }
 var S;
 try{S=merge(DEF,JSON.parse(localStorage.getItem(LSKEY)||'null'));}catch(e){S=merge(DEF,null);}
+if(S.ssn!=='full'&&S.ssn!=='last4'&&S.ssn!=='none')S.ssn='full';
 
 /* populate state select */
 var stSel=$('inState');
@@ -1071,9 +1088,9 @@ $('pdfBtn').addEventListener('click',function(){
 update();
 acbTipUpgrade(document);
 acbCoachSeq('rental-application-generator',[
-  {target:'#inProperty',title:'1. Property or company name',body:'Type the name applicants will see at the top of the form — e.g. Maple Court Apartments.'},
-  {target:'#sec-coapp .sw',title:'2. Pick your sections',body:'Switch sections on or off — the form on the right rebuilds instantly.'},
-  {target:'#pdfBtn',title:'3. Download PDF',body:'Download a fillable PDF applicants can type into — your details are already filled in.'}
+  {target:'#inProperty',title:'Property or company name',body:'Type the name applicants will see at the top of the form — e.g. Maple Court Apartments.'},
+  {target:'#sec-coapp .sw',title:'Pick your sections',body:'Switch sections on or off — the form on the right rebuilds instantly.'},
+  {target:'#pdfBtn',title:'Download PDF',body:'Download a fillable PDF applicants can type into — your details are already filled in.'}
 ]);
 })();
 </script>
