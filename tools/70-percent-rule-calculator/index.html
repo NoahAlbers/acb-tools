@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>70% Rule Calculator | Advanced Collection Bureau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --acb-blue:#3D5AF1;--acb-blue-dark:#2D45C6;--acb-blue-light:#EEF1FE;--acb-blue-mid:#D5DBFC;
+  --acb-bg:#F4F5F9;--acb-card:#FFFFFF;--acb-text:#1A1A2E;--acb-text-mid:#4A4A68;--acb-text-light:#8889A0;
+  --acb-border:#E2E4EC;--acb-warn:#E8A83E;--acb-warn-bg:#FEF9EE;--acb-green:#16A34A;--acb-red:#DC2626;--acb-gold:#F5B301;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-text);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 48px}
+.tool-head{text-align:center;margin-bottom:26px}
+.tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
+.tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.modes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
+.mode-btn{padding:11px 22px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14.5px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
+.mode-btn.on{background:var(--acb-blue-light);border-color:var(--acb-blue);color:var(--acb-blue);font-weight:600}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+@media(max-width:840px){.grid{grid-template-columns:1fr}}
+.card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
+.sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:14px;font-weight:600;color:var(--acb-text);margin-bottom:7px}
+.in-wrap{position:relative;display:flex;align-items:center}
+.in-wrap .pre,.in-wrap .suf{position:absolute;color:var(--acb-text-light);font-size:15px;font-weight:500;pointer-events:none}
+.in-wrap .pre{left:14px}.in-wrap .suf{right:14px}
+input[type=text],input[type=number]{width:100%;padding:13px 16px;background:#fff;border:1.5px solid var(--acb-border);border-radius:10px;color:var(--acb-text);font-size:16px;font-family:inherit;outline:none;transition:border-color .25s,box-shadow .25s}
+.in-wrap.has-pre input{padding-left:30px}
+.in-wrap.has-suf input{padding-right:34px}
+input:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(61,90,241,.09)}
+input[type=range]{width:100%;accent-color:var(--acb-blue);margin-top:6px}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+.hint{font-size:12.5px;color:var(--acb-text-light);margin-top:6px;line-height:1.5}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.chip{padding:8px 13px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:12.5px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s;line-height:1.3}
+.chip b{font-weight:700;margin-right:4px}
+.chip.on{background:var(--acb-blue-light);border-color:var(--acb-blue);color:var(--acb-blue);font-weight:600}
+.hero{text-align:center;padding:8px 0 4px}
+.hero .big{font-size:46px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.hero .big.pos{color:var(--acb-green)}.hero .big.neg{color:var(--acb-red)}
+.hero .cap-label{font-size:13.5px;color:var(--acb-text-light);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.verdict{display:inline-block;margin-top:12px;font-size:13.5px;font-weight:600;padding:7px 16px;border-radius:50px}
+.verdict.low{background:#EEF6FE;color:#1d6fb8;border:1px solid #BBD9F2}
+.verdict.mod{background:#EFFAF1;color:var(--acb-green);border:1px solid #BFE8C8}
+.verdict.high{background:var(--acb-warn-bg);color:#B07916;border:1px solid #F0DCB2}
+.verdict.vhigh{background:#FDEEEE;color:var(--acb-red);border:1px solid #F2C4C4}
+.nodeal{background:var(--acb-warn-bg);border:1px solid #F0DCB2;border-left:4px solid var(--acb-warn);border-radius:6px 12px 12px 6px;padding:14px 16px;margin-top:16px;font-size:13.5px;color:var(--acb-text-mid);line-height:1.6}
+.nodeal strong{color:var(--acb-text);display:block;margin-bottom:3px}
+.wf{margin:20px 0 6px}
+.wf svg{width:100%;height:auto;display:block}
+.stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px dashed var(--acb-border);font-size:14.5px}
+.stat-row:last-child{border-bottom:none}
+.stat-row .k{color:var(--acb-text-mid)}
+.stat-row .v{font-weight:700;font-variant-numeric:tabular-nums}
+.stat-row .v.pos{color:var(--acb-green)}.stat-row .v.neg{color:var(--acb-red)}
+.acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--acb-text);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;padding:10px 12px;border-radius:10px;width:230px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;text-transform:none;letter-spacing:normal}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble{opacity:1}
+@media(max-width:720px){.acb-tip-bubble{left:auto;right:-10px;transform:none}}
+.edu{background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:16px 18px;margin-top:18px}
+.edu-title{font-size:14px;font-weight:700;color:var(--acb-text);margin-bottom:10px}
+.edu-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.edu-item .dot{flex-shrink:0;width:10px;height:10px;border-radius:50%;margin-top:5px}
+.edu-item p{font-size:13px;color:var(--acb-text-mid);line-height:1.6}
+.edu-note{font-size:12.5px;color:var(--acb-text-light);line-height:1.55;border-top:1px dashed var(--acb-border);padding-top:10px;margin-top:2px}
+.matrix-card{margin-top:22px}
+.matrix{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+.matrix th,.matrix td{padding:8px 6px;text-align:center;border:1px solid var(--acb-border)}
+.matrix th{background:#FAFBFD;color:var(--acb-text-mid);font-weight:600;font-size:12px}
+.matrix td.cur{background:var(--acb-blue);color:#fff;font-weight:700;border-color:var(--acb-blue)}
+.matrix td.bad{color:var(--acb-red)}
+.matrix-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.explain{display:flex;gap:14px;align-items:flex-start;background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:16px 18px;margin-top:18px}
+.explain svg{flex-shrink:0;margin-top:2px}
+.explain p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.6}
+.explain a{color:var(--acb-blue);font-weight:600;text-decoration:none}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.btn-secondary{padding:11px 24px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:var(--acb-blue-mid);color:var(--acb-blue)}
+.acb-btn-primary{display:inline-block;padding:14px 36px;border-radius:50px;border:none;background:var(--acb-blue);color:#fff;font-size:15px;font-family:inherit;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(61,90,241,.27);transition:all .2s}
+.acb-btn-primary:hover{background:var(--acb-blue-dark);transform:translateY(-1px)}
+.acb-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:var(--acb-blue-light);border-left:4px solid var(--acb-blue);border-radius:6px 16px 16px 6px;padding:24px 28px;margin-top:34px}
+.acb-cta-title{font-size:19px;font-weight:700;color:var(--acb-text);margin-bottom:6px}
+.acb-cta p{font-size:14.5px;color:var(--acb-text-mid);line-height:1.55;margin:0;max-width:520px}
+.acb-cta-actions{display:flex;flex-direction:column;align-items:center;gap:8px}
+.acb-cta-tel{font-size:13px;color:var(--acb-blue);text-decoration:none;font-weight:600;white-space:nowrap}
+.acb-rating{display:flex;flex-direction:column;align-items:center;gap:6px;margin:34px auto 0;text-align:center}
+.acb-star{background:none;border:none;font-size:30px;line-height:1;color:#D0D3DC;cursor:pointer;padding:2px 3px;transition:color .15s,transform .15s;font-family:inherit}
+.acb-star.on{color:var(--acb-gold)}
+.acb-star:hover{transform:scale(1.15)}
+.acb-rating-meta{font-size:13px;color:var(--acb-text-light)}
+.disclaimer{font-size:12px;color:var(--acb-text-light);text-align:center;line-height:1.6;margin-top:26px;max-width:640px;margin-left:auto;margin-right:auto}
+.fade{animation:fadeIn .35s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media print{
+  body{background:#fff}
+  .modes,.actions,.acb-cta,.acb-rating{display:none!important}
+  .card{box-shadow:none;border-color:#ccc}
+  .wrap{padding:0}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tool-head">
+    <h1>70% Rule Calculator</h1>
+    <p>Find the most you can pay for a fix-and-flip — ARV × your rule % minus repairs — then pressure-test a real asking price before you make an offer.</p>
+    <div class="badges"><span class="badge">100% Free</span><span class="badge">No Signup</span><span class="badge">No Email Required</span></div>
+  </div>
+
+  <div class="modes" role="tablist" aria-label="Calculator mode">
+    <button class="mode-btn on" data-mode="mao" role="tab" aria-selected="true">Max Offer</button>
+    <button class="mode-btn" data-mode="deal" role="tab" aria-selected="false">Deal Check</button>
+  </div>
+
+  <div class="grid">
+    <div class="card" id="inputsCard">
+      <div class="sec-label" id="inputsLabel">Deal numbers</div>
+
+      <div class="field">
+        <label for="arv">After repair value (ARV)
+          <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">What the home will sell for after renovation. Estimate it from comps: 3–6 recently sold, fully-renovated homes within ~0.5 miles, similar beds/baths/square footage, sold in the last 3–6 months. Be conservative — every dollar of optimism here inflates your offer.</span></span>
+        </label>
+        <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="arv" inputmode="decimal" value="300,000"></div>
+        <div class="hint">The renovated resale price, not today&rsquo;s as-is price.</div>
+      </div>
+
+      <div class="field">
+        <label for="repairs">Estimated repair costs
+          <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Full renovation budget: materials, labor, permits, dumpsters — plus a 10–20% contingency for surprises behind the walls. Underestimating rehab is the #1 way flips lose money.</span></span>
+        </label>
+        <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="repairs" inputmode="decimal" value="40,000"></div>
+      </div>
+
+      <div class="field" id="fOffer" style="display:none">
+        <label for="offer">Asking / offer price
+          <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">The seller&rsquo;s asking price, or the offer you&rsquo;re considering. We&rsquo;ll compare it to your max allowable offer and show the margin it actually leaves you.</span></span>
+        </label>
+        <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="offer" inputmode="decimal" value="185,000"></div>
+      </div>
+
+      <div class="field">
+        <label for="rulePct">Rule percentage
+          <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">The share of ARV you can pay before repairs. 70% is the classic rule of thumb; the rest covers your costs and profit. Lower it for riskier deals, raise it where competition or a wholetail strategy justifies a thinner margin.</span></span>
+        </label>
+        <div class="in-wrap has-suf"><input type="number" id="rulePct" inputmode="decimal" value="70" step="1" min="60" max="85"><span class="suf">%</span></div>
+        <input type="range" id="rulePctRange" min="60" max="85" step="1" value="70" aria-label="Rule percentage slider">
+        <div class="chips" id="ruleChips" role="group" aria-label="Rule percentage presets">
+          <button type="button" class="chip" data-set="65" data-hi="65"><b>65%</b>expensive markets / high risk</button>
+          <button type="button" class="chip on" data-set="70" data-hi="70"><b>70%</b>standard</button>
+          <button type="button" class="chip" data-set="75" data-hi="80"><b>75–80%</b>competitive / wholetail</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" aria-live="polite">
+      <div class="sec-label">Results</div>
+      <div class="hero">
+        <div class="cap-label" id="heroLabel">Maximum Allowable Offer</div>
+        <div class="big" id="heroVal">$170,000</div>
+        <div id="heroVerdict"></div>
+      </div>
+      <div class="nodeal" id="noDeal" style="display:none">
+        <strong>This deal doesn&rsquo;t work at these numbers.</strong>
+        <span id="noDealMsg"></span>
+      </div>
+      <div class="wf" id="wfBox" aria-hidden="true"></div>
+      <div id="statRows"></div>
+      <div class="edu" id="eduCard">
+        <div class="edu-title">Where the <span id="eduPct">30%</span> goes</div>
+        <div class="edu-item"><span class="dot" style="background:#8B9CF7"></span>
+          <p><strong>Buy, hold &amp; sell costs — roughly 10–15% of ARV.</strong> Two sets of closing costs, loan interest and points, property taxes, insurance and utilities while you hold, and the agent commission when you sell.</p>
+        </div>
+        <div class="edu-item"><span class="dot" style="background:#16A34A"></span>
+          <p><strong>Target profit — roughly 15–20% of ARV.</strong> Your pay for the risk, the capital, and months of work. Most experienced flippers won&rsquo;t take a project that pencils below this.</p>
+        </div>
+        <p class="edu-note">Add those together and you get ~30% — that&rsquo;s why the rule discounts ARV by 30% <em>before</em> repairs even enter the math.</p>
+      </div>
+      <div class="explain">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="#3D5AF1"/></svg>
+        <p><strong>The 70% rule is a screen, not an underwriting model.</strong> It shines on mid-priced flips; on very cheap or very expensive homes, fixed costs distort the percentage — always follow up with a full cost workup. Planning to rent instead of flip? Run the numbers in our <a href="https://www.advancedcb.com/resources/rental-property-roi-calculator" target="_top">Rental Property ROI Calculator</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card matrix-card">
+    <div class="sec-label" id="matrixTitle">Sensitivity — max offer across ARV (±10%) and repairs (±25%)</div>
+    <div class="matrix-scroll"><table class="matrix" id="matrix"></table></div>
+    <p class="hint" style="margin-top:10px">Your current inputs are highlighted. Red cells mean no workable offer at that combination — use this to see how much rehab-budget slip or a softer resale market your offer can survive.</p>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn-secondary" id="copyBtn">Copy results summary</button>
+    <button type="button" class="btn-secondary" onclick="window.print()">Print results</button>
+  </div>
+
+  <div class="acb-rating" id="acbRating" aria-label="Rate this tool">
+    <div class="acb-rating-stars" id="acbStars" role="radiogroup"></div>
+    <div class="acb-rating-meta" id="acbRatingMeta"></div>
+  </div>
+
+  <div class="acb-cta">
+    <div class="acb-cta-text">
+      <div class="acb-cta-title">Tenant left owing money?</div>
+      <p>Advanced Collection Bureau has recovered over <strong>$85&nbsp;million</strong> in unpaid rent, fees, and damages for landlords and property managers. No recovery, no fee.</p>
+    </div>
+    <div class="acb-cta-actions">
+      <a class="acb-btn-primary" href="https://www.advancedcb.com/" target="_top">Get Started</a>
+      <a class="acb-cta-tel" href="tel:3216334999">or call (321) 633-4999</a>
+    </div>
+  </div>
+
+  <p class="disclaimer">This calculator provides estimates for educational purposes only and is not financial, investment, or tax advice. The 70% rule is a screening shortcut — verify all figures, comps, and rehab budgets independently before making investment decisions. © Advanced Collection Bureau, Inc.</p>
+</div>
+
+<script>
+(function(){
+"use strict";
+var fmtUSD=function(n,c){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:c?2:0,maximumFractionDigits:c?2:0}).format(isFinite(n)?n:0);};
+var fmtPct=function(n,d){return (isFinite(n)?n:0).toFixed(d==null?2:d)+'%';};
+var clamp=function(n,a,b){return Math.min(b,Math.max(a,n));};
+var $=function(id){return document.getElementById(id);};
+var LS='acb:70-percent-rule-calculator:';
+
+function moneyVal(el){var v=parseFloat(String(el.value).replace(/[^0-9.\-]/g,''));return isFinite(v)?v:0;}
+function fmtMoneyField(el){var v=moneyVal(el);el.value=v?v.toLocaleString('en-US',{maximumFractionDigits:0}):'';}
+function numVal(el){var v=parseFloat(el.value);return isFinite(v)?v:0;}
+
+var mode='mao';
+var els={arv:$('arv'),repairs:$('repairs'),offer:$('offer'),rulePct:$('rulePct'),rulePctRange:$('rulePctRange')};
+
+/* persistence */
+try{
+  ['arv','repairs','offer','rulePct'].forEach(function(id){
+    var s=localStorage.getItem(LS+id);if(s!==null&&s!=='')$(id).value=s;
+  });
+  els.rulePctRange.value=clamp(numVal(els.rulePct),60,85);
+  var m=localStorage.getItem(LS+'mode');if(m==='mao'||m==='deal')mode=m;
+}catch(e){}
+function persist(){try{
+  ['arv','repairs','offer','rulePct'].forEach(function(id){localStorage.setItem(LS+id,$(id).value);});
+  localStorage.setItem(LS+'mode',mode);
+}catch(e){}}
+
+/* mode switching */
+var modeBtns=document.querySelectorAll('.mode-btn');
+function setMode(m){
+  mode=m;
+  modeBtns.forEach(function(b){var on=b.dataset.mode===m;b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false');});
+  $('fOffer').style.display=(m==='deal')?'':'none';
+  $('inputsLabel').textContent=m==='deal'?'Deal numbers & price':'Deal numbers';
+  calc();persist();
+}
+modeBtns.forEach(function(b){b.addEventListener('click',function(){setMode(b.dataset.mode);});});
+
+/* rule preset chips */
+var chips=document.querySelectorAll('#ruleChips .chip');
+chips.forEach(function(c){c.addEventListener('click',function(){
+  els.rulePct.value=c.dataset.set;
+  els.rulePctRange.value=c.dataset.set;
+  calc();persist();
+});});
+function syncChips(p){
+  chips.forEach(function(c){
+    var lo=parseFloat(c.dataset.set),hi=parseFloat(c.dataset.hi);
+    c.classList.toggle('on',p>=lo&&p<=hi);
+  });
+}
+
+function tip(t){return '<span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">'+t+'</span></span>';}
+function statRow(k,v,tipTxt,vCls){
+  return '<div class="stat-row"><span class="k">'+k+(tipTxt?tip(tipTxt):'')+'</span><span class="v'+(vCls?' '+vCls:'')+'">'+v+'</span></div>';
+}
+
+/* SVG waterfall */
+function buildWaterfall(rows,scale){
+  var W=640,rowH=44,H=rows.length*rowH-6;
+  var s='<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Deal breakdown waterfall">';
+  rows.forEach(function(r,i){
+    var y=i*rowH;
+    var x0=scale>0?clamp(r.from/scale,0,1)*W:0;
+    var x1=scale>0?clamp(r.to/scale,0,1)*W:0;
+    var w=x1-x0;
+    s+='<text x="0" y="'+(y+12)+'" font-size="12.5" font-weight="600" fill="#4A4A68" font-family="Outfit,sans-serif">'+r.label+'</text>';
+    s+='<text x="'+W+'" y="'+(y+12)+'" text-anchor="end" font-size="12.5" font-weight="700" fill="'+(r.valColor||'#1A1A2E')+'" font-family="Outfit,sans-serif">'+r.val+'</text>';
+    s+='<rect x="0" y="'+(y+19)+'" width="'+W+'" height="14" rx="4" fill="#F4F5F9"/>';
+    if(w>0.5){s+='<rect x="'+x0.toFixed(1)+'" y="'+(y+19)+'" width="'+w.toFixed(1)+'" height="14" rx="4" fill="'+r.color+'"/>';}
+    else{s+='<rect x="'+x0.toFixed(1)+'" y="'+(y+19)+'" width="2.5" height="14" fill="'+r.color+'"/>';}
+  });
+  $('wfBox').innerHTML=s+'</svg>';
+}
+
+/* sensitivity matrix */
+function buildMatrix(arv,rep,rule){
+  var t=$('matrix'),aSteps=[-0.10,-0.05,0,0.05,0.10],rSteps=[-0.25,-0.125,0,0.125,0.25];
+  var html='<thead><tr><th>Repairs \\ ARV</th>';
+  aSteps.forEach(function(s){html+='<th>'+fmtUSD(arv*(1+s))+(s===0?' ◆':'')+'</th>';});
+  html+='</tr></thead><tbody>';
+  rSteps.forEach(function(rs){
+    html+='<tr><th>'+fmtUSD(rep*(1+rs))+(rs===0?' ◆':'')+'</th>';
+    aSteps.forEach(function(as){
+      var m=arv*(1+as)*rule-rep*(1+rs);
+      var cls=(rs===0&&as===0)?' class="cur"':(m<=0?' class="bad"':'');
+      html+='<td'+cls+'>'+fmtUSD(m)+'</td>';
+    });
+    html+='</tr>';
+  });
+  t.innerHTML=html+'</tbody>';
+}
+
+var lastSummary='';
+function calc(){
+  var arv=moneyVal(els.arv),repairs=moneyVal(els.repairs),offerP=moneyVal(els.offer);
+  var pct=clamp(numVal(els.rulePct),60,85),rule=pct/100,marginPct=100-pct;
+  syncChips(pct);
+  $('eduPct').textContent=Math.round(marginPct)+'%';
+  var margin=arv*(1-rule);                 /* held-back margin for costs + profit */
+  var mao=arv*rule-repairs;                /* maximum allowable offer */
+  var heroVal=$('heroVal'),heroLabel=$('heroLabel'),rows='';
+
+  /* "doesn't work" callout */
+  var dead=mao<=0;
+  $('noDeal').style.display=dead?'':'none';
+  if(dead){
+    var minArv=rule>0?repairs/rule:0;
+    $('noDealMsg').textContent='At a '+pct+'% rule, '+fmtUSD(repairs)+' of repairs eats the entire allowance'+(arv>0?' on a '+fmtUSD(arv)+' ARV':'')+'. You’d need an ARV of at least '+fmtUSD(minArv)+' just to reach a $0 offer — renegotiate the price, trim the scope, or walk away.';
+  }
+
+  if(mode==='mao'){
+    heroLabel.textContent='Maximum Allowable Offer';
+    heroVal.textContent=fmtUSD(mao);
+    heroVal.className='big '+(dead?'neg':'pos');
+    $('heroVerdict').innerHTML=dead
+      ?'<span class="verdict vhigh">No workable offer at these numbers</span>'
+      :'<span class="verdict mod">'+fmtUSD(arv)+' ARV × '+pct+'% − '+fmtUSD(repairs)+' repairs</span>';
+    buildWaterfall([
+      {label:'After repair value (ARV)',from:0,to:arv,color:'#3D5AF1',val:fmtUSD(arv)},
+      {label:'− Margin held back ('+Math.round(marginPct)+'% of ARV)',from:arv*rule,to:arv,color:'#8B9CF7',val:'−'+fmtUSD(margin)},
+      {label:'− Repair costs',from:Math.max(0,mao),to:arv*rule,color:'#E8A83E',val:'−'+fmtUSD(repairs)},
+      {label:'= Maximum allowable offer',from:0,to:Math.max(0,mao),color:dead?'#DC2626':'#16A34A',val:fmtUSD(mao),valColor:dead?'#DC2626':'#16A34A'}
+    ],arv);
+    rows+=statRow('After repair value (ARV)',fmtUSD(arv));
+    rows+=statRow('Margin held back ('+Math.round(marginPct)+'% of ARV)','−'+fmtUSD(margin),'Covers buying, holding, and selling costs plus your target profit — the breakdown is in the &ldquo;Where the '+Math.round(marginPct)+'% goes&rdquo; card below.');
+    rows+=statRow('Estimated repairs','−'+fmtUSD(repairs));
+    rows+=statRow('Maximum allowable offer',fmtUSD(mao),null,dead?'neg':'pos');
+    rows+=statRow('MAO as % of ARV',arv>0?fmtPct(mao/arv*100,1):'—','How deep your all-in discount is. Seasoned flippers often land between 40% and 65% of ARV depending on rehab size.');
+    rows+=statRow('At a 65% rule you could offer',fmtUSD(arv*0.65-repairs));
+    rows+=statRow('At a 75% rule you could offer',fmtUSD(arv*0.75-repairs));
+    lastSummary='70% Rule Calculator (advancedcb.com)\nARV: '+fmtUSD(arv)+'\nRepairs: '+fmtUSD(repairs)+'\nRule: '+pct+'%\nMargin held back: '+fmtUSD(margin)+' ('+Math.round(marginPct)+'% of ARV)\nMaximum Allowable Offer: '+fmtUSD(mao);
+  }else{
+    var profit=arv-offerP-repairs;                      /* gross profit at ARV */
+    var impMargin=arv>0?profit/arv*100:NaN;             /* implied margin % */
+    var diff=offerP-mao;                                /* over/under MAO */
+    var needArv=rule>0?(offerP+repairs)/rule:0;         /* reverse: ARV to satisfy rule */
+    var beArv=offerP+repairs;                           /* simple break-even ARV */
+    heroLabel.textContent='Projected Gross Profit at ARV';
+    heroVal.textContent=fmtUSD(profit);
+    heroVal.className='big '+(profit>0?'pos':'neg');
+    var v;
+    if(dead)v='<span class="verdict vhigh">No workable offer at these numbers</span>';
+    else if(diff>0)v='<span class="verdict vhigh">Over MAO — '+fmtUSD(diff)+' above your '+fmtUSD(mao)+' max</span>';
+    else if(-diff<0.03*arv)v='<span class="verdict high">Thin — meets the '+pct+'% rule with little cushion</span>';
+    else v='<span class="verdict mod">Good deal — '+fmtUSD(-diff)+' under your '+fmtUSD(mao)+' max</span>';
+    $('heroVerdict').innerHTML=v;
+    buildWaterfall([
+      {label:'After repair value (ARV)',from:0,to:arv,color:'#3D5AF1',val:fmtUSD(arv)},
+      {label:'− Purchase price (your offer)',from:Math.max(0,arv-offerP),to:arv,color:'#8B9CF7',val:'−'+fmtUSD(offerP)},
+      {label:'− Repair costs',from:Math.max(0,profit),to:Math.max(0,arv-offerP),color:'#E8A83E',val:'−'+fmtUSD(repairs)},
+      {label:'= Gross profit at ARV',from:0,to:Math.max(0,profit),color:profit>0?'#16A34A':'#DC2626',val:fmtUSD(profit),valColor:profit>0?'#16A34A':'#DC2626'}
+    ],arv);
+    rows+=statRow('Maximum allowable offer ('+pct+'% rule)',fmtUSD(mao),null,dead?'neg':null);
+    rows+=statRow('Your price vs. MAO',diff>0?'Over by '+fmtUSD(diff):'Under by '+fmtUSD(-diff),null,diff>0?'neg':'pos');
+    rows+=statRow('Implied margin',isFinite(impMargin)?fmtPct(impMargin,1)+' of ARV':'—','(ARV − price − repairs) ÷ ARV. The '+pct+'% rule wants at least '+Math.round(marginPct)+'% left over for costs and profit.',isFinite(impMargin)&&impMargin>=marginPct?'pos':null);
+    rows+=statRow('Projected gross profit at ARV',fmtUSD(profit),'Before holding, financing, closing, and selling costs — expect those to consume roughly 10–15% of ARV.',profit>0?'pos':'neg');
+    rows+=statRow('ARV needed to meet the '+pct+'% rule',fmtUSD(needArv),'Reverse check: (price + repairs) ÷ '+pct+'%. If your comps can&rsquo;t support this resale value, the price is too high for the rule.');
+    rows+=statRow('Break-even ARV (gross)',fmtUSD(beArv),'The resale price at which you&rsquo;d merely recoup purchase + repairs — it ignores every transaction, holding, and selling cost, so a real flip needs much more.');
+    lastSummary='70% Rule Calculator — Deal Check (advancedcb.com)\nARV: '+fmtUSD(arv)+'\nRepairs: '+fmtUSD(repairs)+'\nRule: '+pct+'%\nAsking/offer price: '+fmtUSD(offerP)+'\nMAO: '+fmtUSD(mao)+' ('+(diff>0?'over by '+fmtUSD(diff):'under by '+fmtUSD(-diff))+')\nImplied margin: '+(isFinite(impMargin)?fmtPct(impMargin,1):'—')+'\nProjected gross profit at ARV: '+fmtUSD(profit)+'\nARV needed to meet rule: '+fmtUSD(needArv);
+  }
+  $('statRows').innerHTML=rows;
+  buildMatrix(arv,repairs,rule);
+}
+
+/* wire inputs */
+['arv','repairs','offer'].forEach(function(id){
+  $(id).addEventListener('input',function(){calc();persist();});
+  $(id).addEventListener('blur',function(){fmtMoneyField(this);calc();persist();});
+});
+els.rulePct.addEventListener('input',function(){
+  els.rulePctRange.value=clamp(numVal(els.rulePct),60,85);
+  calc();persist();
+});
+els.rulePct.addEventListener('blur',function(){
+  this.value=clamp(numVal(this),60,85);
+  els.rulePctRange.value=this.value;
+  calc();persist();
+});
+els.rulePctRange.addEventListener('input',function(){els.rulePct.value=this.value;calc();persist();});
+
+$('copyBtn').addEventListener('click',function(){
+  var b=this;
+  (navigator.clipboard?navigator.clipboard.writeText(lastSummary):Promise.reject()).then(function(){
+    b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy results summary';},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=lastSummary;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy results summary';},1600);}catch(e){}
+    document.body.removeChild(ta);
+  });
+});
+
+setMode(mode);
+})();
+</script>
+
+<script>
+(function(){
+  var SEED={value:4.8,count:176};
+  var KEY='acb:70-percent-rule-calculator:rating';
+  var box=document.getElementById('acbStars'),meta=document.getElementById('acbRatingMeta');
+  var mine=parseInt(localStorage.getItem(KEY)||'0',10);
+  function agg(){var c=SEED.count+(mine?1:0);
+    var v=mine?((SEED.value*SEED.count+mine)/c):SEED.value;
+    return {v:Math.round(v*10)/10,c:c};}
+  function render(hover){
+    var a=agg();box.innerHTML='';
+    for(var i=1;i<=5;i++){(function(i){
+      var b=document.createElement('button');
+      b.type='button';b.className='acb-star'+((hover||mine||Math.round(a.v))>=i?' on':'');
+      b.setAttribute('aria-label',i+' star'+(i>1?'s':''));b.textContent='★';
+      b.onmouseenter=function(){render(i)};b.onmouseleave=function(){render(0)};
+      b.onclick=function(){mine=i;localStorage.setItem(KEY,String(i));render(0);
+        try{fetch('https://formsubmit.co/ajax/RATINGS_EMAIL',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({tool:'70-percent-rule-calculator',rating:i,_subject:'Tool rating: 70-percent-rule-calculator'})
+        }).catch(function(){});}catch(e){}};
+      box.appendChild(b);})(i);}
+    meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
+  }
+  render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var last=0;
+  function send(){
+    var h=document.documentElement.scrollHeight;
+    if(Math.abs(h-last)>2){last=h;parent.postMessage({acbTool:'70-percent-rule-calculator',height:h},'*');}
+  }
+  if(window.ResizeObserver){new ResizeObserver(send).observe(document.body);}
+  window.addEventListener('load',send);
+  setInterval(send,800);
+})();
+</script>
+</body>
+</html>

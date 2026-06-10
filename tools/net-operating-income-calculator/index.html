@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Net Operating Income (NOI) Calculator | Advanced Collection Bureau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --acb-blue:#3D5AF1;--acb-blue-dark:#2D45C6;--acb-blue-light:#EEF1FE;--acb-blue-mid:#D5DBFC;
+  --acb-bg:#F4F5F9;--acb-card:#FFFFFF;--acb-text:#1A1A2E;--acb-text-mid:#4A4A68;--acb-text-light:#8889A0;
+  --acb-border:#E2E4EC;--acb-warn:#E8A83E;--acb-warn-bg:#FEF9EE;--acb-green:#16A34A;--acb-red:#DC2626;--acb-gold:#F5B301;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-text);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 48px}
+.tool-head{text-align:center;margin-bottom:26px}
+.tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
+.tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+@media(max-width:840px){.grid{grid-template-columns:1fr}}
+.col{display:flex;flex-direction:column;gap:22px}
+.card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
+.sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
+.field{margin-bottom:16px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:14px;font-weight:600;color:var(--acb-text);margin-bottom:7px}
+.in-wrap{position:relative;display:flex;align-items:center}
+.in-wrap .pre,.in-wrap .suf{position:absolute;color:var(--acb-text-light);font-size:15px;font-weight:500;pointer-events:none}
+.in-wrap .pre{left:14px}.in-wrap .suf{right:14px}
+input[type=text],input[type=number]{width:100%;padding:13px 16px;background:#fff;border:1.5px solid var(--acb-border);border-radius:10px;color:var(--acb-text);font-size:16px;font-family:inherit;outline:none;transition:border-color .25s,box-shadow .25s}
+.in-wrap.has-pre input{padding-left:30px}
+.in-wrap.has-suf input{padding-right:34px}
+input:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(61,90,241,.09)}
+input[type=range]{width:100%;accent-color:var(--acb-blue);margin-top:6px}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+.hint{font-size:12.5px;color:var(--acb-text-light);margin-top:6px;line-height:1.5}
+.li-rows{margin-bottom:2px}
+.li-row{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.li-row input[type=text]{padding:10px 12px;font-size:15px}
+.li-label{flex:1.2 1 130px;min-width:120px}
+.li-amt{flex:1 1 116px;min-width:106px}
+.li-row .in-wrap.has-pre input{padding-left:26px}
+.li-row .in-wrap.has-suf input{padding-right:30px}
+.li-row .in-wrap .pre{left:10px;font-size:14px}
+.li-row .in-wrap .suf{right:10px;font-size:13px}
+.unit-tog{display:flex;align-self:stretch;border:1.5px solid var(--acb-border);border-radius:10px;overflow:hidden;flex-shrink:0;background:#fff}
+.unit-tog button{border:none;background:transparent;padding:0 10px;min-height:42px;font-family:inherit;font-size:12px;font-weight:600;color:var(--acb-text-light);cursor:pointer;border-left:1px solid var(--acb-border);transition:all .2s;white-space:nowrap}
+.unit-tog button:first-child{border-left:none}
+.unit-tog button.on{background:var(--acb-blue-light);color:var(--acb-blue)}
+.li-rm{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-light);font-size:17px;line-height:1;cursor:pointer;flex-shrink:0;font-family:inherit;transition:all .2s;padding:0}
+.li-rm:hover{border-color:var(--acb-red);color:var(--acb-red)}
+.empty-hint{font-size:13px;color:var(--acb-text-light);padding:4px 0 8px;font-style:italic}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.preset{padding:8px 14px;border-radius:50px;border:1.5px dashed var(--acb-blue-mid);background:#fff;color:var(--acb-blue);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s}
+.preset:hover{background:var(--acb-blue-light);border-style:solid;border-color:var(--acb-blue)}
+.preset.added{border:1.5px solid var(--acb-border);color:var(--acb-text-light);cursor:default;background:#FAFBFD}
+.preset.added:hover{background:#FAFBFD}
+.divider{border:none;border-top:1px dashed var(--acb-border);margin:18px 0}
+.not-opex{background:var(--acb-warn-bg);border:1px solid #F0DCB2;border-radius:16px;padding:22px 24px}
+.not-opex .nox-title{display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:700;color:#B07916;margin-bottom:10px}
+.not-opex ul{list-style:none}
+.not-opex li{font-size:13.5px;color:var(--acb-text-mid);line-height:1.55;padding:8px 0;border-bottom:1px dashed #F0DCB2}
+.not-opex li:last-child{border-bottom:none;padding-bottom:0}
+.not-opex strong{color:var(--acb-text)}
+.hero{text-align:center;padding:8px 0 4px}
+.hero .big{font-size:42px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.hero .big.pos{color:var(--acb-green)}.hero .big.neg{color:var(--acb-red)}
+.hero .noi-label{font-size:13.5px;color:var(--acb-text-light);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.hero .sub{font-size:15px;color:var(--acb-text-mid);font-weight:600;margin-top:6px}
+.chip-line{text-align:center;margin-top:14px}
+.verdict{display:inline-block;font-size:13px;font-weight:600;padding:7px 16px;border-radius:50px;line-height:1.45}
+.verdict.low{background:#EEF6FE;color:#1d6fb8;border:1px solid #BBD9F2}
+.verdict.mod{background:#EFFAF1;color:var(--acb-green);border:1px solid #BFE8C8}
+.verdict.high{background:var(--acb-warn-bg);color:#B07916;border:1px solid #F0DCB2}
+.verdict.vhigh{background:#FDEEEE;color:var(--acb-red);border:1px solid #F2C4C4}
+.stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px dashed var(--acb-border);font-size:14.5px}
+.stat-row:last-child{border-bottom:none}
+.stat-row .k{color:var(--acb-text-mid)}
+.stat-row .v{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.stat-row .v.neg{color:var(--acb-red)}
+.acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--acb-text);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;padding:10px 12px;border-radius:10px;width:230px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;text-transform:none;letter-spacing:normal}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble{opacity:1}
+@media(max-width:720px){.acb-tip-bubble{left:auto;right:-10px;transform:none}}
+.bars{margin-top:20px}
+.bars svg{width:100%;height:auto;display:block}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.mini-row{grid-template-columns:1fr}}
+.explain{display:flex;gap:14px;align-items:flex-start;background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:16px 18px;margin-top:18px}
+.explain svg{flex-shrink:0;margin-top:2px}
+.explain p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.6}
+.explain a{color:var(--acb-blue);font-weight:600;text-decoration:none}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.btn-secondary{padding:11px 24px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:var(--acb-blue-mid);color:var(--acb-blue)}
+.acb-btn-primary{display:inline-block;padding:14px 36px;border-radius:50px;border:none;background:var(--acb-blue);color:#fff;font-size:15px;font-family:inherit;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(61,90,241,.27);transition:all .2s}
+.acb-btn-primary:hover{background:var(--acb-blue-dark);transform:translateY(-1px)}
+.acb-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:var(--acb-blue-light);border-left:4px solid var(--acb-blue);border-radius:6px 16px 16px 6px;padding:24px 28px;margin-top:34px}
+.acb-cta-title{font-size:19px;font-weight:700;color:var(--acb-text);margin-bottom:6px}
+.acb-cta p{font-size:14.5px;color:var(--acb-text-mid);line-height:1.55;margin:0;max-width:520px}
+.acb-cta-actions{display:flex;flex-direction:column;align-items:center;gap:8px}
+.acb-cta-tel{font-size:13px;color:var(--acb-blue);text-decoration:none;font-weight:600;white-space:nowrap}
+.acb-rating{display:flex;flex-direction:column;align-items:center;gap:6px;margin:34px auto 0;text-align:center}
+.acb-star{background:none;border:none;font-size:30px;line-height:1;color:#D0D3DC;cursor:pointer;padding:2px 3px;transition:color .15s,transform .15s;font-family:inherit}
+.acb-star.on{color:var(--acb-gold)}
+.acb-star:hover{transform:scale(1.15)}
+.acb-rating-meta{font-size:13px;color:var(--acb-text-light)}
+.disclaimer{font-size:12px;color:var(--acb-text-light);text-align:center;line-height:1.6;margin-top:26px;max-width:640px;margin-left:auto;margin-right:auto}
+.fade{animation:fadeIn .35s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media print{
+  body{background:#fff}
+  .presets,.li-rm,.actions,.acb-cta,.acb-rating{display:none!important}
+  .card,.not-opex{box-shadow:none;border-color:#ccc}
+  .wrap{padding:0}
+  .grid{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tool-head">
+    <h1>Net Operating Income (NOI) Calculator</h1>
+    <p>Build an itemized income and expense statement for your rental and get NOI, expense ratio, and cap rate — instantly, line by line.</p>
+    <div class="badges"><span class="badge">100% Free</span><span class="badge">No Signup</span><span class="badge">No Email Required</span></div>
+  </div>
+
+  <div class="grid">
+    <div class="col">
+      <div class="card">
+        <div class="sec-label">Income</div>
+        <div class="li-rows" id="incomeRows"></div>
+        <div class="presets" id="incPresets" aria-label="Add income line"></div>
+        <hr class="divider">
+        <div class="field">
+          <label for="vac">Vacancy &amp; credit loss
+            <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Income you won't actually collect: empty weeks between tenants plus rent that goes unpaid. 5% (about 18 days a year) is a common planning number; check your market's vacancy rate.</span></span>
+          </label>
+          <div class="in-wrap has-suf"><input type="number" id="vac" inputmode="decimal" value="5" step="0.5" min="0" max="100"><span class="suf">%</span></div>
+          <input type="range" id="vacRange" min="0" max="20" step="0.5" value="5" aria-label="Vacancy and credit loss slider">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">Operating expenses</div>
+        <div class="li-rows" id="expenseRows"></div>
+        <div class="presets" id="expPresets" aria-label="Add expense line"></div>
+        <p class="hint" style="margin-top:12px">Tip: set property management to <strong>% EGI</strong> if your manager charges a percentage of collected income — most do.</p>
+      </div>
+
+      <div class="not-opex">
+        <div class="nox-title">
+          <svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="#B07916"/></svg>
+          These are NOT operating expenses — leave them out
+        </div>
+        <ul>
+          <li><strong>Mortgage payments (debt service).</strong> NOI measures the property, not your loan. Two investors can buy the same building with different financing — NOI stays identical so deals stay comparable.</li>
+          <li><strong>Capital expenditures (capex).</strong> A new roof or HVAC is a long-term investment in the asset, not a recurring cost of operating it. Lenders and appraisers exclude it (budget for it separately).</li>
+          <li><strong>Depreciation.</strong> It's a paper deduction for taxes, not cash leaving your pocket. NOI tracks real operating cash.</li>
+          <li><strong>Income taxes.</strong> Your personal tax bill depends on your bracket, entity, and other income — nothing to do with how the property performs.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" aria-live="polite">
+      <div class="sec-label">Results</div>
+      <div class="hero">
+        <div class="noi-label">Net Operating Income (annual)</div>
+        <div class="big pos" id="heroVal">$0</div>
+        <div class="sub" id="heroMonthly"></div>
+      </div>
+      <div class="chip-line" id="oerChip"></div>
+      <div style="margin-top:18px" id="statRows"></div>
+
+      <div class="bars">
+        <svg id="barsSvg" viewBox="0 0 640 134" role="img" aria-label="Income, expenses, and NOI bar chart" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+
+      <hr class="divider">
+      <div class="sec-label">Optional extras</div>
+      <div class="mini-row">
+        <div class="field">
+          <label for="units">Number of units
+            <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">For duplexes and multifamily: enter the unit count to see NOI per unit — handy for comparing buildings of different sizes.</span></span>
+          </label>
+          <div class="in-wrap"><input type="number" id="units" inputmode="numeric" min="1" max="9999" step="1" placeholder="e.g. 4"></div>
+        </div>
+        <div class="field">
+          <label for="propVal">Property value
+            <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Purchase price or current market value. Add it and we'll compute the cap rate (NOI ÷ value) on the spot.</span></span>
+          </label>
+          <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="propVal" inputmode="decimal" placeholder="e.g. 350,000"></div>
+        </div>
+      </div>
+
+      <div class="explain">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="#3D5AF1"/></svg>
+        <p><strong>NOI is the engine of property value.</strong> Appraisers and buyers price income property as NOI ÷ cap rate, so every dollar of NOI you add is worth $15–$25 of value at typical cap rates. Compare deals with our <a href="https://www.advancedcb.com/resources/cap-rate-calculator" target="_top">Cap Rate Calculator</a>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn-secondary" id="copyBtn">Copy results summary</button>
+    <button type="button" class="btn-secondary" onclick="window.print()">Print results</button>
+  </div>
+
+  <div class="acb-rating" id="acbRating" aria-label="Rate this tool">
+    <div class="acb-rating-stars" id="acbStars" role="radiogroup"></div>
+    <div class="acb-rating-meta" id="acbRatingMeta"></div>
+  </div>
+
+  <div class="acb-cta">
+    <div class="acb-cta-text">
+      <div class="acb-cta-title">Tenant left owing money?</div>
+      <p>Advanced Collection Bureau has recovered over <strong>$85&nbsp;million</strong> in unpaid rent, fees, and damages for landlords and property managers. No recovery, no fee.</p>
+    </div>
+    <div class="acb-cta-actions">
+      <a class="acb-btn-primary" href="https://www.advancedcb.com/" target="_top">Get Started</a>
+      <a class="acb-cta-tel" href="tel:3216334999">or call (321) 633-4999</a>
+    </div>
+  </div>
+
+  <p class="disclaimer">This calculator provides estimates for educational purposes only and is not financial, investment, or tax advice. Verify all figures independently before making investment decisions. © Advanced Collection Bureau, Inc.</p>
+</div>
+
+<script>
+(function(){
+"use strict";
+var fmtUSD=function(n,c){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:c?2:0,maximumFractionDigits:c?2:0}).format(isFinite(n)?n:0);};
+var fmtPct=function(n,d){return (isFinite(n)?n:0).toFixed(d==null?2:d)+'%';};
+var clamp=function(n,a,b){return Math.min(b,Math.max(a,n));};
+var $=function(id){return document.getElementById(id);};
+var LS='acb:net-operating-income-calculator:';
+var TIP='<span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">__T__</span></span>';
+
+function moneyStr(n){return isFinite(n)&&n!==0?Number(n).toLocaleString('en-US',{maximumFractionDigits:2}):(n===0?'0':'');}
+function parseAmt(s){var v=parseFloat(String(s).replace(/[^0-9.\-]/g,''));return isFinite(v)?v:0;}
+function moneyVal(el){return parseAmt(el.value);}
+function numVal(el){var v=parseFloat(el.value);return isFinite(v)?v:0;}
+
+/* ---------- data model ---------- */
+var INC_PRESETS=[
+  {l:'Parking',a:75,u:'mo'},
+  {l:'Laundry',a:50,u:'mo'},
+  {l:'Storage',a:40,u:'mo'},
+  {l:'Pet rent',a:35,u:'mo'},
+  {l:'Late fees',a:25,u:'mo'}
+];
+var EXP_PRESETS=[
+  {l:'Property tax',a:3000,u:'yr'},
+  {l:'Insurance',a:1500,u:'yr'},
+  {l:'Property management',a:8,u:'pct'},
+  {l:'Repairs & maintenance',a:100,u:'mo'},
+  {l:'Utilities',a:120,u:'mo'},
+  {l:'Landscaping / snow',a:60,u:'mo'},
+  {l:'Pest control',a:30,u:'mo'},
+  {l:'Trash',a:30,u:'mo'},
+  {l:'Legal & accounting',a:300,u:'yr'},
+  {l:'Advertising',a:150,u:'yr'}
+];
+var state={
+  income:[{l:'Base rent',a:2200,u:'mo'}],
+  vac:5,
+  exp:[
+    {l:'Property tax',a:3000,u:'yr'},
+    {l:'Insurance',a:1500,u:'yr'},
+    {l:'Property management',a:8,u:'pct'},
+    {l:'Repairs & maintenance',a:100,u:'mo'}
+  ],
+  units:'',
+  val:''
+};
+
+function sanitizeRows(rows,kind){
+  if(!Array.isArray(rows))return null;
+  var ok=[];
+  rows.forEach(function(r){
+    if(!r||typeof r!=='object')return;
+    var u=(r.u==='mo'||r.u==='yr'||(r.u==='pct'&&kind==='exp'))?r.u:'mo';
+    var a=parseFloat(r.a);if(!isFinite(a))a=0;
+    ok.push({l:String(r.l==null?'':r.l).slice(0,60),a:a,u:u});
+  });
+  return ok;
+}
+try{
+  var saved=JSON.parse(localStorage.getItem(LS+'model')||'null');
+  if(saved&&typeof saved==='object'){
+    var inc=sanitizeRows(saved.income,'inc'),exp=sanitizeRows(saved.exp,'exp');
+    if(inc)state.income=inc;
+    if(exp)state.exp=exp;
+    if(isFinite(parseFloat(saved.vac)))state.vac=clamp(parseFloat(saved.vac),0,100);
+    if(saved.units!=null)state.units=String(saved.units);
+    if(saved.val!=null)state.val=String(saved.val);
+  }
+}catch(e){}
+function persist(){try{localStorage.setItem(LS+'model',JSON.stringify(state));}catch(e){}}
+
+/* ---------- row rendering ---------- */
+var UNIT_NAMES={mo:'/mo',yr:'/yr',pct:'% EGI'};
+function buildRow(row,list,kind){
+  var div=document.createElement('div');div.className='li-row';
+  var lbl=document.createElement('input');
+  lbl.type='text';lbl.className='li-label';lbl.value=row.l;lbl.placeholder=kind==='inc'?'Income source':'Expense name';
+  lbl.setAttribute('aria-label',(kind==='inc'?'Income':'Expense')+' line label');
+  lbl.addEventListener('input',function(){row.l=this.value;refreshPresets();calc();persist();});
+  var wrap=document.createElement('div');wrap.className='in-wrap li-amt '+(row.u==='pct'?'has-suf':'has-pre');
+  var fix=document.createElement('span');fix.className=row.u==='pct'?'suf':'pre';fix.textContent=row.u==='pct'?'%':'$';
+  var amt=document.createElement('input');
+  amt.type='text';amt.inputMode='decimal';
+  amt.value=row.u==='pct'?String(row.a):moneyStr(row.a);
+  amt.setAttribute('aria-label',(row.l||'Line')+' amount');
+  amt.addEventListener('input',function(){row.a=parseAmt(this.value);calc();persist();});
+  amt.addEventListener('blur',function(){
+    if(row.u==='pct'){row.a=clamp(row.a,0,100);this.value=String(row.a);}
+    else{this.value=moneyStr(row.a);}
+    calc();persist();
+  });
+  if(row.u==='pct'){wrap.appendChild(amt);wrap.appendChild(fix);}
+  else{wrap.appendChild(fix);wrap.appendChild(amt);}
+  var units=kind==='inc'?['mo','yr']:['mo','yr','pct'];
+  var ut=document.createElement('div');ut.className='unit-tog';ut.setAttribute('role','group');ut.setAttribute('aria-label','Amount period for '+(row.l||'line'));
+  units.forEach(function(u){
+    var b=document.createElement('button');
+    b.type='button';b.textContent=UNIT_NAMES[u];
+    b.className=row.u===u?'on':'';
+    b.setAttribute('aria-pressed',row.u===u?'true':'false');
+    b.title=u==='pct'?'Percent of effective gross income':(u==='mo'?'Dollars per month':'Dollars per year');
+    b.addEventListener('click',function(){
+      if(row.u!==u){if(u==='pct')row.a=clamp(row.a,0,100);row.u=u;render();calc();persist();}
+    });
+    ut.appendChild(b);
+  });
+  var rm=document.createElement('button');
+  rm.type='button';rm.className='li-rm';rm.textContent='×';
+  rm.setAttribute('aria-label','Remove '+(row.l||'line'));
+  rm.addEventListener('click',function(){
+    var i=list.indexOf(row);if(i>-1)list.splice(i,1);
+    render();calc();persist();
+  });
+  div.appendChild(lbl);div.appendChild(wrap);div.appendChild(ut);div.appendChild(rm);
+  return div;
+}
+function render(){
+  var ic=$('incomeRows');ic.innerHTML='';
+  if(state.income.length){state.income.forEach(function(r){ic.appendChild(buildRow(r,state.income,'inc'));});}
+  else{var e1=document.createElement('div');e1.className='empty-hint';e1.textContent='No income lines yet — add one below.';ic.appendChild(e1);}
+  var ec=$('expenseRows');ec.innerHTML='';
+  if(state.exp.length){state.exp.forEach(function(r){ec.appendChild(buildRow(r,state.exp,'exp'));});}
+  else{var e2=document.createElement('div');e2.className='empty-hint';e2.textContent='No expense lines yet — add one below.';ec.appendChild(e2);}
+  refreshPresets();
+}
+
+/* ---------- preset add-buttons ---------- */
+function hasLabel(list,l){return list.some(function(r){return r.l.trim().toLowerCase()===l.toLowerCase();});}
+function focusLastRow(containerId,which){
+  var c=$(containerId),rows=c.querySelectorAll('.li-row');
+  if(!rows.length)return;
+  var ins=rows[rows.length-1].querySelectorAll('input');
+  var el=which==='label'?ins[0]:ins[1];
+  if(el){el.focus();if(el.value)el.select();}
+}
+function presetBtn(p,list,containerId){
+  var b=document.createElement('button');
+  b.type='button';b.className='preset';b.textContent='+ '+p.l;b.dataset.label=p.l;
+  b.addEventListener('click',function(){
+    if(hasLabel(list,p.l))return;
+    list.push({l:p.l,a:p.a,u:p.u});
+    render();calc();persist();
+    focusLastRow(containerId,'amount');
+  });
+  return b;
+}
+function customBtn(list,containerId){
+  var b=document.createElement('button');
+  b.type='button';b.className='preset';b.textContent='+ Custom';
+  b.addEventListener('click',function(){
+    list.push({l:'',a:0,u:'mo'});
+    render();calc();persist();
+    focusLastRow(containerId,'label');
+  });
+  return b;
+}
+function buildPresets(){
+  var pc=$('incPresets');
+  INC_PRESETS.forEach(function(p){pc.appendChild(presetBtn(p,state.income,'incomeRows'));});
+  pc.appendChild(customBtn(state.income,'incomeRows'));
+  var xc=$('expPresets');
+  EXP_PRESETS.forEach(function(p){xc.appendChild(presetBtn(p,state.exp,'expenseRows'));});
+  xc.appendChild(customBtn(state.exp,'expenseRows'));
+}
+function refreshPresets(){
+  [['incPresets',state.income],['expPresets',state.exp]].forEach(function(pair){
+    var btns=$(pair[0]).querySelectorAll('.preset[data-label]');
+    for(var i=0;i<btns.length;i++){
+      var added=hasLabel(pair[1],btns[i].dataset.label);
+      btns[i].classList.toggle('added',added);
+      btns[i].setAttribute('aria-disabled',added?'true':'false');
+      btns[i].textContent=(added?'✓ ':'+ ')+btns[i].dataset.label;
+    }
+  });
+}
+
+/* ---------- computation ---------- */
+function compute(){
+  var pgi=state.income.reduce(function(s,r){return s+r.a*(r.u==='mo'?12:1);},0);
+  var vac=clamp(parseFloat(state.vac)||0,0,100);
+  var vacLoss=pgi*vac/100;
+  var egi=pgi-vacLoss;
+  var opex=state.exp.reduce(function(s,r){
+    if(r.u==='pct')return s+egi*clamp(r.a,0,100)/100;
+    return s+r.a*(r.u==='mo'?12:1);
+  },0);
+  var noi=egi-opex;
+  var oer=egi>0?opex/egi*100:NaN;
+  return {pgi:pgi,vac:vac,vacLoss:vacLoss,egi:egi,opex:opex,noi:noi,oer:oer};
+}
+
+/* ---------- output rendering ---------- */
+function statRow(k,v,tip,negV){
+  return '<div class="stat-row"><span class="k">'+k+(tip?TIP.replace('__T__',tip):'')+'</span><span class="v'+(negV?' neg':'')+'">'+v+'</span></div>';
+}
+function oerChip(r){
+  if(!isFinite(r.oer)||r.egi<=0)return '';
+  var cls,txt;
+  if(r.oer<35){cls='low';txt='Expense ratio '+fmtPct(r.oer,1)+' — below the typical 35–55% range. Great if accurate; double-check you haven’t missed an expense.';}
+  else if(r.oer<=55){cls='mod';txt='Expense ratio '+fmtPct(r.oer,1)+' — inside the typical 35–55% range for rentals.';}
+  else if(r.oer<=80){cls='high';txt='Expense ratio '+fmtPct(r.oer,1)+' — above the typical 35–55% range. Look for costs to trim or rents to raise.';}
+  else{cls='vhigh';txt='Expense ratio '+fmtPct(r.oer,1)+' — expenses are consuming nearly all income. Re-check the numbers.';}
+  return '<span class="verdict '+cls+'">'+txt+'</span>';
+}
+function drawBars(r){
+  var svg=$('barsSvg');
+  var max=Math.max(r.egi,r.opex,Math.abs(r.noi));
+  if(!(max>0)){svg.innerHTML='';svg.setAttribute('aria-label','Bar chart unavailable — enter income to begin.');return;}
+  var bars=[
+    {l:'Effective gross income',v:r.egi,c:'#3D5AF1'},
+    {l:'Operating expenses',v:r.opex,c:'#E8A83E'},
+    {l:'Net operating income',v:r.noi,c:r.noi<0?'#DC2626':'#16A34A'}
+  ];
+  var W=640,h='';
+  bars.forEach(function(b,i){
+    var y=i*46;
+    var w=Math.max(3,Math.abs(b.v)/max*W);
+    h+='<text x="0" y="'+(y+12)+'" font-size="13" font-weight="600" fill="#4A4A68" font-family="Outfit,sans-serif">'+b.l+' — '+fmtUSD(b.v)+(b.v<0?' (loss)':'')+'</text>';
+    h+='<rect x="0" y="'+(y+19)+'" width="'+w.toFixed(1)+'" height="15" rx="7.5" fill="'+b.c+'"/>';
+  });
+  svg.innerHTML=h;
+  svg.setAttribute('aria-label','Bar chart: effective gross income '+fmtUSD(r.egi)+', operating expenses '+fmtUSD(r.opex)+', net operating income '+fmtUSD(r.noi)+'.');
+}
+
+var lastSummary='';
+function buildSummary(r,units,val){
+  var L=['Net Operating Income (NOI) Calculator (advancedcb.com)','','Income:'];
+  state.income.forEach(function(x){L.push('  - '+(x.l||'Untitled')+': '+fmtUSD(x.a)+' '+UNIT_NAMES[x.u]);});
+  L.push('Vacancy & credit loss: '+fmtPct(r.vac,1)+' ('+fmtUSD(r.vacLoss)+' / yr)');
+  L.push('Potential gross income (PGI): '+fmtUSD(r.pgi)+' / yr');
+  L.push('Effective gross income (EGI): '+fmtUSD(r.egi)+' / yr');
+  L.push('');L.push('Operating expenses:');
+  state.exp.forEach(function(x){
+    if(x.u==='pct')L.push('  - '+(x.l||'Untitled')+': '+fmtPct(x.a,1)+' of EGI ('+fmtUSD(r.egi*clamp(x.a,0,100)/100)+' / yr)');
+    else L.push('  - '+(x.l||'Untitled')+': '+fmtUSD(x.a)+' '+UNIT_NAMES[x.u]);
+  });
+  L.push('Total operating expenses: '+fmtUSD(r.opex)+' / yr');
+  L.push('');
+  L.push('NOI: '+fmtUSD(r.noi)+' / yr ('+fmtUSD(r.noi/12)+' / mo)');
+  L.push('Operating expense ratio: '+(isFinite(r.oer)?fmtPct(r.oer,1):'—')+' (typical 35–55%)');
+  if(units>0)L.push('NOI per unit: '+fmtUSD(r.noi/units)+' / yr across '+units+' unit'+(units>1?'s':''));
+  if(val>0)L.push('Cap rate at '+fmtUSD(val)+': '+fmtPct(r.noi/val*100));
+  return L.join('\n');
+}
+
+function calc(){
+  var r=compute();
+  var units=Math.floor(parseFloat(state.units))||0;
+  var val=parseAmt(state.val);
+  var hero=$('heroVal');
+  hero.textContent=fmtUSD(r.noi);
+  hero.className='big '+(r.noi<0?'neg':'pos');
+  $('heroMonthly').textContent=fmtUSD(r.noi/12)+' per month';
+  $('oerChip').innerHTML=oerChip(r);
+  var rows='';
+  rows+=statRow('Potential gross income (PGI)',fmtUSD(r.pgi)+' / yr','All income at 100% occupancy, before vacancy: rent plus parking, laundry, pet rent, and other fees, annualized.');
+  rows+=statRow('Vacancy & credit loss','− '+fmtUSD(r.vacLoss),'Income lost to empty units and unpaid rent: '+fmtPct(r.vac,1)+' of PGI.',r.vacLoss>0);
+  rows+=statRow('Effective gross income (EGI)',fmtUSD(r.egi)+' / yr','PGI minus vacancy and credit loss — the income you actually expect to collect.');
+  rows+=statRow('Total operating expenses','− '+fmtUSD(r.opex),'Everything it costs to run the property: taxes, insurance, management, repairs, utilities. Excludes mortgage, capex, depreciation, and income taxes.',r.opex>0);
+  rows+=statRow('Operating expense ratio',isFinite(r.oer)?fmtPct(r.oer,1):'—','Operating expenses ÷ EGI. Most rentals land between 35% and 55%; the chip above flags anything outside that range.');
+  if(units>0)rows+=statRow('NOI per unit',fmtUSD(r.noi/units)+' / yr','Annual NOI divided by your '+units+' unit'+(units>1?'s':'')+' — useful for comparing buildings of different sizes.');
+  if(val>0)rows+=statRow('Cap rate at '+fmtUSD(val),fmtPct(r.noi/val*100),'NOI ÷ property value. The financing-blind return the property itself produces — compare deals with our cap rate calculator.');
+  $('statRows').innerHTML=rows;
+  drawBars(r);
+  lastSummary=buildSummary(r,units,val);
+}
+
+/* ---------- wire static inputs ---------- */
+$('vac').addEventListener('input',function(){
+  state.vac=clamp(numVal(this),0,100);
+  $('vacRange').value=clamp(state.vac,0,20);
+  calc();persist();
+});
+$('vacRange').addEventListener('input',function(){
+  state.vac=parseFloat(this.value);
+  $('vac').value=this.value;
+  calc();persist();
+});
+$('units').addEventListener('input',function(){state.units=this.value;calc();persist();});
+$('propVal').addEventListener('input',function(){state.val=this.value;calc();persist();});
+$('propVal').addEventListener('blur',function(){
+  var v=parseAmt(this.value);
+  this.value=v?moneyStr(v):'';
+  state.val=this.value;calc();persist();
+});
+
+$('copyBtn').addEventListener('click',function(){
+  var b=this;
+  (navigator.clipboard?navigator.clipboard.writeText(lastSummary):Promise.reject()).then(function(){
+    b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy results summary';},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=lastSummary;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy results summary';},1600);}catch(e){}
+    document.body.removeChild(ta);
+  });
+});
+
+/* ---------- init ---------- */
+$('vac').value=state.vac;
+$('vacRange').value=clamp(state.vac,0,20);
+if(state.units)$('units').value=state.units;
+if(state.val)$('propVal').value=state.val;
+buildPresets();
+render();
+calc();
+})();
+</script>
+
+<script>
+(function(){
+  var SEED={value:4.7,count:203};
+  var KEY='acb:net-operating-income-calculator:rating';
+  var box=document.getElementById('acbStars'),meta=document.getElementById('acbRatingMeta');
+  var mine=parseInt(localStorage.getItem(KEY)||'0',10);
+  function agg(){var c=SEED.count+(mine?1:0);
+    var v=mine?((SEED.value*SEED.count+mine)/c):SEED.value;
+    return {v:Math.round(v*10)/10,c:c};}
+  function render(hover){
+    var a=agg();box.innerHTML='';
+    for(var i=1;i<=5;i++){(function(i){
+      var b=document.createElement('button');
+      b.type='button';b.className='acb-star'+((hover||mine||Math.round(a.v))>=i?' on':'');
+      b.setAttribute('aria-label',i+' star'+(i>1?'s':''));b.textContent='★';
+      b.onmouseenter=function(){render(i)};b.onmouseleave=function(){render(0)};
+      b.onclick=function(){mine=i;localStorage.setItem(KEY,String(i));render(0);
+        try{fetch('https://formsubmit.co/ajax/RATINGS_EMAIL',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({tool:'net-operating-income-calculator',rating:i,_subject:'Tool rating: net-operating-income-calculator'})
+        }).catch(function(){});}catch(e){}};
+      box.appendChild(b);})(i);}
+    meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
+  }
+  render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var last=0;
+  function send(){
+    var h=document.documentElement.scrollHeight;
+    if(Math.abs(h-last)>2){last=h;parent.postMessage({acbTool:'net-operating-income-calculator',height:h},'*');}
+  }
+  if(window.ResizeObserver){new ResizeObserver(send).observe(document.body);}
+  window.addEventListener('load',send);
+  setInterval(send,800);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Rental Application Form Generator | Advanced Collection Bureau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<style>
+:root{
+  --acb-blue:#3D5AF1;--acb-blue-dark:#2D45C6;--acb-blue-light:#EEF1FE;--acb-blue-mid:#D5DBFC;
+  --acb-bg:#F4F5F9;--acb-card:#FFFFFF;--acb-text:#1A1A2E;--acb-text-mid:#4A4A68;--acb-text-light:#8889A0;
+  --acb-border:#E2E4EC;--acb-warn:#E8A83E;--acb-warn-bg:#FEF9EE;--acb-green:#16A34A;--acb-red:#DC2626;--acb-gold:#F5B301;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-text);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 48px}
+.tool-head{text-align:center;margin-bottom:26px}
+.tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
+.tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.grid{display:grid;grid-template-columns:10fr 11fr;gap:22px;align-items:start}
+@media(max-width:960px){.grid{grid-template-columns:1fr}}
+.card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
+.card+.card{margin-top:22px}
+.sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:14px;font-weight:600;color:var(--acb-text);margin-bottom:7px}
+.in-wrap{position:relative;display:flex;align-items:center}
+.in-wrap .pre{position:absolute;left:14px;color:var(--acb-text-light);font-size:15px;font-weight:500;pointer-events:none}
+input[type=text],input[type=email],input[type=tel],select{width:100%;padding:13px 16px;background:#fff;border:1.5px solid var(--acb-border);border-radius:10px;color:var(--acb-text);font-size:16px;font-family:inherit;outline:none;transition:border-color .25s,box-shadow .25s}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238889A0' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px;cursor:pointer}
+.in-wrap.has-pre input{padding-left:30px}
+input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(61,90,241,.09)}
+.hint{font-size:12.5px;color:var(--acb-text-light);margin-top:6px;line-height:1.5}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.mini-row{grid-template-columns:1fr}}
+.chip-warn{display:flex;gap:8px;align-items:flex-start;background:var(--acb-warn-bg);border:1px solid #F0DCB2;color:#8A6213;border-radius:10px;padding:10px 13px;font-size:12.5px;line-height:1.5;margin-top:8px;font-weight:500}
+.chip-warn[hidden]{display:none}
+.state-note{background:#FAFBFD;border:1px solid var(--acb-border);border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--acb-text-mid);line-height:1.55;margin-top:8px}
+.state-note em{color:var(--acb-text-light)}
+/* section toggles */
+.sec{border-bottom:1px dashed var(--acb-border);padding:13px 0}
+.sec:last-child{border-bottom:none;padding-bottom:0}
+.sec-head{display:flex;align-items:center;gap:12px}
+.sec-title{flex:1;min-width:0}
+.sec-title .tt{font-size:14.5px;font-weight:600}
+.sec-title .ts{font-size:12px;color:var(--acb-text-light);margin-top:2px;line-height:1.4}
+.sw{position:relative;width:40px;height:23px;flex-shrink:0}
+.sw input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2}
+.sw input:disabled{cursor:default}
+.sw .knob{position:absolute;inset:0;background:#D0D3DC;border-radius:50px;transition:background .2s}
+.sw .knob:after{content:'';position:absolute;top:2.5px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw input:checked+.knob{background:var(--acb-blue)}
+.sw input:checked+.knob:after{transform:translateX(16px)}
+.sw input:disabled+.knob{opacity:.55}
+.exp{flex-shrink:0;background:none;border:none;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--acb-blue);cursor:pointer;padding:6px 4px;display:flex;align-items:center;gap:4px}
+.exp .chev{display:inline-block;transition:transform .25s;font-size:10px}
+.sec.open .exp .chev{transform:rotate(180deg)}
+.sec-opts{display:none;margin:12px 0 2px 52px;padding:14px 16px;background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px}
+.sec.open .sec-opts{display:block}
+.sec.off .sec-title,.sec.off .exp{opacity:.45}
+.sec-opts .field:last-child{margin-bottom:0}
+.sec-opts .field label{font-size:13px}
+.sec-opts select,.sec-opts input[type=text]{padding:10px 13px;font-size:15px}
+.chk-line{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--acb-text-mid);padding:6px 0;cursor:pointer;font-weight:500}
+.chk-line input{width:17px;height:17px;accent-color:var(--acb-blue);cursor:pointer;flex-shrink:0}
+@media(max-width:560px){.sec-opts{margin-left:0}}
+/* document preview */
+.preview-shell{padding:18px}
+.doc{background:#fff;border:1px solid var(--acb-border);border-radius:8px;padding:34px 32px;font-size:13px;color:#15151f;line-height:1.45}
+@media(max-width:480px){.doc{padding:22px 16px}}
+.doc-title{text-align:center;font-size:19px;font-weight:800;letter-spacing:.14em}
+.doc-sub{text-align:center;font-size:13px;color:#2a2a3c;margin-top:4px}
+.doc-sub.b{font-weight:700;font-size:14.5px;margin-top:8px}
+.doc-note{font-size:11.5px;color:#4c4c5e;font-style:italic;margin:7px 0;line-height:1.5}
+.doc-h{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-bottom:1.6px solid #1A1A2E;padding-bottom:4px;margin:20px 0 12px}
+.doc-sh{font-size:12px;font-weight:700;color:#26263a;margin:12px 0 8px}
+.doc-row{display:flex;gap:18px;margin-bottom:12px;flex-wrap:nowrap}
+.doc-f{display:flex;align-items:flex-end;gap:6px;min-width:0}
+.doc-f .lbl{white-space:nowrap;font-size:11.5px;color:#26263a}
+.doc-f .line{flex:1;border-bottom:1px solid #6a6a78;min-width:30px;height:14px}
+.doc-sig .line{border-bottom-width:1.4px;height:20px}
+.doc-yn{display:flex;justify-content:space-between;gap:16px;align-items:baseline;margin-bottom:10px}
+.doc-yn .q{font-size:12px;color:#1c1c2c;line-height:1.5}
+.doc-yn .ops{white-space:nowrap;font-size:12px}
+.doc-cb{display:inline-block;width:11px;height:11px;border:1.4px solid #333;vertical-align:-1px;margin-right:6px}
+.doc-chk{font-size:12px;color:#1c1c2c;margin:0 0 8px 6px}
+.doc-para{font-size:11.6px;color:#26263a;line-height:1.6;margin-bottom:10px;text-align:justify}
+.doc-notes{border:1.2px solid #8a8a96;padding:13px 15px;margin-top:20px}
+.doc-notes .nt{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:7px}
+.doc-notes p{font-size:11px;color:#33333f;line-height:1.55;margin-bottom:6px}
+.doc-notes p:last-child{margin-bottom:0;font-style:italic}
+.doc-eho{display:flex;gap:11px;align-items:center;margin-top:18px}
+.doc-eho svg{flex-shrink:0}
+.doc-eho .et b{display:block;font-size:9.5px;letter-spacing:.08em}
+.doc-eho .et span{font-size:9px;color:#44444f;line-height:1.45;display:block;margin-top:2px}
+.doc-legal{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:14px;border-top:1px solid #d8d8e0;padding-top:8px}
+/* actions / tips */
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.btn-secondary{padding:11px 24px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:var(--acb-blue-mid);color:var(--acb-blue)}
+.btn-secondary:disabled{opacity:.6;cursor:wait}
+.acb-btn-primary{display:inline-block;padding:14px 36px;border-radius:50px;border:none;background:var(--acb-blue);color:#fff;font-size:15px;font-family:inherit;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(61,90,241,.27);transition:all .2s}
+.acb-btn-primary:hover{background:var(--acb-blue-dark);transform:translateY(-1px)}
+.tips{margin-top:22px}
+.tips ul{list-style:none;margin-top:4px}
+.tips li{display:flex;gap:11px;font-size:14px;color:var(--acb-text-mid);line-height:1.6;padding:8px 0;border-bottom:1px dashed var(--acb-border)}
+.tips li:last-child{border-bottom:none}
+.tips li .ico{flex-shrink:0;margin-top:3px;color:var(--acb-blue)}
+.tips a{color:var(--acb-blue);font-weight:600;text-decoration:none}
+.acb-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:var(--acb-blue-light);border-left:4px solid var(--acb-blue);border-radius:6px 16px 16px 6px;padding:24px 28px;margin-top:34px}
+.acb-cta-title{font-size:19px;font-weight:700;color:var(--acb-text);margin-bottom:6px}
+.acb-cta p{font-size:14.5px;color:var(--acb-text-mid);line-height:1.55;margin:0;max-width:520px}
+.acb-cta-actions{display:flex;flex-direction:column;align-items:center;gap:8px}
+.acb-cta-tel{font-size:13px;color:var(--acb-blue);text-decoration:none;font-weight:600;white-space:nowrap}
+.acb-rating{display:flex;flex-direction:column;align-items:center;gap:6px;margin:34px auto 0;text-align:center}
+.acb-star{background:none;border:none;font-size:30px;line-height:1;color:#D0D3DC;cursor:pointer;padding:2px 3px;transition:color .15s,transform .15s;font-family:inherit}
+.acb-star.on{color:var(--acb-gold)}
+.acb-star:hover{transform:scale(1.15)}
+.acb-rating-meta{font-size:13px;color:var(--acb-text-light)}
+.disclaimer{font-size:12px;color:var(--acb-text-light);text-align:center;line-height:1.6;margin-top:26px;max-width:640px;margin-left:auto;margin-right:auto}
+.fade{animation:fadeIn .35s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media print{
+  @page{margin:.6in}
+  body{background:#fff}
+  .no-print{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .grid{display:block}
+  #previewCard{border:none;box-shadow:none;padding:0;border-radius:0;margin:0}
+  .doc{border:none;border-radius:0;padding:0;font-size:12.5px}
+  .doc-h,.doc-sh{page-break-after:avoid;break-after:avoid}
+  .doc-row,.doc-yn,.doc-chk,.doc-notes,.doc-eho{page-break-inside:avoid;break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tool-head no-print">
+    <h1>Rental Application Form Generator</h1>
+    <p>Build a professional, state-aware rental application in minutes. Toggle the sections you need, then print it or download a fillable PDF.</p>
+    <div class="badges"><span class="badge">100% Free</span><span class="badge">No Signup</span><span class="badge">No Email Required</span></div>
+  </div>
+
+  <div class="grid">
+    <!-- ============ BUILDER COLUMN ============ -->
+    <div class="no-print">
+      <div class="card">
+        <div class="sec-label">1 · Property setup</div>
+
+        <div class="field">
+          <label for="inState">Property state</label>
+          <select id="inState" aria-describedby="stateNote"></select>
+          <div class="state-note" id="stateNote" aria-live="polite"></div>
+        </div>
+
+        <div class="field">
+          <label for="inProperty">Property or company name</label>
+          <input type="text" id="inProperty" placeholder="e.g. Maple Court Apartments" autocomplete="organization">
+        </div>
+
+        <div class="field">
+          <label for="inAddress">Property address</label>
+          <input type="text" id="inAddress" placeholder="e.g. 123 Main St, Unit 4, Orlando, FL 32801">
+        </div>
+
+        <div class="field">
+          <label for="inFee">Application fee (per applicant)</label>
+          <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="inFee" inputmode="decimal" placeholder="0"></div>
+          <div class="hint">Leave blank or 0 if you don't charge one. Keep fees tied to your actual screening costs.</div>
+          <div class="chip-warn" id="feeWarn" hidden role="alert"></div>
+        </div>
+
+        <div class="field" style="margin-bottom:0">
+          <label>Return completed application to</label>
+          <div class="mini-row" style="margin-bottom:12px">
+            <input type="email" id="inEmail" placeholder="Email" aria-label="Return-to email">
+            <input type="tel" id="inPhone" placeholder="Phone" aria-label="Return-to phone">
+          </div>
+          <input type="text" id="inRetAddr" placeholder="Mailing / drop-off address (optional)" aria-label="Return-to mailing address">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">2 · Application sections</div>
+
+        <div class="sec" id="sec-applicant">
+          <div class="sec-head">
+            <span class="sw"><input type="checkbox" checked disabled aria-label="Applicant information — always included"><span class="knob"></span></span>
+            <div class="sec-title"><div class="tt">Applicant information</div><div class="ts">Name, DOB, ID, contact, emergency contact — always included</div></div>
+            <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+          </div>
+          <div class="sec-opts">
+            <div class="field">
+              <label for="optSsn">Social Security number handling</label>
+              <select id="optSsn">
+                <option value="full">Collect full SSN</option>
+                <option value="last4">Collect last 4 digits only</option>
+                <option value="none">Don't collect SSN</option>
+              </select>
+              <div class="hint">Privacy tip: paper forms with full SSNs create real data-security obligations if lost or breached. Most screening services can match on last-4 + date of birth, or collect the full SSN from the applicant through their own secure portal.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec" id="sec-coapp">
+          <div class="sec-head">
+            <span class="sw"><input type="checkbox" id="t-coapp" aria-label="Include co-applicants and occupants section"><span class="knob"></span></span>
+            <div class="sec-title"><div class="tt">Co-applicants &amp; occupants</div><div class="ts">Other adults applying and everyone who will live in the unit</div></div>
+            <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+          </div>
+          <div class="sec-opts">
+            <div class="mini-row">
+              <div class="field">
+                <label for="optCoappCount">Co-applicant blocks</label>
+                <select id="optCoappCount"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+              </div>
+              <div class="field">
+                <label for="optOccCount">Occupant lines</label>
+                <select id="optOccCount"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>
+              </div>
+            </div>
+            <div class="hint" style="margin-top:0">Best practice: every adult (18+) completes or signs the application; minors are listed as occupants only.</div>
+          </div>
+        </div>
+
+        <div class="sec" id="sec-res">
+          <div class="sec-head">
+            <span class="sw"><input type="checkbox" id="t-res" aria-label="Include residence history section"><span class="knob"></span></span>
+            <div class="sec-title"><div class="tt">Residence history</div><div class="ts">Current and previous addresses, rent, landlord references</div></div>
+            <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+          </div>
+          <div class="sec-opts">
+            <div class="field">
+              <label for="optResCount">Addresses to request</label>
+              <select id="optResCount"><option value="2">Last 2 addresses</option><option value="3">Last 3 addresses</option></select>
+            </div>
+            <label class="chk-line"><input type="checkbox" id="optLlRefs"> Include landlord reference (name &amp; phone) per address</label>
+          </div>
+        </div>
+
+        <div class="sec" id="sec-emp">
+          <div class="sec-head">
+            <span class="sw"><input type="checkbox" id="t-emp" aria-label="Include employment and income section"><span class="knob"></span></span>
+            <div class="sec-title"><div class="tt">Employment &amp; income</div><div class="ts">Employer, position, income, optional proof-of-income checklist</div></div>
+            <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+          </div>
+          <div class="sec-opts">
+            <label class="chk-line"><input type="checkbox" id="optPrevEmp"> Include previous employer</label>
+            <label class="chk-line"><input type="checkbox" id="optProof"> Include proof-of-income document checklist (pay stubs, W-2, bank statements)</label>
+          </div>
+        </div>
+
+        <div class="sec" id="sec-oinc">
+          <div class="sec-head">
+            <span class="sw"><input type="checkbox" id="t-oinc" aria-label="Include other income section"><span class="knob"></span></span>
+            <div class="sec-title"><div class="tt">Other income sources</div><div class="ts">Optional income the applicant wants considered (with safe disclosure wording)</div></div>
+          </div>
+        </div>
+
+        <div class="sec" id="sec-ref">
+          <div class="sec-head">
+            <span class="sw"><input type="checkbox" id="t-ref" aria-label="Include references section"><span class="knob"></span></span>
+            <div class="sec-title"><div class="tt">References</div><div class="ts">Personal or professional references with phone numbers</div></div>
+            <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+          </div>
+          <div class="sec-opts">
+            <div class="field">
+              <label for="optRefCount">Number of references</label>
+              <select id="optRefCount"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec" id="sec-veh">
+          <div class="sec-head">
+            <span class="sw"><input type="checkbox" id="t-veh" aria-label="Include vehicles section"><span class="knob"></span></span>
+            <div class="sec-title"><div class="tt">Vehicles</div><div class="ts">Make, model, year, plate — for parking rules</div></div>
+            <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+          </div>
+          <div class="sec-opts">
+            <div class="field">
+              <label for="optVehCount">Vehicle lines</label>
+              <select id="optVehCount"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec" id="sec-pet">
+          <div class="sec-head">
+            <span class="sw"><input type="checkbox" id="t-pet" aria-label="Include pets section"><span class="knob"></span></span>
+            <div class="sec-title"><div class="tt">Pets</div><div class="ts">Type, breed, weight — with an assistance-animal fair-housing note</div></div>
+            <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+          </div>
+          <div class="sec-opts">
+            <div class="field">
+              <label for="optPetCount">Pet lines</label>
+              <select id="optPetCount"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec" id="sec-bg">
+          <div class="sec-head">
+            <span class="sw"><input type="checkbox" id="t-bg" aria-label="Include background questions section"><span class="knob"></span></span>
+            <div class="sec-title"><div class="tt">Background questions</div><div class="ts">Eviction, felony, bankruptcy, smoking — each individually toggleable</div></div>
+            <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+          </div>
+          <div class="sec-opts">
+            <label class="chk-line"><input type="checkbox" id="optBgEvict"> Prior eviction / eviction filing</label>
+            <label class="chk-line"><input type="checkbox" id="optBgFelony"> Felony conviction</label>
+            <div class="chip-warn" id="felonyWarn" hidden role="alert"></div>
+            <label class="chk-line"><input type="checkbox" id="optBgBank"> Bankruptcy (last 7 years)</label>
+            <label class="chk-line"><input type="checkbox" id="optBgSmoke"> Smoking</label>
+            <div class="hint">A growing number of states and cities limit criminal-history questions on rental applications ("fair chance" laws). The state notes on the form flag the big ones, but always verify your city and county rules.</div>
+          </div>
+        </div>
+
+        <div class="sec" id="sec-consent">
+          <div class="sec-head">
+            <span class="sw"><input type="checkbox" checked disabled aria-label="Authorization and consent — always included"><span class="knob"></span></span>
+            <div class="sec-title"><div class="tt">Authorization &amp; consent</div><div class="ts">FCRA-compliant consent for credit, background &amp; eviction checks, plus signatures — always included</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PREVIEW COLUMN ============ -->
+    <div>
+      <div class="card preview-shell" id="previewCard">
+        <div class="sec-label no-print" style="margin-bottom:12px">Live preview — updates as you build</div>
+        <div class="doc" id="docPreview" aria-live="polite"></div>
+      </div>
+      <div class="actions no-print">
+        <button type="button" class="acb-btn-primary" id="printBtn">Print / Save as PDF</button>
+        <button type="button" class="btn-secondary" id="pdfBtn">Download fillable PDF</button>
+        <button type="button" class="btn-secondary" id="copyBtn">Copy text</button>
+      </div>
+      <p class="hint no-print" style="text-align:center;margin-top:10px">"Print / Save as PDF" prints only the application document. The fillable PDF can be typed into with any PDF reader.</p>
+    </div>
+  </div>
+
+  <div class="card tips no-print">
+    <div class="sec-label">Screening tips for landlords</div>
+    <ul>
+      <li><span class="ico">✓</span><span><strong>Write your criteria down before you advertise</strong> — minimum income-to-rent ratio, credit floor, rental-history requirements — and apply them identically to every applicant. Consistent, documented criteria are your best fair-housing defense and lead to better tenants.</span></li>
+      <li><span class="ico">✓</span><span><strong>Know your FCRA duties.</strong> If you deny an applicant, require a co-signer, or raise the deposit based even partly on a credit or background report, you must send an adverse-action notice that names the reporting agency, gives its contact information, and explains the applicant's right to dispute and get a free copy of the report.</span></li>
+      <li><span class="ico">✓</span><span><strong>Never ask about protected classes</strong> — race, color, religion, sex, familial status, disability, or national origin — and check state and local law for additions like source of income, age, marital status, or sexual orientation. Screen the application, not the person.</span></li>
+      <li><span class="ico">✓</span><span><strong>Approved your applicant?</strong> Put the tenancy in writing with our free <a href="https://www.advancedcb.com/resources/lease-agreement-generator" target="_top">Lease Agreement Generator</a>.</span></li>
+    </ul>
+  </div>
+
+  <div class="acb-rating no-print" id="acbRating" aria-label="Rate this tool">
+    <div class="acb-rating-stars" id="acbStars" role="radiogroup"></div>
+    <div class="acb-rating-meta" id="acbRatingMeta"></div>
+  </div>
+
+  <div class="acb-cta no-print">
+    <div class="acb-cta-text">
+      <div class="acb-cta-title">Tenant left owing money?</div>
+      <p>Advanced Collection Bureau has recovered over <strong>$85&nbsp;million</strong> in unpaid rent, fees, and damages for landlords and property managers. No recovery, no fee.</p>
+    </div>
+    <div class="acb-cta-actions">
+      <a class="acb-btn-primary" href="https://www.advancedcb.com/" target="_top">Get Started</a>
+      <a class="acb-cta-tel" href="tel:3216334999">or call (321) 633-4999</a>
+    </div>
+  </div>
+
+  <p class="disclaimer no-print">This generator produces a general-purpose template and is provided for informational purposes only — it is not legal advice. Landlord-tenant and screening laws change frequently and vary by state, county, and city; review the generated form with a local attorney before use. © Advanced Collection Bureau, Inc.</p>
+</div>
+
+<script>
+/* ============ Pure data + document model (no DOM access in this block) ============ */
+"use strict";
+var fmtUSD=function(n,c){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:c?2:0,maximumFractionDigits:c?2:0}).format(isFinite(n)?n:0);};
+var escHtml=function(s){return String(s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});};
+
+var STATES=[["AL","Alabama"],["AK","Alaska"],["AZ","Arizona"],["AR","Arkansas"],["CA","California"],["CO","Colorado"],["CT","Connecticut"],["DE","Delaware"],["DC","District of Columbia"],["FL","Florida"],["GA","Georgia"],["HI","Hawaii"],["ID","Idaho"],["IL","Illinois"],["IN","Indiana"],["IA","Iowa"],["KS","Kansas"],["KY","Kentucky"],["LA","Louisiana"],["ME","Maine"],["MD","Maryland"],["MA","Massachusetts"],["MI","Michigan"],["MN","Minnesota"],["MS","Mississippi"],["MO","Missouri"],["MT","Montana"],["NE","Nebraska"],["NV","Nevada"],["NH","New Hampshire"],["NJ","New Jersey"],["NM","New Mexico"],["NY","New York"],["NC","North Carolina"],["ND","North Dakota"],["OH","Ohio"],["OK","Oklahoma"],["OR","Oregon"],["PA","Pennsylvania"],["RI","Rhode Island"],["SC","South Carolina"],["SD","South Dakota"],["TN","Tennessee"],["TX","Texas"],["UT","Utah"],["VT","Vermont"],["VA","Virginia"],["WA","Washington"],["WV","West Virginia"],["WI","Wisconsin"],["WY","Wyoming"]];
+function stateName(code){for(var i=0;i<STATES.length;i++){if(STATES[i][0]===code)return STATES[i][1];}return code;}
+
+var DEFAULT_FEE_NOTE='No statutory statewide cap on application fees — keep fees reasonable, uniform for every applicant, and tied to your actual screening costs. Local ordinances may add rules.';
+var VERIFY_LINE='Laws change frequently — verify current state and local rules before relying on this form.';
+
+/* cap: numeric dollar cap (0 = fees generally prohibited); capNote: cap wording when not a flat number;
+   fee: builder/state-notes text; crim: criminal-history ("fair chance") caution where jurisdictions restrict the question. */
+var STATE_NOTES={
+  CA:{cap:65,capNote:'about $65 per applicant, indexed annually for inflation',
+      fee:'California caps application screening fees (about $65 per applicant, adjusted annually for inflation — verify the current figure). You must provide an itemized receipt, refund any portion not actually spent on screening, and refund the full fee if no screening is run.',
+      crim:'California and several of its cities (e.g. Oakland, Berkeley) restrict how criminal history may be used in housing decisions; an individualized assessment is generally expected. Verify local "fair chance" rules before asking about convictions.'},
+  CO:{fee:'Colorado requires application fees to reflect your actual screening cost, charged uniformly to every applicant, with a receipt; any unused amount must be refunded. Landlords must also accept a portable tenant screening report in many cases.',
+      crim:'Colorado limits consideration of arrest records and of many convictions older than five years in rental decisions — verify current rules before asking about criminal history.'},
+  CT:{fee:'Connecticut limits what landlords may charge applicants: fees are generally restricted to the actual cost of a tenant screening report. Verify current rules before charging more than your screening cost.'},
+  DC:{fee:'The District of Columbia limits application fees to the actual cost of screening and requires disclosure of screening criteria; refunds apply in some cases.',
+      crim:'DC’s Fair Criminal Record Screening for Housing Act generally prohibits asking about criminal history before a conditional offer. Remove the felony question for DC properties unless your attorney confirms otherwise.'},
+  DE:{cap:50,capNote:'the greater of 10% of one month’s rent or $50',
+      fee:'Delaware caps application fees at the greater of 10% of the monthly rent or $50, with statutory rules on how the fee must be applied or refunded — verify current handling requirements.'},
+  IL:{fee:'Illinois has no statewide cap on application fees, but local ordinances (notably in Cook County and Chicago) add screening rules — verify city and county requirements.',
+      crim:'Cook County (including Chicago) requires a two-step "Just Housing" process: criminal history generally may not be considered until after pre-qualification, and only certain recent convictions may be weighed with an individualized assessment. Don’t use this question for Cook County properties without local legal review.'},
+  MA:{cap:0,fee:'Massachusetts landlords may not charge rental application fees (only a licensed real-estate broker may charge a fee for their services). Collecting an application fee as a landlord can expose you to penalties.'},
+  MD:{fee:'Maryland: landlords of larger properties who charge an application fee over $25 must refund any portion not actually used for screening/processing costs and provide an accounting on request.'},
+  MI:{fee:DEFAULT_FEE_NOTE,
+      crim:'Detroit’s Fair Chance Access to Housing ordinance restricts criminal-history questions on initial rental applications — verify local rules before using this question for Detroit properties.'},
+  MN:{fee:'Minnesota requires landlords to disclose their screening criteria before accepting a fee, limits the fee to the actual screening cost, requires the fee to be returned if the application is never screened, and requires written reasons for any denial.'},
+  NJ:{fee:DEFAULT_FEE_NOTE,
+      crim:'New Jersey’s Fair Chance in Housing Act generally prohibits asking about criminal history on the initial application (limited exceptions). Remove the felony question for NJ properties unless your attorney confirms an exception applies.'},
+  NY:{cap:20,capNote:'$20, or your actual screening cost if less',
+      fee:'New York caps application/background-check fees at $20 (or the actual cost of the check, whichever is less), and the fee must be waived entirely if the applicant provides a copy of a background check or credit check conducted within the past 30 days.',
+      crim:'New York City’s Fair Chance for Housing Act restricts criminal-history screening in most NYC housing decisions. Don’t use a felony question for NYC properties without local legal review.'},
+  VT:{cap:0,fee:'Vermont prohibits landlords from charging application fees for residential rentals.'},
+  VA:{cap:50,capNote:'$50, excluding actual third-party screening costs',
+      fee:'Virginia caps application fees at $50, excluding your actual out-of-pocket cost for a third-party credit/background report. If the applicant doesn’t rent, amounts above your actual expenses must be refunded within 20 days.'},
+  WA:{fee:'Washington landlords must disclose in advance the screening criteria they will use and what the screening will cost, may only charge their actual screening costs, and must give a written adverse-action notice when denying. Some cities (e.g. Seattle) add stricter rules.',
+      crim:'Seattle’s Fair Chance Housing ordinance prohibits asking about or considering most criminal history for Seattle rentals. Remove the felony question for Seattle properties.'},
+  WI:{cap:25,capNote:'$25 for the credit check (or its actual cost, if less)',
+      fee:'Wisconsin: a landlord may charge up to $25 (or the actual cost, if less) for a credit check, and must use a consumer credit report the applicant provides if it is less than 30 days old — in that case no credit-check fee may be charged.'}
+};
+
+function parseFee(v){var n=parseFloat(String(v==null?'':v).replace(/[^0-9.]/g,''));return isFinite(n)?n:0;}
+
+/* Build the document as a flat list of items shared by the HTML preview,
+   the fillable-PDF generator, and the plain-text copy. */
+function buildFieldList(d){
+  var L=[],n=0,i;
+  function h(t){n++;L.push({t:'h',text:n+'. '+t});}
+  function row(fields){L.push({t:'row',fields:fields});}
+
+  L.push({t:'title',text:'RENTAL APPLICATION'});
+  if(d.property)L.push({t:'sub',text:d.property,b:1});
+  if(d.address)L.push({t:'sub',text:d.address});
+
+  var ret=[];
+  if(d.retEmail)ret.push('Email: '+d.retEmail);
+  if(d.retPhone)ret.push('Phone: '+d.retPhone);
+  if(d.retAddr)ret.push('Mail/deliver: '+d.retAddr);
+  if(ret.length)L.push({t:'note',text:'Return completed application to — '+ret.join('  ·  ')});
+  var fee=parseFee(d.fee);
+  if(fee>0)L.push({t:'note',text:'Application fee: '+fmtUSD(fee,true)+' per applicant, due with this application. See the State Notes at the end of this form for fee rules that may apply.'});
+  L.push({t:'gap',h:6});
+  row([{label:'Date of application'},{label:'Desired move-in date'}]);
+
+  /* 1. Applicant information (always on) */
+  h('Applicant Information');
+  row([{label:'Full legal name',flex:2},{label:'Date of birth',flex:1}]);
+  row([{label:'Phone',flex:1},{label:'Email',flex:1.5}]);
+  if(d.ssn==='full'){
+    row([{label:'Social Security number',flex:1},{label:'Driver’s license / ID number',flex:1},{label:'Issuing state',flex:.6}]);
+  }else if(d.ssn==='last4'){
+    row([{label:'SSN (last 4 digits only)',flex:1},{label:'Driver’s license / ID number',flex:1},{label:'Issuing state',flex:.6}]);
+  }else{
+    row([{label:'Driver’s license / ID number',flex:1.4},{label:'Issuing state',flex:.6}]);
+    L.push({t:'note',text:'A Social Security number is not collected on this form. If screening requires one, the screening service will request it from you securely.'});
+  }
+  row([{label:'Emergency contact name',flex:1.2},{label:'Phone',flex:.9},{label:'Relationship',flex:.8}]);
+
+  /* Co-applicants & occupants */
+  if(d.sec.coapp){
+    h('Co-Applicants & Other Occupants');
+    for(i=1;i<=d.coappCount;i++){
+      L.push({t:'sh',text:'Co-applicant '+i+' (each applicant 18 or older must also sign the Authorization section)'});
+      row([{label:'Full legal name',flex:2},{label:'Date of birth',flex:1}]);
+      row([{label:'Phone',flex:1},{label:'Email',flex:1.5}]);
+    }
+    L.push({t:'sh',text:'Other occupants (including minors)'});
+    for(i=1;i<=d.occCount;i++){
+      row([{label:'Occupant '+i+' — full name',flex:1.7},{label:'Age',flex:.4},{label:'Relationship',flex:1}]);
+    }
+  }
+
+  /* Residence history */
+  if(d.sec.res){
+    h('Residence History');
+    var names=['Current address','Previous address','Prior address'];
+    for(i=0;i<d.resCount;i++){
+      L.push({t:'sh',text:names[i]});
+      row([{label:'Street address',flex:2.2},{label:'Unit',flex:.5}]);
+      row([{label:'City',flex:1.3},{label:'State',flex:.5},{label:'ZIP',flex:.6}]);
+      row([{label:'From (mo/yr)',flex:.8},{label:'To (mo/yr)',flex:.8},{label:'Monthly rent',flex:.9}]);
+      row([{label:'Reason for leaving',flex:1}]);
+      if(d.llRefs)row([{label:'Landlord / property manager name',flex:1.5},{label:'Landlord phone',flex:1}]);
+    }
+  }
+
+  /* Employment & income */
+  if(d.sec.emp){
+    h('Employment & Income');
+    L.push({t:'sh',text:'Current employment'});
+    row([{label:'Employer',flex:1.5},{label:'Position / title',flex:1}]);
+    row([{label:'Supervisor name',flex:1.3},{label:'Work phone',flex:1}]);
+    row([{label:'Start date',flex:.7},{label:'Gross monthly income',flex:1},{label:'Full-time / part-time / self-employed',flex:1.3}]);
+    if(d.prevEmp){
+      L.push({t:'sh',text:'Previous employment'});
+      row([{label:'Employer',flex:1.5},{label:'Position / title',flex:1}]);
+      row([{label:'From (mo/yr)',flex:.8},{label:'To (mo/yr)',flex:.8},{label:'Phone',flex:1}]);
+    }
+    if(d.proof){
+      L.push({t:'note',text:'Please attach the following proof of income with this application:'});
+      L.push({t:'chk',label:'Two most recent pay stubs'});
+      L.push({t:'chk',label:'Most recent W-2 or full tax return'});
+      L.push({t:'chk',label:'Two most recent bank statements'});
+      L.push({t:'chk',label:'Signed offer letter (if starting a new job)'});
+    }
+  }
+
+  /* Other income */
+  if(d.sec.oinc){
+    h('Other Income');
+    L.push({t:'note',text:'List any additional income you would like considered. You are not required to disclose alimony, child support, or separate maintenance income unless you want it considered as a basis for paying rent.'});
+    for(i=1;i<=2;i++){
+      row([{label:'Source',flex:1.5},{label:'Monthly amount',flex:.8},{label:'How long received',flex:.8}]);
+    }
+  }
+
+  /* References */
+  if(d.sec.ref){
+    h('References');
+    for(i=1;i<=d.refCount;i++){
+      row([{label:'Reference '+i+' — name',flex:1.4},{label:'Phone',flex:.9},{label:'Relationship',flex:.9}]);
+    }
+  }
+
+  /* Vehicles */
+  if(d.sec.veh){
+    h('Vehicles');
+    L.push({t:'note',text:'List all vehicles that will be parked at the property.'});
+    for(i=1;i<=d.vehCount;i++){
+      row([{label:'Vehicle '+i+' — make, model & color',flex:1.7},{label:'Year',flex:.4},{label:'License plate & state',flex:1}]);
+    }
+  }
+
+  /* Pets */
+  if(d.sec.pet){
+    h('Pets');
+    L.push({t:'note',text:'Note: service and assistance animals are not pets under fair-housing law and are not subject to pet restrictions, pet rent, or pet fees. You are not required to list an assistance animal here.'});
+    for(i=1;i<=d.petCount;i++){
+      row([{label:'Pet '+i+' — type & breed',flex:1.6},{label:'Weight',flex:.5},{label:'Age',flex:.4}]);
+      row([{label:'Pet name',flex:1},{label:'Spayed/neutered? (Y/N)',flex:1}]);
+    }
+  }
+
+  /* Background questions */
+  var qs=[];
+  if(d.sec.bg){
+    if(d.bg.eviction)qs.push({label:'Have you ever been evicted, or had an eviction action filed against you?',ex:1});
+    if(d.bg.felony)qs.push({label:'Have you ever been convicted of a felony?',ex:1});
+    if(d.bg.bankruptcy)qs.push({label:'Have you filed for bankruptcy within the last 7 years?',ex:1});
+    if(d.bg.smoking)qs.push({label:'Do you, or does anyone who will occupy the unit, smoke?',ex:0});
+  }
+  if(qs.length){
+    h('Background Questions');
+    L.push({t:'note',text:'Please answer honestly. Verified history, reviewed against written criteria, is generally weighed more favorably than information discovered after the fact.'});
+    for(i=0;i<qs.length;i++){
+      L.push({t:'yn',label:qs[i].label});
+      if(qs[i].ex)row([{label:'If yes, please explain (dates & circumstances)',flex:1}]);
+    }
+  }
+
+  /* Authorization & consent (always on) */
+  h('Authorization & Consent');
+  var who=d.property?d.property:'the landlord / property manager';
+  L.push({t:'para',text:'I certify that all information provided in this application is true, accurate, and complete to the best of my knowledge. I understand that providing false, misleading, or incomplete information may result in denial of this application or, if discovered later, termination of any resulting tenancy to the extent permitted by law.'});
+  L.push({t:'para',text:'I authorize '+who+' and its designated screening provider(s) to obtain consumer reports about me — including credit reports, eviction and rental-history records, and criminal-background records where permitted by applicable law — and to verify any information contained in this application, including by contacting my current and former landlords, employers, income sources, and the references listed above. This authorization is provided in accordance with the Fair Credit Reporting Act (FCRA). I understand that I may request the name and address of any consumer reporting agency that furnishes a report about me, and that if this application is denied or other adverse action is taken based in whole or in part on information in a consumer report, I will receive an adverse-action notice as required by the FCRA, including the agency’s contact information and my right to dispute the report and obtain a free copy.'});
+  row([{label:'Applicant printed name',flex:1}]);
+  L.push({t:'sig',label:'Applicant signature'});
+  if(d.sec.coapp){
+    for(i=1;i<=d.coappCount;i++){
+      row([{label:'Co-applicant '+i+' printed name',flex:1}]);
+      L.push({t:'sig',label:'Co-applicant '+i+' signature'});
+    }
+  }
+
+  /* State notes */
+  var sn=STATE_NOTES[d.st]||null;
+  var lines=[(sn&&sn.fee)||DEFAULT_FEE_NOTE];
+  if(sn&&sn.crim&&d.sec.bg&&d.bg.felony)lines.push('Criminal-history caution: '+sn.crim);
+  lines.push(VERIFY_LINE);
+  L.push({t:'notes',title:'State Notes — '+stateName(d.st),lines:lines});
+
+  L.push({t:'eho'});
+  L.push({t:'legal',text:'This document was created with a free generator provided by Advanced Collection Bureau (advancedcb.com) for general informational purposes. It is not legal advice and no attorney-client relationship is created. Laws vary by state, county, and city — review this form with a local attorney before use.'});
+  return L;
+}
+
+var EHO_TEXT='We are pledged to the letter and spirit of U.S. policy for the achievement of equal housing opportunity. This application will be evaluated without regard to race, color, religion, sex, disability, familial status, national origin, or any other characteristic protected by applicable law.';
+var EHO_SVG='<svg width="30" height="30" viewBox="0 0 24 24" aria-label="Equal Housing Opportunity logo" role="img"><path d="M12 1 23 9.5 23 23 1 23 1 9.5 Z" fill="#1A1A2E"/><rect x="6.5" y="11.5" width="11" height="2.4" fill="#fff"/><rect x="6.5" y="16" width="11" height="2.4" fill="#fff"/></svg>';
+
+function renderDocHtml(list){
+  var out='';
+  list.forEach(function(it){
+    switch(it.t){
+      case 'title':out+='<div class="doc-title">'+escHtml(it.text)+'</div>';break;
+      case 'sub':out+='<div class="doc-sub'+(it.b?' b':'')+'">'+escHtml(it.text)+'</div>';break;
+      case 'note':out+='<div class="doc-note">'+escHtml(it.text)+'</div>';break;
+      case 'gap':out+='<div style="height:'+(it.h*2)+'px"></div>';break;
+      case 'h':out+='<div class="doc-h">'+escHtml(it.text)+'</div>';break;
+      case 'sh':out+='<div class="doc-sh">'+escHtml(it.text)+'</div>';break;
+      case 'row':
+        out+='<div class="doc-row">'+it.fields.map(function(f){
+          return '<span class="doc-f" style="flex:'+(f.flex||1)+'"><span class="lbl">'+escHtml(f.label)+'</span><span class="line"></span></span>';
+        }).join('')+'</div>';break;
+      case 'yn':out+='<div class="doc-yn"><span class="q">'+escHtml(it.label)+'</span><span class="ops"><span class="doc-cb"></span>Yes&nbsp;&nbsp;&nbsp;<span class="doc-cb"></span>No</span></div>';break;
+      case 'chk':out+='<div class="doc-chk"><span class="doc-cb"></span>'+escHtml(it.label)+'</div>';break;
+      case 'para':out+='<p class="doc-para">'+escHtml(it.text)+'</p>';break;
+      case 'sig':out+='<div class="doc-row doc-sig"><span class="doc-f" style="flex:2.2"><span class="lbl">X</span><span class="line"></span><span class="lbl">'+escHtml(it.label)+'</span></span><span class="doc-f" style="flex:.8"><span class="lbl">Date</span><span class="line"></span></span></div>';break;
+      case 'notes':out+='<div class="doc-notes"><div class="nt">'+escHtml(it.title)+'</div>'+it.lines.map(function(l){return '<p>'+escHtml(l)+'</p>';}).join('')+'</div>';break;
+      case 'eho':out+='<div class="doc-eho">'+EHO_SVG+'<span class="et"><b>EQUAL HOUSING OPPORTUNITY</b><span>'+escHtml(EHO_TEXT)+'</span></span></div>';break;
+      case 'legal':out+='<p class="doc-legal">'+escHtml(it.text)+'</p>';break;
+    }
+  });
+  return out;
+}
+
+function buildPlainText(list){
+  var out=[];
+  list.forEach(function(it){
+    switch(it.t){
+      case 'title':out.push(it.text);out.push(new Array(it.text.length+1).join('='));break;
+      case 'sub':out.push(it.text);break;
+      case 'note':out.push('('+it.text+')');break;
+      case 'gap':out.push('');break;
+      case 'h':out.push('');out.push(it.text.toUpperCase());out.push('------------------------------------------');break;
+      case 'sh':out.push('');out.push('* '+it.text);break;
+      case 'row':out.push(it.fields.map(function(f){return f.label+': ______________';}).join('    '));break;
+      case 'yn':out.push(it.label+'   [ ] Yes   [ ] No');break;
+      case 'chk':out.push('  [ ] '+it.label);break;
+      case 'para':out.push('');out.push(it.text);break;
+      case 'sig':out.push('X ______________________________  ('+it.label+')    Date: ____________');break;
+      case 'notes':out.push('');out.push(it.title.toUpperCase());it.lines.forEach(function(l){out.push('- '+l);});break;
+      case 'eho':out.push('');out.push('EQUAL HOUSING OPPORTUNITY — '+EHO_TEXT);break;
+      case 'legal':out.push('');out.push(it.text);break;
+    }
+  });
+  return out.join('\n');
+}
+</script>
+
+<script>
+/* ============ Builder UI, persistence, warnings, preview, PDF ============ */
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id);};
+var LSKEY='acb:rental-application-generator:state';
+
+var DEF={
+  property:'',address:'',fee:'',retEmail:'',retPhone:'',retAddr:'',st:'FL',ssn:'last4',
+  sec:{coapp:true,res:true,emp:true,oinc:true,ref:true,veh:true,pet:true,bg:true},
+  coappCount:1,occCount:2,resCount:2,llRefs:true,prevEmp:true,proof:true,
+  refCount:2,vehCount:2,petCount:1,
+  bg:{eviction:true,felony:true,bankruptcy:true,smoking:true}
+};
+function merge(d,s){
+  var o={},k;
+  for(k in d){
+    if(d[k]!==null&&typeof d[k]==='object'){o[k]=merge(d[k],s&&typeof s[k]==='object'?s[k]:null);}
+    else{o[k]=(s&&s[k]!==undefined&&typeof s[k]===typeof d[k])?s[k]:d[k];}
+  }
+  return o;
+}
+var S;
+try{S=merge(DEF,JSON.parse(localStorage.getItem(LSKEY)||'null'));}catch(e){S=merge(DEF,null);}
+
+/* populate state select */
+var stSel=$('inState');
+STATES.forEach(function(s){
+  var o=document.createElement('option');o.value=s[0];o.textContent=s[1];stSel.appendChild(o);
+});
+stSel.value=S.st;
+
+function persist(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}}
+
+function warnings(){
+  var sn=STATE_NOTES[S.st],fee=parseFee(S.fee),name=stateName(S.st);
+  /* state note under the select */
+  var html='<strong>'+escHtml(name)+':</strong> '+escHtml((sn&&sn.fee)||DEFAULT_FEE_NOTE);
+  if(sn&&sn.crim)html+='<br><strong>Criminal history:</strong> '+escHtml(sn.crim);
+  html+='<br><em>'+escHtml(VERIFY_LINE)+'</em>';
+  $('stateNote').innerHTML=html;
+  /* fee cap chip */
+  var w='';
+  if(sn&&sn.cap===0&&fee>0){
+    w=name+' generally does not allow landlords to charge rental application fees — consider removing this fee.';
+  }else if(sn&&sn.cap>0&&fee>sn.cap){
+    w=fmtUSD(fee,true)+' may exceed '+name+'’s application-fee cap ('+(sn.capNote||'about $'+sn.cap)+'). Verify current law before charging it.';
+  }
+  $('feeWarn').hidden=!w;
+  if(w)$('feeWarn').textContent='⚠ '+w;
+  /* felony chip */
+  var showF=!!(sn&&sn.crim&&S.sec.bg&&S.bg.felony);
+  $('felonyWarn').hidden=!showF;
+  if(showF)$('felonyWarn').textContent='⚠ '+sn.crim;
+}
+
+function update(){
+  persist();
+  warnings();
+  $('docPreview').innerHTML=renderDocHtml(buildFieldList(S));
+}
+
+/* ---- wire inputs ---- */
+[['inProperty','property'],['inAddress','address'],['inFee','fee'],
+ ['inEmail','retEmail'],['inPhone','retPhone'],['inRetAddr','retAddr']].forEach(function(b){
+  var el=$(b[0]);el.value=S[b[1]];
+  el.addEventListener('input',function(){S[b[1]]=el.value;update();});
+});
+stSel.addEventListener('change',function(){S.st=stSel.value;update();});
+$('optSsn').value=S.ssn;
+$('optSsn').addEventListener('change',function(){S.ssn=this.value;update();});
+
+/* section toggles */
+[['t-coapp','coapp','sec-coapp'],['t-res','res','sec-res'],['t-emp','emp','sec-emp'],
+ ['t-oinc','oinc','sec-oinc'],['t-ref','ref','sec-ref'],['t-veh','veh','sec-veh'],
+ ['t-pet','pet','sec-pet'],['t-bg','bg','sec-bg']].forEach(function(b){
+  var el=$(b[0]),wrap=$(b[2]);
+  el.checked=S.sec[b[1]];
+  wrap.classList.toggle('off',!el.checked);
+  el.addEventListener('change',function(){S.sec[b[1]]=el.checked;wrap.classList.toggle('off',!el.checked);update();});
+});
+
+/* option selects */
+[['optCoappCount','coappCount'],['optOccCount','occCount'],['optResCount','resCount'],
+ ['optRefCount','refCount'],['optVehCount','vehCount'],['optPetCount','petCount']].forEach(function(b){
+  var el=$(b[0]);el.value=String(S[b[1]]);
+  el.addEventListener('change',function(){S[b[1]]=parseInt(el.value,10)||1;update();});
+});
+
+/* option checkboxes */
+[['optLlRefs','llRefs'],['optPrevEmp','prevEmp'],['optProof','proof']].forEach(function(b){
+  var el=$(b[0]);el.checked=S[b[1]];
+  el.addEventListener('change',function(){S[b[1]]=el.checked;update();});
+});
+[['optBgEvict','eviction'],['optBgFelony','felony'],['optBgBank','bankruptcy'],['optBgSmoke','smoking']].forEach(function(b){
+  var el=$(b[0]);el.checked=S.bg[b[1]];
+  el.addEventListener('change',function(){S.bg[b[1]]=el.checked;update();});
+});
+
+/* expanders */
+Array.prototype.forEach.call(document.querySelectorAll('.exp'),function(btn){
+  btn.addEventListener('click',function(){
+    var sec=btn.closest('.sec');
+    var open=sec.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open?'true':'false');
+  });
+});
+
+/* ---- actions ---- */
+$('printBtn').addEventListener('click',function(){window.print();});
+
+$('copyBtn').addEventListener('click',function(){
+  var b=this,txt=buildPlainText(buildFieldList(S));
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){
+    b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy text';},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy text';},1600);}catch(e){}
+    document.body.removeChild(ta);
+  });
+});
+
+/* ---- fillable PDF (pdf-lib) ---- */
+async function makePdf(d){
+  var list=buildFieldList(d);
+  var PD=window.PDFLib;
+  var doc=await PD.PDFDocument.create();
+  doc.setTitle('Rental Application'+(d.property?' — '+d.property:''));
+  doc.setProducer('advancedcb.com free rental application generator');
+  var helv=await doc.embedFont(PD.StandardFonts.Helvetica);
+  var bold=await doc.embedFont(PD.StandardFonts.HelveticaBold);
+  var obl=await doc.embedFont(PD.StandardFonts.HelveticaOblique);
+  var form=doc.getForm();
+  var W=612,H=792,MX=54,MY=56,usable=W-2*MX;
+  var ink=PD.rgb(.1,.1,.16),gray=PD.rgb(.36,.36,.44),lineC=PD.rgb(.58,.58,.65),white=PD.rgb(1,1,1);
+  var page,y;
+  function np(){page=doc.addPage([W,H]);y=H-MY;}
+  function need(h){if(y-h<MY)np();}
+  np();
+  function wrap(t,f,s,w){
+    var words=String(t).split(/\s+/),lines=[],cur='';
+    for(var i=0;i<words.length;i++){
+      var tryl=cur?cur+' '+words[i]:words[i];
+      if(f.widthOfTextAtSize(tryl,s)>w&&cur){lines.push(cur);cur=words[i];}
+      else cur=tryl;
+    }
+    if(cur)lines.push(cur);
+    return lines;
+  }
+  function para(t,f,s,lh,color,w){
+    wrap(t,f,s,w||usable).forEach(function(l){
+      need(lh);page.drawText(l,{x:MX,y:y-s,size:s,font:f,color:color||ink});y-=lh;
+    });
+  }
+  var used={};
+  function fname(label){
+    var nm=String(label).toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'').slice(0,48)||'field';
+    if(used[nm]){var i=2;while(used[nm+'_'+i])i++;nm=nm+'_'+i;}
+    used[nm]=1;return nm;
+  }
+  function textField(x,wd,label){
+    var tf=form.createTextField(fname(label));
+    tf.setFontSize(9);
+    tf.addToPage(page,{x:x,y:y-16.5,width:Math.max(wd,28),height:15,borderWidth:.8,borderColor:lineC,backgroundColor:white});
+    return tf;
+  }
+
+  for(var ii=0;ii<list.length;ii++){
+    var it=list[ii];
+    if(it.t==='title'){
+      need(26);
+      page.drawText(it.text,{x:(W-bold.widthOfTextAtSize(it.text,15))/2,y:y-15,size:15,font:bold,color:ink});
+      y-=24;
+    }else if(it.t==='sub'){
+      var sf=it.b?bold:helv,ss=it.b?11:9.5;
+      need(15);
+      page.drawText(it.text,{x:(W-sf.widthOfTextAtSize(it.text,ss))/2,y:y-ss,size:ss,font:sf,color:ink});
+      y-=ss+5;
+    }else if(it.t==='note'){
+      para(it.text,obl,8.3,11,gray);y-=2;
+    }else if(it.t==='gap'){
+      y-=it.h;
+    }else if(it.t==='h'){
+      y-=6;need(28);
+      page.drawText(it.text.toUpperCase(),{x:MX,y:y-10.5,size:10.5,font:bold,color:ink});
+      page.drawRectangle({x:MX,y:y-15.5,width:usable,height:.9,color:ink});
+      y-=23;
+    }else if(it.t==='sh'){
+      need(18);
+      page.drawText(it.text,{x:MX,y:y-9.5,size:9.5,font:bold,color:ink});
+      y-=16;
+    }else if(it.t==='row'){
+      need(24);
+      var totalFlex=0,gp=14,k;
+      for(k=0;k<it.fields.length;k++)totalFlex+=(it.fields[k].flex||1);
+      var x=MX,avail=usable-gp*(it.fields.length-1);
+      for(k=0;k<it.fields.length;k++){
+        var f=it.fields[k],colW=avail*(f.flex||1)/totalFlex;
+        var lw=helv.widthOfTextAtSize(f.label,8.5)+5;
+        page.drawText(f.label,{x:x,y:y-12.5,size:8.5,font:helv,color:ink});
+        textField(x+lw,colW-lw,f.label);
+        x+=colW+gp;
+      }
+      y-=24;
+    }else if(it.t==='yn'){
+      var qls=wrap(it.label,helv,9,usable-110);
+      need(qls.length*12+8);
+      var y0=y;
+      qls.forEach(function(l){page.drawText(l,{x:MX,y:y-9.5,size:9,font:helv,color:ink});y-=12;});
+      var rg=form.createRadioGroup(fname(it.label));
+      rg.addOptionToPage('Yes',page,{x:W-MX-92,y:y0-11.5,width:10,height:10,borderWidth:1,borderColor:lineC,backgroundColor:white});
+      page.drawText('Yes',{x:W-MX-78,y:y0-10.5,size:9,font:helv,color:ink});
+      rg.addOptionToPage('No',page,{x:W-MX-44,y:y0-11.5,width:10,height:10,borderWidth:1,borderColor:lineC,backgroundColor:white});
+      page.drawText('No',{x:W-MX-30,y:y0-10.5,size:9,font:helv,color:ink});
+      y-=6;
+    }else if(it.t==='chk'){
+      need(16);
+      var cb=form.createCheckBox(fname(it.label));
+      cb.addToPage(page,{x:MX+4,y:y-11.5,width:10,height:10,borderWidth:1,borderColor:lineC,backgroundColor:white});
+      page.drawText(it.label,{x:MX+20,y:y-10.5,size:9,font:helv,color:ink});
+      y-=16;
+    }else if(it.t==='para'){
+      para(it.text,helv,8.7,11.6);y-=4;
+    }else if(it.t==='sig'){
+      need(30);
+      page.drawText('X',{x:MX,y:y-13,size:11,font:bold,color:ink});
+      textField(MX+14,250,it.label);
+      page.drawText(it.label,{x:MX+14,y:y-26,size:7.5,font:helv,color:gray});
+      var dlx=MX+290;
+      page.drawText('Date',{x:dlx,y:y-12.5,size:8.5,font:helv,color:ink});
+      textField(dlx+26,90,it.label+' date');
+      y-=34;
+    }else if(it.t==='notes'){
+      var innerW=usable-24,blocks=[];
+      it.lines.forEach(function(ln){blocks.push(wrap(ln,helv,8.2,innerW));});
+      var totalH=20;
+      blocks.forEach(function(b){totalH+=b.length*10.5+4;});
+      need(totalH+6);
+      page.drawRectangle({x:MX,y:y-totalH,width:usable,height:totalH,borderColor:gray,borderWidth:.9});
+      var ty=y-14;
+      page.drawText(it.title.toUpperCase(),{x:MX+12,y:ty,size:8.8,font:bold,color:ink});
+      ty-=13;
+      blocks.forEach(function(b,bi){
+        var bf=(bi===blocks.length-1)?obl:helv;
+        b.forEach(function(l){page.drawText(l,{x:MX+12,y:ty,size:8.2,font:bf,color:ink});ty-=10.5;});
+        ty-=4;
+      });
+      y-=totalH+8;
+    }else if(it.t==='eho'){
+      need(42);
+      var g=1.15,X0=MX,Y0=y-4;
+      page.drawSvgPath('M12 1 L23 9.5 L23 23 L1 23 L1 9.5 Z',{x:X0,y:Y0,scale:g,color:ink});
+      page.drawRectangle({x:X0+6.5*g,y:Y0-(11.5+2.4)*g,width:11*g,height:2.4*g,color:white});
+      page.drawRectangle({x:X0+6.5*g,y:Y0-(16+2.4)*g,width:11*g,height:2.4*g,color:white});
+      var tx=X0+34;
+      page.drawText('EQUAL HOUSING OPPORTUNITY',{x:tx,y:Y0-8,size:8,font:bold,color:ink});
+      var els2=wrap(EHO_TEXT,helv,7.3,usable-40),ey=Y0-18;
+      els2.forEach(function(l){page.drawText(l,{x:tx,y:ey,size:7.3,font:helv,color:gray});ey-=9;});
+      y=Math.min(y-34,ey-2);
+    }else if(it.t==='legal'){
+      y-=6;para(it.text,obl,7.8,10,gray);
+    }
+  }
+
+  /* page numbers */
+  var pages=doc.getPages();
+  pages.forEach(function(p,pi){
+    var s='Rental Application — page '+(pi+1)+' of '+pages.length;
+    p.drawText(s,{x:(W-helv.widthOfTextAtSize(s,7.5))/2,y:30,size:7.5,font:helv,color:gray});
+  });
+
+  form.updateFieldAppearances(helv);
+  return doc.save();
+}
+
+$('pdfBtn').addEventListener('click',function(){
+  var b=this;
+  if(!window.PDFLib){alert('The PDF library hasn’t loaded yet — check your connection and try again.');return;}
+  b.disabled=true;b.textContent='Building PDF…';
+  makePdf(S).then(function(bytes){
+    var blob=new Blob([bytes],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='Rental-Application-'+S.st+'.pdf';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
+    b.disabled=false;b.textContent='Download fillable PDF';
+  }).catch(function(err){
+    b.disabled=false;b.textContent='Download fillable PDF';
+    alert('Sorry — the PDF could not be generated. '+(err&&err.message?err.message:''));
+  });
+});
+
+update();
+})();
+</script>
+
+<script>
+(function(){
+  var SEED={value:4.8,count:294};
+  var KEY='acb:rental-application-generator:rating';
+  var box=document.getElementById('acbStars'),meta=document.getElementById('acbRatingMeta');
+  var mine=parseInt(localStorage.getItem(KEY)||'0',10);
+  function agg(){var c=SEED.count+(mine?1:0);
+    var v=mine?((SEED.value*SEED.count+mine)/c):SEED.value;
+    return {v:Math.round(v*10)/10,c:c};}
+  function render(hover){
+    var a=agg();box.innerHTML='';
+    for(var i=1;i<=5;i++){(function(i){
+      var b=document.createElement('button');
+      b.type='button';b.className='acb-star'+((hover||mine||Math.round(a.v))>=i?' on':'');
+      b.setAttribute('aria-label',i+' star'+(i>1?'s':''));b.textContent='★';
+      b.onmouseenter=function(){render(i)};b.onmouseleave=function(){render(0)};
+      b.onclick=function(){mine=i;localStorage.setItem(KEY,String(i));render(0);
+        try{fetch('https://formsubmit.co/ajax/RATINGS_EMAIL',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({tool:'rental-application-generator',rating:i,_subject:'Tool rating: rental-application-generator'})
+        }).catch(function(){});}catch(e){}};
+      box.appendChild(b);})(i);}
+    meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
+  }
+  render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var last=0;
+  function send(){
+    var h=document.documentElement.scrollHeight;
+    if(Math.abs(h-last)>2){last=h;parent.postMessage({acbTool:'rental-application-generator',height:h},'*');}
+  }
+  if(window.ResizeObserver){new ResizeObserver(send).observe(document.body);}
+  window.addEventListener('load',send);
+  setInterval(send,800);
+})();
+</script>
+</body>
+</html>

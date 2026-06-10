@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Lease Agreement Generator | Advanced Collection Bureau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<style>
+:root{
+  --acb-blue:#3D5AF1;--acb-blue-dark:#2D45C6;--acb-blue-light:#EEF1FE;--acb-blue-mid:#D5DBFC;
+  --acb-bg:#F4F5F9;--acb-card:#FFFFFF;--acb-text:#1A1A2E;--acb-text-mid:#4A4A68;--acb-text-light:#8889A0;
+  --acb-border:#E2E4EC;--acb-warn:#E8A83E;--acb-warn-bg:#FEF9EE;--acb-green:#16A34A;--acb-red:#DC2626;--acb-gold:#F5B301;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-text);-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:28px 16px 48px}
+.progress{position:sticky;top:0;left:0;right:0;height:4px;z-index:100;background:var(--acb-border);border-radius:2px;margin-bottom:24px;overflow:hidden;display:none}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--acb-blue),var(--acb-blue-dark));transition:width .5s cubic-bezier(.22,1,.36,1)}
+.tool-head{text-align:center;margin-bottom:26px}
+.tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
+.tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55;max-width:600px;margin-left:auto;margin-right:auto}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
+.sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
+.entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:720px){.entry-grid{grid-template-columns:1fr}}
+.entry-card{background:#fff;border:1.5px solid var(--acb-border);border-radius:16px;padding:30px 26px;text-align:center;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.entry-card:hover{border-color:var(--acb-blue);transform:translateY(-2px);box-shadow:0 8px 24px rgba(61,90,241,.12)}
+.entry-card .ic{width:54px;height:54px;border-radius:50%;background:var(--acb-blue-light);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.entry-card h2{font-size:19px;font-weight:700;margin-bottom:8px}
+.entry-card p{font-size:14px;color:var(--acb-text-mid);line-height:1.55}
+.entry-card .tag{display:inline-block;margin-top:14px;font-size:13px;font-weight:600;color:var(--acb-blue)}
+.field{margin-bottom:16px}
+.field>label{display:block;font-size:14px;font-weight:600;color:var(--acb-text);margin-bottom:7px}
+.in-wrap{position:relative;display:flex;align-items:center}
+.in-wrap .pre,.in-wrap .suf{position:absolute;color:var(--acb-text-light);font-size:15px;font-weight:500;pointer-events:none}
+.in-wrap .pre{left:14px}.in-wrap .suf{right:14px}
+input[type=text],input[type=number],input[type=date],input[type=email],select,textarea{width:100%;padding:13px 16px;background:#fff;border:1.5px solid var(--acb-border);border-radius:10px;color:var(--acb-text);font-size:16px;font-family:inherit;outline:none;transition:border-color .25s,box-shadow .25s}
+.in-wrap.has-pre input{padding-left:30px}
+.in-wrap.has-suf input{padding-right:36px}
+input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(61,90,241,.09)}
+textarea{resize:vertical;min-height:84px;line-height:1.5}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+.hint{font-size:12.5px;color:var(--acb-text-light);margin-top:6px;line-height:1.5}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:560px){.row2,.row3{grid-template-columns:1fr}}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.chip{padding:10px 18px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s;user-select:none}
+.chip.on{background:var(--acb-blue-light);border-color:var(--acb-blue);color:var(--acb-blue);font-weight:600}
+.chip.on::before{content:"✓ "}
+.warnbox{display:flex;gap:10px;align-items:flex-start;background:var(--acb-warn-bg);border:1.5px solid rgba(232,168,62,.45);border-radius:12px;padding:13px 16px;margin-top:10px;font-size:13.5px;color:#8a6116;line-height:1.55}
+.infobox{display:flex;gap:10px;align-items:flex-start;background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:12px;padding:13px 16px;margin-top:10px;font-size:13.5px;color:var(--acb-text-mid);line-height:1.55}
+.statefacts{background:#FAFBFD;border:1px solid var(--acb-border);border-radius:14px;padding:18px 20px;margin-top:16px}
+.statefacts h3{font-size:14.5px;font-weight:700;margin-bottom:10px;color:var(--acb-text)}
+.sf-row{display:flex;justify-content:space-between;gap:16px;padding:7px 0;border-bottom:1px dashed var(--acb-border);font-size:13.5px}
+.sf-row:last-child{border-bottom:none}
+.sf-row .k{color:var(--acb-text-light);flex-shrink:0}
+.sf-row .v{color:var(--acb-text);font-weight:600;text-align:right}
+.sf-note{font-size:11.5px;color:var(--acb-text-light);margin-top:10px;line-height:1.5}
+.step-title{font-size:23px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+.step-sub{font-size:14.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:20px}
+.wiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:26px;gap:12px}
+.btn-primary{display:inline-block;padding:14px 40px;border-radius:50px;border:none;background:var(--acb-blue);color:#fff;font-size:15.5px;font-family:inherit;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(61,90,241,.27);transition:all .2s}
+.btn-primary:hover{background:var(--acb-blue-dark);transform:translateY(-1px)}
+.btn-primary:disabled{background:#D0D3DC;color:#8889A0;box-shadow:none;cursor:not-allowed;transform:none}
+.btn-secondary{padding:12px 26px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:var(--acb-blue-mid);color:var(--acb-blue)}
+.steps-dots{font-size:13px;color:var(--acb-text-light);font-weight:600}
+.tenant-row,.clause-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.tenant-row input{flex:1}
+.rm-btn{flex-shrink:0;width:42px;height:46px;border-radius:10px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-light);font-size:18px;cursor:pointer;font-family:inherit}
+.rm-btn:hover{color:var(--acb-red);border-color:var(--acb-red)}
+.add-btn{padding:10px 20px;border-radius:50px;border:1.5px dashed var(--acb-blue-mid);background:var(--acb-blue-light);color:var(--acb-blue);font-size:13.5px;font-family:inherit;font-weight:600;cursor:pointer}
+.util-table{width:100%;border-collapse:collapse;font-size:14px}
+.util-table th{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--acb-text-light);text-align:left;padding:8px 6px;border-bottom:1px solid var(--acb-border)}
+.util-table th:not(:first-child){text-align:center}
+.util-table td{padding:9px 6px;border-bottom:1px dashed var(--acb-border)}
+.util-table tr:last-child td{border-bottom:none}
+.util-seg{display:flex;gap:6px;justify-content:center}
+.util-seg button{padding:7px 14px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:12.5px;font-family:inherit;cursor:pointer;transition:all .15s}
+.util-seg button.on{background:var(--acb-blue-light);border-color:var(--acb-blue);color:var(--acb-blue);font-weight:600}
+.disc-item{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border:1.5px solid var(--acb-border);border-radius:12px;margin-bottom:10px;background:#fff;cursor:pointer;transition:all .2s}
+.disc-item.on{background:var(--acb-blue-light);border-color:rgba(61,90,241,.5)}
+.disc-item.req{cursor:default}
+.disc-check{width:22px;height:22px;min-width:22px;border-radius:6px;border:2px solid var(--acb-border);background:#fff;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s}
+.disc-item.on .disc-check{background:var(--acb-blue);border-color:var(--acb-blue)}
+.disc-check svg{opacity:0}.disc-item.on .disc-check svg{opacity:1}
+.disc-item b{font-size:14.5px;display:block;margin-bottom:3px}
+.disc-item span.d{font-size:13px;color:var(--acb-text-mid);line-height:1.5}
+.req-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--acb-blue);background:#fff;border:1px solid var(--acb-blue-mid);padding:2px 9px;border-radius:50px;margin-left:8px;vertical-align:1px}
+.review-sec{border:1px solid var(--acb-border);border-radius:12px;margin-bottom:10px;overflow:hidden}
+.review-sec>button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;background:#FAFBFD;border:none;font-family:inherit;font-size:14.5px;font-weight:600;color:var(--acb-text);cursor:pointer;text-align:left}
+.review-sec .edit{font-size:12.5px;color:var(--acb-blue);font-weight:600;flex-shrink:0}
+.review-sec .body{padding:6px 18px 14px;font-size:13.5px;color:var(--acb-text-mid);line-height:1.7;border-top:1px solid var(--acb-border)}
+.acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--acb-text);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;padding:10px 12px;border-radius:10px;width:230px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;text-transform:none;letter-spacing:normal}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble{opacity:1}
+@media(max-width:720px){.acb-tip-bubble{left:auto;right:-10px;transform:none}}
+.doc-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.doc-paper{background:#fff;border:1px solid var(--acb-border);border-radius:4px;box-shadow:0 4px 24px rgba(0,0,0,.08);padding:64px 72px;font-family:Georgia,'Times New Roman',serif;font-size:14px;line-height:1.65;color:#111}
+@media(max-width:720px){.doc-paper{padding:32px 22px}}
+.doc-paper h2.doc-title{text-align:center;font-size:19px;letter-spacing:.04em;margin-bottom:4px;text-transform:uppercase}
+.doc-paper .doc-sub{text-align:center;font-size:12.5px;color:#555;margin-bottom:26px}
+.doc-paper h3{font-size:14px;margin:22px 0 8px;text-transform:uppercase;letter-spacing:.02em}
+.doc-paper p{margin-bottom:10px;text-align:justify}
+.doc-paper ul{margin:0 0 10px 22px}
+.doc-paper li{margin-bottom:4px}
+.doc-paper .blank{display:inline-block;min-width:160px;border-bottom:1px solid #111}
+.doc-paper table.doc-util{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:13px}
+.doc-paper table.doc-util td,.doc-paper table.doc-util th{border:1px solid #999;padding:5px 8px;text-align:left}
+.sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:34px 40px;margin-top:36px}
+@media(max-width:560px){.sig-grid{grid-template-columns:1fr}}
+.sig-block .line{border-bottom:1px solid #111;height:34px}
+.sig-block .lbl{font-size:11.5px;color:#444;margin-top:5px}
+.doc-foot{margin-top:30px;padding-top:14px;border-top:1px solid #ccc;font-size:11px;color:#666;text-align:center;line-height:1.6}
+.fade{animation:fadeIn .35s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.acb-btn-primary{display:inline-block;padding:14px 36px;border-radius:50px;border:none;background:var(--acb-blue);color:#fff;font-size:15px;font-family:inherit;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(61,90,241,.27);transition:all .2s}
+.acb-btn-primary:hover{background:var(--acb-blue-dark);transform:translateY(-1px)}
+.acb-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:var(--acb-blue-light);border-left:4px solid var(--acb-blue);border-radius:6px 16px 16px 6px;padding:24px 28px;margin-top:34px}
+.acb-cta-title{font-size:19px;font-weight:700;color:var(--acb-text);margin-bottom:6px}
+.acb-cta p{font-size:14.5px;color:var(--acb-text-mid);line-height:1.55;margin:0;max-width:520px}
+.acb-cta-actions{display:flex;flex-direction:column;align-items:center;gap:8px}
+.acb-cta-tel{font-size:13px;color:var(--acb-blue);text-decoration:none;font-weight:600;white-space:nowrap}
+.acb-rating{display:flex;flex-direction:column;align-items:center;gap:6px;margin:34px auto 0;text-align:center}
+.acb-star{background:none;border:none;font-size:30px;line-height:1;color:#D0D3DC;cursor:pointer;padding:2px 3px;transition:color .15s,transform .15s;font-family:inherit}
+.acb-star.on{color:var(--acb-gold)}
+.acb-star:hover{transform:scale(1.15)}
+.acb-rating-meta{font-size:13px;color:var(--acb-text-light)}
+.disclaimer{font-size:12px;color:var(--acb-text-light);text-align:center;line-height:1.6;margin-top:26px;max-width:660px;margin-left:auto;margin-right:auto}
+@media print{
+  body{background:#fff}
+  .no-print{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .doc-paper{border:none;box-shadow:none;border-radius:0;padding:0;font-size:12.5px}
+  .doc-paper h3{page-break-after:avoid}
+  .sig-grid{page-break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="progress no-print" id="progress"><div id="progressBar"></div></div>
+
+  <div class="tool-head no-print" id="toolHead">
+    <h1>Lease Agreement Generator</h1>
+    <p>Build a residential lease customized to your state's rules in about five minutes — or grab a blank, fillable template. Every state plus D.C.</p>
+    <div class="badges"><span class="badge">100% Free</span><span class="badge">No Signup</span><span class="badge">All 50 States + DC</span></div>
+  </div>
+
+  <!-- ENTRY -->
+  <div id="screenEntry" class="no-print">
+    <div class="entry-grid">
+      <div class="entry-card" id="entryBuild" role="button" tabindex="0">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#3D5AF1" stroke-width="2.5" stroke-linecap="round"/></svg></div>
+        <h2>Build My Custom Lease</h2>
+        <p>Answer simple questions step by step. We pre-fill your state's deposit limits, late-fee rules, notice periods, and required disclosures as you go.</p>
+        <span class="tag">Start building →</span>
+      </div>
+      <div class="entry-card" id="entryBlank" role="button" tabindex="0">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke="#3D5AF1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h2>Download a Blank Template</h2>
+        <p>In a hurry? Pick your state and instantly download a professional, fillable PDF lease template you can complete on your computer or by hand.</p>
+        <span class="tag">Get the template →</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLANK TEMPLATE -->
+  <div id="screenBlank" class="no-print" style="display:none">
+    <div class="card fade">
+      <div class="sec-label">Blank fillable template</div>
+      <div class="field">
+        <label for="blankState">Your state</label>
+        <select id="blankState"></select>
+      </div>
+      <div id="blankFacts"></div>
+      <div class="wiz-nav">
+        <button class="btn-secondary" id="blankBack">← Back</button>
+        <button class="btn-primary" id="blankDownload">Download Fillable PDF</button>
+      </div>
+      <p class="hint" style="text-align:right;margin-top:8px" id="blankStatus"></p>
+    </div>
+  </div>
+
+  <!-- WIZARD -->
+  <div id="screenWizard" class="no-print" style="display:none">
+    <div class="card">
+      <div id="stepBody"></div>
+      <div class="wiz-nav">
+        <button class="btn-secondary" id="wizBack">← Back</button>
+        <span class="steps-dots" id="stepDots"></span>
+        <button class="btn-primary" id="wizNext">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENT -->
+  <div id="screenDoc" style="display:none">
+    <div class="doc-actions no-print">
+      <button class="btn-primary" onclick="window.print()">Print / Save as PDF</button>
+      <button class="btn-secondary" id="docWord">Download .doc</button>
+      <button class="btn-secondary" id="docCopy">Copy text</button>
+      <button class="btn-secondary" id="docEdit">← Edit answers</button>
+      <button class="btn-secondary" id="docRestart">Start over</button>
+    </div>
+    <div class="doc-paper" id="docPaper"></div>
+  </div>
+
+  <div class="no-print">
+    <div class="acb-rating" id="acbRating" aria-label="Rate this tool">
+      <div class="acb-rating-stars" id="acbStars" role="radiogroup"></div>
+      <div class="acb-rating-meta" id="acbRatingMeta"></div>
+    </div>
+
+    <div class="acb-cta">
+      <div class="acb-cta-text">
+        <div class="acb-cta-title">Tenant left owing money?</div>
+        <p>A solid lease is your first line of defense. If a tenant still skips out, Advanced Collection Bureau has recovered over <strong>$85&nbsp;million</strong> in unpaid rent, fees, and damages for landlords and property managers. No recovery, no fee.</p>
+      </div>
+      <div class="acb-cta-actions">
+        <a class="acb-btn-primary" href="https://www.advancedcb.com/" target="_top">Get Started</a>
+        <a class="acb-cta-tel" href="tel:3216334999">or call (321) 633-4999</a>
+      </div>
+    </div>
+
+    <p class="disclaimer"><strong>Not legal advice.</strong> This generator produces a general template based on commonly cited state rules, current to the best of our knowledge as of 2025. Landlord–tenant law changes frequently and varies by city and county. Have a local attorney review any lease before you use it. © Advanced Collection Bureau, Inc.</p>
+  </div>
+</div>
+<script>
+"use strict";
+/* ============================================================
+   STATE DATA — commonly cited landlord–tenant rules, current to
+   the best of our knowledge as of 2025. Always verify against the
+   current statute; many cities/counties add stricter local rules.
+   Fields: n name · dep deposit-cap text · depM numeric months (null = no cap)
+   ret deposit-return deadline · ent entry-notice text · entL phrase used in lease
+   late late-fee rule text · lateCapPct numeric % cap where clearly defined
+   graceReq statutory grace days · mtm month-to-month termination notice
+   disc [{t,b}] state-required disclosures (lease language) · note extra
+   ============================================================ */
+var D_CHECKLIST={t:"Move-In Inspection Checklist",b:"Landlord and Tenant shall jointly complete a move-in inspection checklist documenting the condition of the Premises at the start of the tenancy. A signed copy will be provided to Tenant and used at move-out to assess damages beyond normal wear and tear."};
+var D_AGENT={t:"Identification of Landlord or Authorized Agent",b:"The name and address of the owner of the Premises, or the person authorized to manage the Premises and to receive notices and legal process on the owner's behalf, is set forth in the Notices section of this Agreement."};
+var D_MOLD_INFO={t:"Mold Disclosure",b:"Landlord discloses that, as of the date of this Agreement, Landlord has no knowledge of mold contamination at the Premises beyond ordinary household levels. Tenant agrees to promptly notify Landlord of any visible mold, moisture intrusion, or water damage."};
+var D_BEDBUG={t:"Bed Bug Disclosure",b:"Landlord represents that, as of the date of this Agreement, the Premises is not known to be infested with bed bugs. Tenant agrees to promptly report any suspected bed bug activity and to cooperate with inspection and treatment."};
+var SD={
+AL:{n:"Alabama",dep:"1 month's rent (pet/damage add-ons allowed)",depM:1,ret:"60 days",ent:"No statute — set by lease (2 days used here)",entL:"at least two (2) days'",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[],note:""},
+AK:{n:"Alaska",dep:"2 months' rent (if rent ≤ $2,000/mo)",depM:2,ret:"14 days (proper notice) / 30 days otherwise",ent:"24 hours",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[],note:""},
+AZ:{n:"Arizona",dep:"1.5 months' rent",depM:1.5,ret:"14 business days",ent:"2 days",entL:"at least two (2) days'",late:"Must be reasonable and stated in the lease",mtm:"30 days",disc:[{t:"Arizona Residential Landlord and Tenant Act",b:"Tenant is hereby notified that the Arizona Residential Landlord and Tenant Act is available for review on the Arizona Department of Housing website."},D_CHECKLIST],note:""},
+AR:{n:"Arkansas",dep:"2 months' rent",depM:2,ret:"60 days",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[],note:""},
+CA:{n:"California",dep:"1 month's rent (since July 2024; limited small-landlord exception of 2 months)",depM:1,ret:"21 days",ent:"24 hours (48 hours for initial move-out inspection)",entL:"at least twenty-four (24) hours'",late:"Must be a reasonable estimate of actual damages",mtm:"30 days (under 1 year of tenancy) / 60 days (1 year or more)",disc:[{t:"Megan's Law Database Notice",b:"Notice: Pursuant to Section 290.46 of the Penal Code, information about specified registered sex offenders is made available to the public via an Internet Web site maintained by the Department of Justice at www.meganslaw.ca.gov."},D_BEDBUG,{t:"Mold Booklet",b:"Tenant acknowledges receipt of the California Department of Health Services consumer booklet regarding mold, and agrees to promptly report suspected mold or moisture problems to Landlord."}],note:"Many CA cities have rent control, just-cause eviction, and deposit-interest ordinances — check local rules."},
+CO:{n:"Colorado",dep:"2 months' rent",depM:2,ret:"30 days (up to 60 if the lease provides)",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"Greater of $50 or 5% of past-due amount; 7-day grace period required",lateCapPct:5,graceReq:7,mtm:"21 to 91 days depending on length of tenancy",disc:[{t:"Radon Disclosure",b:"Colorado law requires disclosure of known radon information. Landlord discloses that Landlord has no knowledge of radon concentrations at the Premises exceeding recommended levels, except as otherwise stated in writing. The Colorado Department of Public Health and Environment provides radon information at cdphe.colorado.gov."},D_BEDBUG],note:""},
+CT:{n:"Connecticut",dep:"2 months' rent (1 month if tenant is 62 or older)",depM:2,ret:"Within 30 days, or 15 days after receiving Tenant's forwarding address, whichever is later",ent:"Reasonable notice required",entL:"reasonable (at least twenty-four (24) hours')",late:"9-day grace period required (4 days for week-to-week); fee must be reasonable",graceReq:9,mtm:"No statute — lease should specify (30 days used here)",disc:[{t:"Common Interest Community",b:"If the Premises is located in a common interest community, Tenant will receive notice of that fact and a copy of applicable association rules."}],note:"Interest on security deposits is required in Connecticut."},
+DE:{n:"Delaware",dep:"1 month's rent (for leases of 1 year or more)",depM:1,ret:"20 days",ent:"48 hours",entL:"at least forty-eight (48) hours'",late:"5% of monthly rent maximum; rent must be 5+ days late",lateCapPct:5,graceReq:5,mtm:"60 days",disc:[{t:"Summary of the Delaware Landlord-Tenant Code",b:"Tenant acknowledges receipt of a summary of the Delaware Residential Landlord-Tenant Code as prepared by the Attorney General's office."}],note:""},
+DC:{n:"Washington, D.C.",dep:"1 month's rent",depM:1,ret:"45 days",ent:"48 hours",entL:"at least forty-eight (48) hours'",late:"5% of monthly rent maximum; 5-day grace period required",lateCapPct:5,graceReq:5,mtm:"30 days",disc:[{t:"Security Deposit Interest",b:"Security deposits must be held in an interest-bearing account, and accrued interest is payable to Tenant as provided by D.C. law."},{t:"Tenant Bill of Rights",b:"Tenant acknowledges receipt of the District of Columbia Tenant Bill of Rights as published by the Office of the Tenant Advocate."}],note:"Most D.C. rentals are subject to rent stabilization and rental-housing registration requirements."},
+FL:{n:"Florida",dep:"No statutory cap",depM:null,ret:"15 days (no deductions) / 30 days to give notice of a claim",ent:"12 hours (for repairs, between 7:30 a.m. and 8:00 p.m.)",entL:"at least twelve (12) hours'",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[{t:"Radon Gas",b:"RADON GAS: Radon is a naturally occurring radioactive gas that, when it has accumulated in a building in sufficient quantities, may present health risks to persons who are exposed to it over time. Levels of radon that exceed federal and state guidelines have been found in buildings in Florida. Additional information regarding radon and radon testing may be obtained from your county health department."},{t:"Security Deposit Notice (Fla. Stat. § 83.49)",b:"If a security deposit is collected, Landlord will, within 30 days, notify Tenant in writing of the manner in which the deposit is being held, as required by Florida Statutes § 83.49."}],note:""},
+GA:{n:"Georgia",dep:"No statutory cap",depM:null,ret:"30 days",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"60 days by Landlord / 30 days by Tenant",disc:[{t:"Flooding Disclosure",b:"Landlord discloses that the living space of the Premises has not been damaged by flooding three or more times within the past five years, except as otherwise stated in writing."},D_AGENT,D_CHECKLIST],note:""},
+HI:{n:"Hawaii",dep:"1 month's rent (plus up to 1 month additional pet deposit)",depM:1,ret:"14 days",ent:"2 days",entL:"at least two (2) days'",late:"8% of the delinquent amount maximum",lateCapPct:8,mtm:"45 days by Landlord / 28 days by Tenant",disc:[D_AGENT],note:""},
+ID:{n:"Idaho",dep:"No statutory cap",depM:null,ret:"21 days (up to 30 if the lease provides)",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"One month",disc:[],note:""},
+IL:{n:"Illinois",dep:"No statewide cap (Chicago and some suburbs differ)",depM:null,ret:"30 days (itemized statement) / 45 days (refund) — applies to 5+ unit buildings",ent:"No statewide statute (Chicago: 48 hours)",entL:"at least forty-eight (48) hours'",late:"$20 or 20% of monthly rent, whichever is greater (5+ unit buildings); must be reasonable",mtm:"30 days",disc:[{t:"Radon Hazard Disclosure",b:"Illinois law requires disclosure of known radon hazards. Landlord discloses that Landlord has no knowledge of a radon hazard at the Premises, except as otherwise stated in writing. Tenant may obtain radon information from the Illinois Emergency Management Agency."},{t:"Shared Utility Arrangements",b:"If utilities serving the Premises are measured through a meter shared with other units or common areas, Landlord has disclosed the arrangement and the formula for allocating charges."}],note:"Chicago's RLTO imposes significant additional requirements (deposit interest, summaries, receipts)."},
+IN:{n:"Indiana",dep:"No statutory cap",depM:null,ret:"45 days",ent:"Reasonable notice required",entL:"reasonable (at least twenty-four (24) hours')",late:"No statutory cap — must be reasonable",mtm:"One month",disc:[{t:"Smoke Detector Acknowledgment",b:"Tenant acknowledges that the Premises is equipped with functional smoke detectors and agrees to maintain them (including battery replacement) and not to disable them."}],note:""},
+IA:{n:"Iowa",dep:"2 months' rent",depM:2,ret:"30 days",ent:"24 hours",entL:"at least twenty-four (24) hours'",late:"Rent ≤ $700/mo: $12/day, max $60/mo · Rent > $700/mo: $20/day, max $100/mo",mtm:"30 days",disc:[{t:"Shared Utility Arrangements",b:"If utilities are not separately metered to the Premises, Landlord has disclosed the manner in which utility charges are allocated."}],note:""},
+KS:{n:"Kansas",dep:"1 month's rent (unfurnished) / 1.5 months (furnished); pet deposit up to ½ month extra",depM:1,ret:"30 days",ent:"Reasonable notice required",entL:"reasonable (at least twenty-four (24) hours')",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[D_CHECKLIST],note:""},
+KY:{n:"Kentucky",dep:"No statutory cap",depM:null,ret:"30–60 days",ent:"2 days",entL:"at least two (2) days'",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[D_CHECKLIST,D_AGENT],note:"The URLTA applies only in counties/cities that adopted it (e.g., Lexington, Louisville)."},
+LA:{n:"Louisiana",dep:"No statutory cap",depM:null,ret:"1 month",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"10 days",disc:[],note:""},
+ME:{n:"Maine",dep:"2 months' rent",depM:2,ret:"30 days (written lease) / 21 days (tenancy at will)",ent:"24 hours",entL:"at least twenty-four (24) hours'",late:"4% of monthly rent maximum; rent must be 15+ days late",lateCapPct:4,graceReq:15,mtm:"30 days",disc:[{t:"Radon Disclosure",b:"Maine law requires landlords to test for radon and disclose the results to tenants. Landlord will provide Tenant with the most recent radon test results for the building."},D_BEDBUG,{t:"Smoking Policy",b:"Landlord's smoking policy for the Premises is stated in the Smoking section of this Agreement, as required by Maine law."},{t:"Energy Efficiency Disclosure",b:"Upon request, Landlord will provide an energy efficiency disclosure statement for the Premises."}],note:""},
+MD:{n:"Maryland",dep:"1 month's rent (reduced from 2 months effective October 2024)",depM:1,ret:"45 days",ent:"No statewide statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"5% of monthly rent maximum",lateCapPct:5,mtm:"One month (some counties require 60+ days)",disc:[{t:"Security Deposit Receipt",b:"Tenant acknowledges receipt of a written security deposit receipt describing Tenant's rights regarding the deposit, as required by Maryland law."}],note:"Interest is owed on deposits of $50+ held 6+ months."},
+MA:{n:"Massachusetts",dep:"1 month's rent",depM:1,ret:"30 days",ent:"No statute — entry must be reasonable",entL:"reasonable (at least twenty-four (24) hours')",late:"No fee until rent is 30 days late",graceReq:30,mtm:"30 days or one full rental period, whichever is longer",disc:[{t:"Statement of Condition",b:"If a security deposit is taken, Landlord will provide Tenant with a signed Statement of Condition of the Premises within 10 days, and Tenant has 15 days to note any damage."},{t:"Security Deposit Bank Disclosure",b:"Any security deposit will be held in a separate interest-bearing account in a Massachusetts bank, and Landlord will disclose the bank name, address, and account number. Annual interest is payable to Tenant."}],note:"Massachusetts deposit law is strictly enforced — follow the receipt, banking, and interest rules exactly."},
+MI:{n:"Michigan",dep:"1.5 months' rent",depM:1.5,ret:"30 days",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"One month",disc:[{t:"Security Deposit Notice",b:"Landlord will provide Tenant, in writing, the name and address of the financial institution where the security deposit is held. Notice to Tenant: You must notify your landlord in writing within 4 days after you move of a forwarding address where you can be reached and where you will receive mail; otherwise your landlord shall be relieved of sending you an itemized list of damages and the penalties adherent to that failure."},{t:"Inventory Checklists",b:"Tenant acknowledges receipt of two blank inventory checklists; Tenant must complete and return one copy within 7 days of taking possession."}],note:""},
+MN:{n:"Minnesota",dep:"No statutory cap",depM:null,ret:"21 days",ent:"Reasonable notice (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"8% of overdue rent maximum",lateCapPct:8,mtm:"One full rental period plus one day",disc:[D_AGENT],note:"Interest is owed on security deposits."},
+MS:{n:"Mississippi",dep:"No statutory cap",depM:null,ret:"45 days",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[],note:""},
+MO:{n:"Missouri",dep:"2 months' rent",depM:2,ret:"30 days",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"One month",disc:[],note:""},
+MT:{n:"Montana",dep:"No statutory cap",depM:null,ret:"30 days (10 days if no deductions)",ent:"24 hours",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[D_MOLD_INFO,D_CHECKLIST],note:""},
+NE:{n:"Nebraska",dep:"1 month's rent (plus up to ¼ month pet deposit)",depM:1,ret:"14 days",ent:"24 hours",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[],note:""},
+NV:{n:"Nevada",dep:"3 months' rent",depM:3,ret:"30 days",ent:"24 hours",entL:"at least twenty-four (24) hours'",late:"5% of monthly rent maximum",lateCapPct:5,mtm:"30 days",disc:[D_CHECKLIST],note:""},
+NH:{n:"New Hampshire",dep:"1 month's rent or $100, whichever is greater",depM:1,ret:"30 days",ent:"Adequate notice under the circumstances",entL:"adequate (at least twenty-four (24) hours')",late:"No statutory cap — must be reasonable",mtm:"30 days (eviction requires good cause)",disc:[{t:"Security Deposit Receipt",b:"If the deposit is paid by cash or money order, Landlord will provide a signed receipt stating where the deposit will be held."}],note:""},
+NJ:{n:"New Jersey",dep:"1.5 months' rent",depM:1.5,ret:"30 days",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"5-business-day grace period required for certain senior/assistance recipients; fee must be reasonable",mtm:"One month (eviction requires good cause under the Anti-Eviction Act)",disc:[{t:"Truth in Renting Statement",b:"For buildings of three or more units (and certain others), Tenant acknowledges receipt of the New Jersey Truth in Renting statement published by the Department of Community Affairs."},{t:"Flood Zone Disclosure",b:"As required by New Jersey law, Landlord discloses whether the Premises is located in the FEMA Special or Moderate Risk Flood Hazard Area and whether the Premises has experienced flood damage, as stated in writing to Tenant."},{t:"Window Guard Notice",b:"In multiple dwellings, Tenant may require Landlord to install window guards in the apartment if a child 10 years or younger lives there or regularly spends time there (N.J.A.C. 5:10-27)."}],note:"Deposit must be placed in an interest-bearing N.J. account with written notice of its location."},
+NM:{n:"New Mexico",dep:"1 month's rent (leases under 1 year; no cap for 1-year+ leases)",depM:1,ret:"30 days",ent:"24 hours",entL:"at least twenty-four (24) hours'",late:"10% of monthly rent maximum",lateCapPct:10,mtm:"30 days",disc:[D_AGENT],note:""},
+NY:{n:"New York",dep:"1 month's rent",depM:1,ret:"14 days",ent:"Reasonable notice (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"Lesser of $50 or 5% of monthly rent; 5-day grace period required",lateCapPct:5,graceReq:5,mtm:"30 days (under 1 yr) / 60 days (1–2 yrs) / 90 days (2+ yrs of occupancy)",disc:[{t:"Sprinkler System Disclosure",b:"Landlord discloses whether the Premises is equipped with an operative sprinkler system and, if so, the date of its last maintenance and inspection, as required by N.Y. Real Property Law § 231-a, as stated in writing to Tenant."},{t:"Flood History and Risk Disclosure",b:"As required by N.Y. law, Landlord discloses whether any part of the Premises is located in a FEMA flood plain and whether the Premises has experienced flood damage, as stated in writing to Tenant."}],note:"NYC adds bedbug history, window guards, and other requirements; rent-stabilized units have their own rider."},
+NC:{n:"North Carolina",dep:"2 months' rent (fixed-term) / 1.5 months (month-to-month)",depM:2,ret:"30 days (interim) / 60 days (final, if damage claims)",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"Greater of $15 or 5% of monthly rent; rent must be 5+ days late",lateCapPct:5,graceReq:5,mtm:"7 days",disc:[],note:"Deposit must be held in a licensed N.C. trust account (or bonded), with written notice to Tenant."},
+ND:{n:"North Dakota",dep:"1 month's rent (up to $2,500 pet deposit allowed)",depM:1,ret:"30 days",ent:"Reasonable notice (24 hours used here)",entL:"reasonable (at least twenty-four (24) hours')",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[],note:""},
+OH:{n:"Ohio",dep:"No statutory cap",depM:null,ret:"30 days",ent:"24 hours",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[],note:"Interest is owed on deposits over one month's rent held 6+ months."},
+OK:{n:"Oklahoma",dep:"No statutory cap",depM:null,ret:"45 days",ent:"1 day",entL:"at least one (1) day's",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[{t:"Flood Disclosure",b:"If the Premises has been flooded within the past five years, Landlord has disclosed that fact in writing to Tenant, as required by Oklahoma law."}],note:""},
+OR:{n:"Oregon",dep:"No statutory cap",depM:null,ret:"31 days",ent:"24 hours",entL:"at least twenty-four (24) hours'",late:"4-day grace required; flat fee must be reasonable (statute also allows defined % schemes)",graceReq:4,mtm:"30 days (90 days+ and just cause after the first year; Portland adds rules)",disc:[{t:"Flood Zone Disclosure",b:"If the Premises is located in a 100-year flood plain, Landlord has disclosed that fact to Tenant as required by Oregon law."},{t:"Smoking Policy",b:"Landlord's smoking policy for the Premises is stated in the Smoking section of this Agreement, as required by Oregon law."},{t:"Carbon Monoxide Alarm",b:"The Premises is equipped with one or more functional carbon monoxide alarms as required by Oregon law, and Tenant agrees to test and maintain them and report any deficiency."}],note:"Oregon has statewide rent-increase limits — check the current annual cap before raising rent."},
+PA:{n:"Pennsylvania",dep:"2 months' rent (first year) / 1 month (after first year)",depM:2,ret:"30 days",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"No statute — lease should specify (30 days used here)",disc:[],note:"Deposits held beyond 2 years accrue interest payable to Tenant."},
+RI:{n:"Rhode Island",dep:"1 month's rent",depM:1,ret:"20 days",ent:"2 days",entL:"at least two (2) days'",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[{t:"Code Violations",b:"Landlord discloses that Landlord has no outstanding minimum-housing-code violations on the Premises, except as otherwise stated in writing."}],note:""},
+SC:{n:"South Carolina",dep:"No statutory cap",depM:null,ret:"30 days",ent:"24 hours",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"30 days",disc:[{t:"Unequal Deposit Disclosure",b:"If Landlord rents five or more adjoining units and imposes different deposit amounts on different tenants, the standards for determining deposits are posted or will be provided to Tenant."}],note:""},
+SD:{n:"South Dakota",dep:"1 month's rent",depM:1,ret:"14 days (45 days for itemized statement on request)",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"One month",disc:[{t:"Methamphetamine Disclosure",b:"Landlord discloses that Landlord has no knowledge that the Premises was ever used for the manufacture of methamphetamine, except as otherwise stated in writing."}],note:""},
+TN:{n:"Tennessee",dep:"No statutory cap",depM:null,ret:"30 days",ent:"No specific hours in statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"10% of the late amount maximum; 5-day grace period required",lateCapPct:10,graceReq:5,mtm:"30 days",disc:[D_AGENT],note:"The URLTA applies in counties over 75,000 population."},
+TX:{n:"Texas",dep:"No statutory cap",depM:null,ret:"30 days",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"Must be reasonable: safe-harbor cap of 12% of rent (1–4 units) or 10% (5+ units); rent must be 2+ full days late",lateCapPct:12,graceReq:2,mtm:"One month",disc:[{t:"Tenant's Right to Repair",b:"Tenant may have the right to repair certain conditions and deduct the cost from rent only after proper written notice and the conditions set out in Texas Property Code Chapter 92 are met."},{t:"Parking and Towing Rules (Multiunit)",b:"If the Premises is in a multiunit complex, Tenant acknowledges receipt of a signed copy of Landlord's vehicle parking and towing rules."},{t:"Emergency Contact",b:"Landlord will post or provide the name and telephone number of the person to contact for emergency repairs."}],note:"Security devices (deadbolts, pin locks) and rekeying between tenants are mandatory in Texas."},
+UT:{n:"Utah",dep:"No statutory cap",depM:null,ret:"30 days",ent:"24 hours (unless the lease provides otherwise)",entL:"at least twenty-four (24) hours'",late:"Greater of $75 or 10% of monthly rent maximum",lateCapPct:10,mtm:"15 days",disc:[{t:"Methamphetamine Contamination",b:"Landlord discloses that Landlord has no knowledge that the Premises is currently contaminated from the use or storage of methamphetamine, except as otherwise stated in writing."},D_CHECKLIST],note:""},
+VT:{n:"Vermont",dep:"No statutory cap",depM:null,ret:"14 days",ent:"48 hours",entL:"at least forty-eight (48) hours'",late:"Fees must reflect Landlord's actual costs — punitive late fees are not enforceable",mtm:"60 days (90 days if tenancy exceeds 2 years)",disc:[],note:"Application fees are prohibited in Vermont; some municipalities (e.g., Burlington) add deposit rules."},
+VA:{n:"Virginia",dep:"2 months' rent",depM:2,ret:"45 days",ent:"72 hours (routine maintenance); shorter with consent",entL:"at least seventy-two (72) hours'",late:"Lesser of 10% of monthly rent or 10% of the unpaid balance",lateCapPct:10,mtm:"30 days",disc:[{t:"Statement of Tenant Rights and Responsibilities",b:"Tenant acknowledges receipt of the Statement of Tenant Rights and Responsibilities developed by the Virginia Department of Housing and Community Development, signed by both parties as required by Virginia law."},{t:"Mold Disclosure",b:"The written move-in report will disclose any visible evidence of mold. If visible mold is reported, Tenant may terminate or remain, and Landlord must remediate as provided by law."},{t:"Military Air Installation",b:"If the Premises is located in a locality with a military air installation, Landlord has disclosed whether the Premises is in a noise or accident potential zone."},{t:"Defective Drywall / Methamphetamine",b:"Landlord discloses no known defective drywall and no known prior methamphetamine manufacture at the Premises, except as otherwise stated in writing."}],note:""},
+WA:{n:"Washington",dep:"No statutory cap (move-in fees are regulated)",depM:null,ret:"30 days",ent:"2 days (1 day to show the unit)",entL:"at least two (2) days'",late:"Must be reasonable and stated in the lease — recent laws regulate fees; verify current statute",mtm:"Tenant: 20 days; Landlord: just cause required to end tenancy",disc:[{t:"Mold Information",b:"Tenant acknowledges receipt of the Washington Department of Health information about the health hazards of indoor mold and how to control mold growth."},{t:"Fire Safety and Protection",b:"Tenant acknowledges receipt of fire safety and protection information, including whether the building has a smoking policy, an emergency notification/evacuation plan, and operational smoke detectors."},{t:"Deposit Checklist Requirement",b:"A security deposit is collected only in conjunction with a written checklist describing the condition of the Premises, a copy of which is provided to Tenant."}],note:"Seattle and several cities add caps on fees, first/last/deposit installment rights, and just-cause rules."},
+WV:{n:"West Virginia",dep:"No statutory cap",depM:null,ret:"60 days (or 45 days after a new tenant moves in, if sooner)",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"One month",disc:[],note:""},
+WI:{n:"Wisconsin",dep:"No statutory cap",depM:null,ret:"21 days",ent:"12 hours",entL:"at least twelve (12) hours'",late:"No statutory cap — must be reasonable and in the lease",mtm:"28 days",disc:[{t:"Nonstandard Rental Provisions",b:"Any provision authorizing deposit deductions beyond those allowed by Wis. Admin. Code ATCP 134 is set forth in a separate Nonstandard Rental Provisions document, discussed with and signed by Tenant."},{t:"Code Violations & Conditions",b:"Landlord discloses no uncorrected building or housing code violations of which Landlord has actual knowledge and that present a significant health or safety threat, except as otherwise stated in writing."},{t:"Utility Charges",b:"If utilities are not included in rent and not separately metered, Landlord has disclosed how utility charges are allocated among units."}],note:""},
+WY:{n:"Wyoming",dep:"No statutory cap",depM:null,ret:"30 days (60 days if damage deductions; +15 days for utility charges)",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"No statute — lease should specify (30 days used here)",disc:[{t:"Nonrefundable Fees",b:"Any portion of money paid by Tenant that is a nonrefundable fee rather than a refundable deposit is expressly identified as nonrefundable in this Agreement."}],note:""}
+};
+</script>
+<script>
+"use strict";
+/* ===================== Wizard ===================== */
+(function(){
+window.ACB=window.ACB||{};
+var $=function(id){return document.getElementById(id);};
+var LS='acb:lease-agreement-generator:answers';
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+window.ACB.esc=esc;
+var fmtUSD=function(n,c){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:c?2:0,maximumFractionDigits:c?2:0}).format(isFinite(n)?n:0);};
+window.ACB.fmtUSD=fmtUSD;
+function money(s){var v=parseFloat(String(s).replace(/[^0-9.\-]/g,''));return isFinite(v)?v:0;}
+window.ACB.money=money;
+
+var UTIL_KEYS=['Electricity','Gas','Water / Sewer','Trash Collection','Internet / Cable','Lawn Care','Snow Removal','Pest Control'];
+var DEFAULT_A={
+  state:'',addr:'',unit:'',city:'',zip:'',ptype:'House',furnished:false,furnishings:'',parking:'',storage:'',
+  llName:'',llAddr:'',tenants:[''],occupants:'',maxOcc:'',
+  termType:'fixed',start:'',end:'',
+  rent:'',dueDay:'1',payMethods:['Check','ACH / Bank Transfer'],grace:'',lateType:'flat',lateAmt:'',nsf:'35',
+  deposit:'',petDeposit:'',petRent:'',lastMonth:false,
+  utils:{},
+  pets:'Not allowed',petDesc:'',smoking:'Prohibited anywhere on the property',sublet:'Only with Landlord’s prior written consent',alterations:'Only with Landlord’s prior written consent',
+  insurance:true,insAmt:'100,000',quietHours:true,earlyTerm:'none',etFee:'',
+  pre1978:'no',extraDisc:{},clauses:[]
+};
+UTIL_KEYS.forEach(function(k){DEFAULT_A.utils[k]=(k==='Trash Collection'||k==='Pest Control')?'Landlord':'Tenant';});
+var A;
+try{A=JSON.parse(localStorage.getItem(LS)||'null');}catch(e){A=null;}
+if(!A||typeof A!=='object')A=JSON.parse(JSON.stringify(DEFAULT_A));
+UTIL_KEYS.forEach(function(k){if(!A.utils||!A.utils[k]){A.utils=A.utils||{};A.utils[k]=DEFAULT_A.utils[k];}});
+Object.keys(DEFAULT_A).forEach(function(k){if(A[k]===undefined)A[k]=DEFAULT_A[k];});
+window.ACB.A=A;
+function save(){try{localStorage.setItem(LS,JSON.stringify(A));}catch(e){}}
+window.ACB.save=save;
+
+function stateOptions(sel){
+  var html='<option value="">Choose your state…</option>';
+  Object.keys(SD).sort(function(a,b){return SD[a].n<SD[b].n?-1:1;}).forEach(function(ab){
+    html+='<option value="'+ab+'"'+(sel===ab?' selected':'')+'>'+SD[ab].n+'</option>';
+  });
+  return html;
+}
+window.ACB.stateOptions=stateOptions;
+function stateFacts(ab,forBlank){
+  if(!ab||!SD[ab])return '';
+  var s=SD[ab];
+  var h='<div class="statefacts fade"><h3>What '+esc(s.n)+' requires</h3>';
+  h+='<div class="sf-row"><span class="k">Security deposit limit</span><span class="v">'+esc(s.dep)+'</span></div>';
+  h+='<div class="sf-row"><span class="k">Deposit return deadline</span><span class="v">'+esc(s.ret)+'</span></div>';
+  h+='<div class="sf-row"><span class="k">Notice before entry</span><span class="v">'+esc(s.ent)+'</span></div>';
+  h+='<div class="sf-row"><span class="k">Late fee rules</span><span class="v">'+esc(s.late)+'</span></div>';
+  h+='<div class="sf-row"><span class="k">Month-to-month termination</span><span class="v">'+esc(s.mtm)+'</span></div>';
+  h+='<div class="sf-row"><span class="k">State-specific disclosures</span><span class="v">'+(s.disc.length?s.disc.length+' required':'None beyond federal')+'</span></div>';
+  if(s.note)h+='<p class="sf-note">⚠ '+esc(s.note)+'</p>';
+  h+='<p class="sf-note">Commonly cited rules, current to the best of our knowledge as of 2025. Laws change and cities add rules — verify before relying on them.</p></div>';
+  return h;
+}
+window.ACB.stateFacts=stateFacts;
+
+function chipRow(name,options,current){
+  return '<div class="chips" data-chips="'+name+'">'+options.map(function(o){
+    return '<button type="button" class="chip'+(current===o?' on':'')+'" data-val="'+esc(o)+'">'+esc(o)+'</button>';
+  }).join('')+'</div>';
+}
+function bindChips(root,name,onPick){
+  root.querySelectorAll('[data-chips="'+name+'"] .chip').forEach(function(b){
+    b.addEventListener('click',function(){
+      var box=b.parentNode;
+      box.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      onPick(b.dataset.val);
+      save();
+    });
+  });
+}
+function bindMultiChips(root,name,arr){
+  root.querySelectorAll('[data-chips="'+name+'"] .chip').forEach(function(b){
+    b.addEventListener('click',function(){
+      var v=b.dataset.val,i=arr.indexOf(v);
+      if(i>=0){arr.splice(i,1);b.classList.remove('on');}else{arr.push(v);b.classList.add('on');}
+      save();
+    });
+  });
+}
+function tip(t){return '<span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">'+t+'</span></span>';}
+function bindVal(root,id,key,obj){
+  var el=root.querySelector('#'+id);
+  if(!el)return;
+  el.addEventListener('input',function(){(obj||A)[key]=el.value;save();});
+}
+
+/* ---------- steps ---------- */
+var steps=[
+{id:'state',title:'Which state is the rental property in?',
+ sub:'Lease rules are set state by state. We’ll tailor deposit limits, notice periods, late-fee rules, and required disclosures automatically.',
+ html:function(){
+   return '<div class="field"><label for="wState">State</label><select id="wState">'+stateOptions(A.state)+'</select></div><div id="wStateFacts">'+stateFacts(A.state)+'</div>';
+ },
+ bind:function(root){
+   root.querySelector('#wState').addEventListener('change',function(){
+     A.state=this.value;save();
+     root.querySelector('#wStateFacts').innerHTML=stateFacts(A.state);
+   });
+ },
+ valid:function(){return A.state?true:'Please choose a state to continue.';}},
+
+{id:'property',title:'Tell us about the property',
+ sub:'This describes the “Premises” in your lease.',
+ html:function(){
+   return '<div class="field"><label for="wAddr">Street address</label><input type="text" id="wAddr" value="'+esc(A.addr)+'" placeholder="123 Main Street"></div>'
+   +'<div class="row3"><div class="field"><label for="wUnit">Unit / Apt (optional)</label><input type="text" id="wUnit" value="'+esc(A.unit)+'" placeholder="Unit 2B"></div>'
+   +'<div class="field"><label for="wCity">City</label><input type="text" id="wCity" value="'+esc(A.city)+'"></div>'
+   +'<div class="field"><label for="wZip">ZIP code</label><input type="text" id="wZip" value="'+esc(A.zip)+'" inputmode="numeric" maxlength="10"></div></div>'
+   +'<div class="field"><label>Property type</label>'+chipRow('ptype',['House','Apartment','Condo','Townhouse','Duplex','Room','Other'],A.ptype)+'</div>'
+   +'<div class="field"><label>Is it furnished?</label>'+chipRow('furn',['Unfurnished','Furnished'],A.furnished?'Furnished':'Unfurnished')
+   +'<div id="wFurnWrap" style="display:'+(A.furnished?'block':'none')+';margin-top:10px"><input type="text" id="wFurnishings" value="'+esc(A.furnishings)+'" placeholder="e.g. refrigerator, range, washer/dryer, sofa, two beds"><p class="hint">List the included furnishings and appliances — they’ll appear in the lease.</p></div></div>'
+   +'<div class="row2"><div class="field"><label for="wParking">Parking included (optional)</label><input type="text" id="wParking" value="'+esc(A.parking)+'" placeholder="e.g. 1 driveway space, garage stall #4"></div>'
+   +'<div class="field"><label for="wStorage">Storage included (optional)</label><input type="text" id="wStorage" value="'+esc(A.storage)+'" placeholder="e.g. basement storage unit"></div></div>';
+ },
+ bind:function(root){
+   bindVal(root,'wAddr','addr');bindVal(root,'wUnit','unit');bindVal(root,'wCity','city');bindVal(root,'wZip','zip');
+   bindVal(root,'wFurnishings','furnishings');bindVal(root,'wParking','parking');bindVal(root,'wStorage','storage');
+   bindChips(root,'ptype',function(v){A.ptype=v;});
+   bindChips(root,'furn',function(v){A.furnished=(v==='Furnished');root.querySelector('#wFurnWrap').style.display=A.furnished?'block':'none';});
+ },
+ valid:function(){return (A.addr.trim()&&A.city.trim())?true:'Please enter at least a street address and city.';}},
+
+{id:'parties',title:'Who’s on the lease?',
+ sub:'The landlord (or management company) and every adult tenant who will sign.',
+ html:function(){
+   var t='<div class="field"><label for="wLl">Landlord / property owner or company</label><input type="text" id="wLl" value="'+esc(A.llName)+'" placeholder="e.g. Smith Properties LLC"></div>'
+   +'<div class="field"><label for="wLlAddr">Landlord’s address for notices'+tip('Where the tenant sends legal notices and, in many states, where you must be reachable. A business or P.O. address is fine.')+'</label><input type="text" id="wLlAddr" value="'+esc(A.llAddr)+'" placeholder="Street, City, State ZIP"></div>'
+   +'<div class="field"><label>Tenant(s) — adults who will sign</label><div id="wTenants">';
+   A.tenants.forEach(function(name,i){
+     t+='<div class="tenant-row"><input type="text" data-tenant="'+i+'" value="'+esc(name)+'" placeholder="Full legal name">'+(A.tenants.length>1?'<button type="button" class="rm-btn" data-rm="'+i+'" aria-label="Remove tenant">×</button>':'')+'</div>';
+   });
+   t+='</div><button type="button" class="add-btn" id="wAddTenant">+ Add another tenant</button></div>'
+   +'<div class="row2"><div class="field"><label for="wOcc">Other occupants (optional)'+tip('People who will live there but not sign — like minor children. Listing them keeps the “who may live here” clause enforceable.')+'</label><input type="text" id="wOcc" value="'+esc(A.occupants)+'" placeholder="e.g. two minor children"></div>'
+   +'<div class="field"><label for="wMaxOcc">Maximum occupants (optional)</label><input type="number" id="wMaxOcc" value="'+esc(A.maxOcc)+'" min="1" max="20" placeholder="e.g. 4"></div></div>';
+   return t;
+ },
+ bind:function(root){
+   bindVal(root,'wLl','llName');bindVal(root,'wLlAddr','llAddr');bindVal(root,'wOcc','occupants');bindVal(root,'wMaxOcc','maxOcc');
+   root.querySelectorAll('[data-tenant]').forEach(function(inp){
+     inp.addEventListener('input',function(){A.tenants[+inp.dataset.tenant]=inp.value;save();});
+   });
+   root.querySelectorAll('[data-rm]').forEach(function(b){
+     b.addEventListener('click',function(){A.tenants.splice(+b.dataset.rm,1);save();rerender();});
+   });
+   root.querySelector('#wAddTenant').addEventListener('click',function(){A.tenants.push('');save();rerender();});
+ },
+ valid:function(){
+   if(!A.llName.trim())return 'Please enter the landlord’s name.';
+   if(!A.tenants.some(function(t){return t.trim();}))return 'Please enter at least one tenant’s name.';
+   A.tenants=A.tenants.filter(function(t,i){return t.trim()||i===0;});
+   return true;
+ }},
+
+{id:'term',title:'How long is the lease?',
+ sub:'Fixed-term leases end on a set date. Month-to-month continues until either side gives notice.',
+ html:function(){
+   var s=SD[A.state]||{};
+   var t='<div class="field"><label>Lease type</label>'+chipRow('term',['Fixed term','Month-to-month'],A.termType==='fixed'?'Fixed term':'Month-to-month')+'</div>'
+   +'<div class="row2"><div class="field"><label for="wStart">Start date</label><input type="date" id="wStart" value="'+esc(A.start)+'"></div>'
+   +'<div class="field" id="wEndWrap" style="display:'+(A.termType==='fixed'?'block':'none')+'"><label for="wEnd">End date</label><input type="date" id="wEnd" value="'+esc(A.end)+'"><p class="hint"><a href="#" id="wYear" style="color:var(--acb-blue);font-weight:600;text-decoration:none">Set to 12 months →</a></p></div></div>';
+   if(A.termType!=='fixed'&&A.state)t+='<div class="infobox">ℹ️ In '+esc(s.n)+', month-to-month termination notice: <strong>&nbsp;'+esc(s.mtm)+'</strong>. We’ll write that into the lease.</div>';
+   return t;
+ },
+ bind:function(root){
+   bindVal(root,'wStart','start');bindVal(root,'wEnd','end');
+   bindChips(root,'term',function(v){A.termType=(v==='Fixed term')?'fixed':'mtm';rerender();});
+   var yr=root.querySelector('#wYear');
+   if(yr)yr.addEventListener('click',function(e){
+     e.preventDefault();
+     if(!A.start)return;
+     var d=new Date(A.start+'T00:00:00');
+     d.setFullYear(d.getFullYear()+1);d.setDate(d.getDate()-1);
+     A.end=d.toISOString().slice(0,10);
+     root.querySelector('#wEnd').value=A.end;save();
+   });
+ },
+ valid:function(){
+   if(!A.start)return 'Please choose a start date.';
+   if(A.termType==='fixed'){
+     if(!A.end)return 'Please choose an end date (or switch to month-to-month).';
+     if(A.end<=A.start)return 'The end date must be after the start date.';
+   }
+   return true;
+ }},
+
+{id:'rent',title:'Rent & late fees',
+ sub:'We’ve pre-filled your state’s rules where they exist.',
+ html:function(){
+   var s=SD[A.state]||{};
+   if(A.grace===''&&s.graceReq)A.grace=String(s.graceReq);
+   if(A.grace==='')A.grace='3';
+   var t='<div class="row2"><div class="field"><label for="wRent">Monthly rent</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wRent" inputmode="decimal" value="'+esc(A.rent)+'" placeholder="2,200"></div></div>'
+   +'<div class="field"><label for="wDue">Rent due on the</label><select id="wDue">';
+   for(var i=1;i<=28;i++){t+='<option value="'+i+'"'+(String(A.dueDay)===String(i)?' selected':'')+'>'+i+(i===1?'st':i===2?'nd':i===3?'rd':i===21?'st':i===22?'nd':i===23?'rd':'th')+' of the month</option>';}
+   t+='</select></div></div>'
+   +'<div class="field"><label>Accepted payment methods</label><div class="chips" data-chips="pay">'+['Check','Cash','ACH / Bank Transfer','Online Portal','Money Order','Zelle / Venmo'].map(function(o){return '<button type="button" class="chip'+(A.payMethods.indexOf(o)>=0?' on':'')+'" data-val="'+esc(o)+'">'+esc(o)+'</button>';}).join('')+'</div></div>'
+   +'<div id="wProrate"></div>'
+   +'<div class="row3"><div class="field"><label for="wGrace">Grace period (days)'+tip('Days after the due date before a late fee applies.'+(s.graceReq?' '+(SD[A.state].n)+' requires at least '+s.graceReq+' day(s).':''))+'</label><input type="number" id="wGrace" value="'+esc(A.grace)+'" min="0" max="30"></div>'
+   +'<div class="field"><label>Late fee type</label>'+chipRow('lateType',['Flat $','% of rent'],A.lateType==='flat'?'Flat $':'% of rent')+'</div>'
+   +'<div class="field"><label for="wLate">Late fee amount</label><div class="in-wrap '+(A.lateType==='flat'?'has-pre':'has-suf')+'">'+(A.lateType==='flat'?'<span class="pre">$</span>':'')+'<input type="text" id="wLate" inputmode="decimal" value="'+esc(A.lateAmt)+'" placeholder="'+(A.lateType==='flat'?'50':'5')+'">'+(A.lateType!=='flat'?'<span class="suf">%</span>':'')+'</div></div></div>'
+   +'<div id="wLateWarn"></div>'
+   +'<div class="row2"><div class="field"><label for="wNsf">Returned payment (NSF) fee</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wNsf" inputmode="decimal" value="'+esc(A.nsf)+'"></div><p class="hint">Many states cap NSF fees around $25–$40.</p></div></div>'
+   +(s.late?'<div class="infobox">ℹ️ '+esc(s.n)+' late-fee rule: <strong>&nbsp;'+esc(s.late)+'</strong></div>':'');
+   return t;
+ },
+ bind:function(root){
+   bindVal(root,'wRent','rent');bindVal(root,'wGrace','grace');bindVal(root,'wLate','lateAmt');bindVal(root,'wNsf','nsf');
+   root.querySelector('#wDue').addEventListener('change',function(){A.dueDay=this.value;save();prorate();});
+   bindMultiChips(root,'pay',A.payMethods);
+   bindChips(root,'lateType',function(v){A.lateType=(v==='Flat $')?'flat':'pct';rerender();});
+   function prorate(){
+     var box=root.querySelector('#wProrate'),r=money(A.rent);
+     if(!A.start||!r){box.innerHTML='';return;}
+     var d=new Date(A.start+'T00:00:00');
+     if(d.getDate()===1){box.innerHTML='';return;}
+     var dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+     var remain=dim-d.getDate()+1;
+     var p=r/dim*remain;
+     box.innerHTML='<div class="infobox">ℹ️ Mid-month start detected: first month’s prorated rent is <strong>&nbsp;'+fmtUSD(p,true)+'&nbsp;</strong> ('+remain+' of '+dim+' days). We’ll include it in the lease.</div>';
+   }
+   function lateWarn(){
+     var s=SD[A.state]||{},box=root.querySelector('#wLateWarn'),r=money(A.rent),amt=money(A.lateAmt);
+     if(!s.lateCapPct||!amt){box.innerHTML='';return;}
+     var pct=A.lateType==='flat'?(r?amt/r*100:0):amt;
+     if(pct>s.lateCapPct){box.innerHTML='<div class="warnbox">⚠️ That late fee looks higher than '+esc(s.n)+'’s rule ('+esc(s.late)+'). Courts may not enforce it — consider lowering it.</div>';}
+     else box.innerHTML='';
+   }
+   ['wRent','wLate'].forEach(function(id){root.querySelector('#'+id).addEventListener('input',function(){prorate();lateWarn();});});
+   prorate();lateWarn();
+ },
+ valid:function(){return money(A.rent)>0?true:'Please enter the monthly rent.';}},
+
+{id:'deposit',title:'Security deposit',
+ sub:'We’ll flag anything over your state’s limit and write the return deadline into the lease.',
+ html:function(){
+   var s=SD[A.state]||{};
+   return '<div class="row2"><div class="field"><label for="wDep">Security deposit'+tip('Refundable deposit held against damage and unpaid amounts. '+(s.dep?('Limit in '+s.n+': '+s.dep+'.'):''))+'</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wDep" inputmode="decimal" value="'+esc(A.deposit)+'" placeholder="'+esc(A.rent||'2,200')+'"></div><div id="wDepWarn"></div></div>'
+   +'<div class="field"><label for="wPetDep">Pet deposit (optional)</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wPetDep" inputmode="decimal" value="'+esc(A.petDeposit)+'" placeholder="0"></div><p class="hint">Some states count pet deposits toward the overall cap.</p></div></div>'
+   +'<div class="row2"><div class="field"><label for="wPetRent">Monthly pet rent (optional)</label><div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="wPetRent" inputmode="decimal" value="'+esc(A.petRent)+'" placeholder="0"></div></div>'
+   +'<div class="field"><label>Collect last month’s rent up front?</label>'+chipRow('lastMo',['No','Yes'],A.lastMonth?'Yes':'No')+'</div></div>'
+   +(s.ret?'<div class="infobox">ℹ️ '+esc(s.n)+' deposit return deadline after move-out: <strong>&nbsp;'+esc(s.ret)+'</strong></div>':'');
+ },
+ bind:function(root){
+   bindVal(root,'wDep','deposit');bindVal(root,'wPetDep','petDeposit');bindVal(root,'wPetRent','petRent');
+   bindChips(root,'lastMo',function(v){A.lastMonth=(v==='Yes');});
+   function warn(){
+     var s=SD[A.state]||{},box=root.querySelector('#wDepWarn');
+     var r=money(A.rent),d=money(A.deposit)+money(A.petDeposit);
+     if(s.depM&&r&&d>s.depM*r){box.innerHTML='<div class="warnbox">⚠️ Total deposits ('+fmtUSD(d)+') exceed '+esc(s.n)+'’s limit of '+esc(s.dep)+' ('+fmtUSD(s.depM*r)+' at this rent).</div>';}
+     else box.innerHTML='';
+   }
+   ['wDep','wPetDep'].forEach(function(id){root.querySelector('#'+id).addEventListener('input',warn);});
+   warn();
+ },
+ valid:function(){return true;}},
+
+{id:'utils',title:'Who pays for what?',
+ sub:'Anything marked “Tenant” must be put in the tenant’s name and kept current.',
+ html:function(){
+   var t='<table class="util-table"><thead><tr><th>Utility / service</th><th>Who pays</th></tr></thead><tbody>';
+   UTIL_KEYS.forEach(function(k,i){
+     t+='<tr><td>'+esc(k)+'</td><td><div class="util-seg" data-util="'+i+'">'
+     +['Tenant','Landlord','N/A'].map(function(o){return '<button type="button" data-val="'+o+'" class="'+(A.utils[k]===o?'on':'')+'">'+o+'</button>';}).join('')
+     +'</div></td></tr>';
+   });
+   return t+'</tbody></table>';
+ },
+ bind:function(root){
+   root.querySelectorAll('[data-util]').forEach(function(seg){
+     var key=UTIL_KEYS[+seg.dataset.util];
+     seg.querySelectorAll('button').forEach(function(b){
+       b.addEventListener('click',function(){
+         seg.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});
+         b.classList.add('on');A.utils[key]=b.dataset.val;save();
+       });
+     });
+   });
+ },
+ valid:function(){return true;}},
+
+{id:'policies',title:'House policies',
+ sub:'These become enforceable lease clauses.',
+ html:function(){
+   return '<div class="field"><label>Pets</label>'+chipRow('pets',['Not allowed','Allowed with written approval','Allowed'],A.pets)
+   +'<div id="wPetDescWrap" style="display:'+(A.pets==='Not allowed'?'none':'block')+';margin-top:10px"><input type="text" id="wPetDesc" value="'+esc(A.petDesc)+'" placeholder="e.g. up to 2 cats or 1 dog under 40 lbs"><p class="hint">Limits on number, type, breed, or weight.</p></div></div>'
+   +'<div class="field"><label>Smoking</label>'+chipRow('smoke',['Prohibited anywhere on the property','Allowed outside only','Allowed'],A.smoking)+'</div>'
+   +'<div class="row2"><div class="field"><label>Subletting / Airbnb</label>'+chipRow('sublet',['Not allowed','Only with Landlord’s prior written consent'],A.sublet)+'</div>'
+   +'<div class="field"><label>Alterations (painting, fixtures)</label>'+chipRow('alter',['Not allowed','Only with Landlord’s prior written consent'],A.alterations)+'</div></div>'
+   +'<div class="field"><label>Renters insurance'+tip('Requiring renters insurance protects both sides — the tenant’s belongings and liability claims. Typical requirement: $100,000 liability.')+'</label>'+chipRow('ins',['Required','Not required'],A.insurance?'Required':'Not required')
+   +'<div id="wInsWrap" style="display:'+(A.insurance?'block':'none')+';margin-top:10px"><div class="in-wrap has-pre" style="max-width:240px"><span class="pre">$</span><input type="text" id="wInsAmt" inputmode="decimal" value="'+esc(A.insAmt)+'"></div><p class="hint">Minimum liability coverage.</p></div></div>'
+   +'<div class="row2"><div class="field"><label>Quiet hours clause (10 p.m. – 8 a.m.)</label>'+chipRow('quiet',['Include','Skip'],A.quietHours?'Include':'Skip')+'</div>'
+   +'<div class="field"><label>Early termination option'+tip('A buyout clause lets the tenant leave early by paying a set fee (commonly 1–2 months’ rent) with notice — cleaner than a broken lease.')+'</label>'+chipRow('early',['None','Buyout fee'],A.earlyTerm==='none'?'None':'Buyout fee')
+   +'<div id="wEtWrap" style="display:'+(A.earlyTerm==='none'?'none':'block')+';margin-top:10px"><div class="in-wrap has-pre" style="max-width:240px"><span class="pre">$</span><input type="text" id="wEtFee" inputmode="decimal" value="'+esc(A.etFee)+'" placeholder="e.g. 2 months’ rent"></div><p class="hint">Buyout amount (60-day written notice is included automatically).</p></div></div></div>';
+ },
+ bind:function(root){
+   bindVal(root,'wPetDesc','petDesc');bindVal(root,'wInsAmt','insAmt');bindVal(root,'wEtFee','etFee');
+   bindChips(root,'pets',function(v){A.pets=v;root.querySelector('#wPetDescWrap').style.display=(v==='Not allowed')?'none':'block';});
+   bindChips(root,'smoke',function(v){A.smoking=v;});
+   bindChips(root,'sublet',function(v){A.sublet=v;});
+   bindChips(root,'alter',function(v){A.alterations=v;});
+   bindChips(root,'ins',function(v){A.insurance=(v==='Required');root.querySelector('#wInsWrap').style.display=A.insurance?'block':'none';});
+   bindChips(root,'quiet',function(v){A.quietHours=(v==='Include');});
+   bindChips(root,'early',function(v){A.earlyTerm=(v==='None')?'none':'buyout';root.querySelector('#wEtWrap').style.display=(A.earlyTerm==='none')?'none':'block';});
+ },
+ valid:function(){return true;}},
+
+{id:'disclosures',title:'Required disclosures',
+ sub:'Federal and state law require certain notices in or with the lease. We’ve pre-checked what applies — required ones are locked on.',
+ html:function(){
+   var s=SD[A.state]||{disc:[]};
+   var t='<div class="field"><label>Was the building built before 1978?'+tip('Federal law (Title X) requires a lead-based paint disclosure and the EPA pamphlet “Protect Your Family From Lead in Your Home” for housing built before 1978.')+'</label>'+chipRow('built',['Yes / Not sure','No — 1978 or later'],A.pre1978==='no'?'No — 1978 or later':'Yes / Not sure')+'</div>';
+   t+='<div id="wDiscList">';
+   if(A.pre1978!=='no'){
+     t+='<div class="disc-item on req"><div class="disc-check"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M5 10l3.5 3.5L15 7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><b>Lead-Based Paint Disclosure<span class="req-tag">Federal — required</span></b><span class="d">Disclosure of known lead-based paint hazards plus the EPA pamphlet acknowledgment. Included automatically.</span></div></div>';
+   }
+   s.disc.forEach(function(d){
+     t+='<div class="disc-item on req"><div class="disc-check"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M5 10l3.5 3.5L15 7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><b>'+esc(d.t)+'<span class="req-tag">'+esc(s.n)+' — required</span></b><span class="d">'+esc(d.b)+'</span></div></div>';
+   });
+   var opts=[
+     {id:'mold',t:'Mold Disclosure & Reporting',b:'No known mold beyond ordinary levels; tenant agrees to report moisture problems promptly.'},
+     {id:'bedbug',t:'Bed Bug Disclosure',b:'No known infestation; tenant agrees to report and cooperate with treatment.'},
+     {id:'alarm',t:'Smoke & CO Alarm Acknowledgment',b:'Tenant confirms working alarms at move-in and agrees to maintain batteries and report problems.'},
+     {id:'video',t:'Move-In Documentation',b:'Both parties may photograph/video the unit at move-in; the record may be used at move-out.'}
+   ];
+   var have={};s.disc.forEach(function(d){have[d.t]=1;});
+   t+='<p class="hint" style="margin:14px 0 8px">Optional (recommended) add-ons:</p>';
+   opts.forEach(function(o){
+     if(have['Mold Disclosure']&&o.id==='mold')return;
+     if(have['Bed Bug Disclosure']&&o.id==='bedbug')return;
+     var on=!!A.extraDisc[o.id];
+     t+='<div class="disc-item'+(on?' on':'')+'" data-disc="'+o.id+'" role="checkbox" aria-checked="'+on+'" tabindex="0"><div class="disc-check"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M5 10l3.5 3.5L15 7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><b>'+esc(o.t)+'</b><span class="d">'+esc(o.b)+'</span></div></div>';
+   });
+   return t+'</div>';
+ },
+ bind:function(root){
+   bindChips(root,'built',function(v){A.pre1978=(v==='No — 1978 or later')?'no':'yes';rerender();});
+   root.querySelectorAll('[data-disc]').forEach(function(el){
+     function toggle(){
+       var id=el.dataset.disc;
+       A.extraDisc[id]=!A.extraDisc[id];
+       el.classList.toggle('on',A.extraDisc[id]);
+       el.setAttribute('aria-checked',String(!!A.extraDisc[id]));
+       save();
+     }
+     el.addEventListener('click',toggle);
+     el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
+   });
+ },
+ valid:function(){return true;}},
+
+{id:'extras',title:'Anything else?',
+ sub:'Add custom rules or agreements — each becomes its own numbered clause. Optional.',
+ html:function(){
+   var t='<div id="wClauses">';
+   A.clauses.forEach(function(c,i){
+     t+='<div class="clause-row"><textarea data-clause="'+i+'" placeholder="e.g. Tenant is responsible for replacing HVAC filters every 90 days.">'+esc(c)+'</textarea><button type="button" class="rm-btn" data-crm="'+i+'" aria-label="Remove clause">×</button></div>';
+   });
+   t+='</div><button type="button" class="add-btn" id="wAddClause">+ Add a custom clause</button>';
+   if(!A.clauses.length)t+='<p class="hint" style="margin-top:10px">Common examples: lawn-care duties, HOA rules acknowledgment, pool/trampoline prohibition, home business rules, smart-lock/alarm codes.</p>';
+   return t;
+ },
+ bind:function(root){
+   root.querySelectorAll('[data-clause]').forEach(function(ta){
+     ta.addEventListener('input',function(){A.clauses[+ta.dataset.clause]=ta.value;save();});
+   });
+   root.querySelectorAll('[data-crm]').forEach(function(b){
+     b.addEventListener('click',function(){A.clauses.splice(+b.dataset.crm,1);save();rerender();});
+   });
+   root.querySelector('#wAddClause').addEventListener('click',function(){A.clauses.push('');save();rerender();});
+ },
+ valid:function(){A.clauses=A.clauses.filter(function(c){return c.trim();});return true;}},
+
+{id:'review',title:'Review your lease',
+ sub:'Check each section — tap Edit to change anything. Then generate your document.',
+ html:function(){
+   var s=SD[A.state]||{n:'—'};
+   function sec(i,t,b){return '<div class="review-sec"><button type="button" data-go="'+i+'"><span>'+esc(t)+'</span><span class="edit">Edit ✎</span></button><div class="body">'+b+'</div></div>';}
+   var addr=esc(A.addr+(A.unit?', '+A.unit:'')+', '+A.city+', '+(A.state||'')+' '+A.zip);
+   var h='';
+   h+=sec(0,'State',esc(s.n));
+   h+=sec(1,'Property',addr+' · '+esc(A.ptype)+(A.furnished?' · Furnished':''));
+   h+=sec(2,'Parties','Landlord: '+esc(A.llName)+'<br>Tenant(s): '+esc(A.tenants.filter(function(t){return t.trim();}).join(', ')));
+   h+=sec(3,'Term',A.termType==='fixed'?('Fixed: '+esc(A.start)+' → '+esc(A.end)):('Month-to-month from '+esc(A.start)));
+   h+=sec(4,'Rent',fmtUSD(money(A.rent))+'/mo, due the '+esc(A.dueDay)+(A.grace?' · '+esc(A.grace)+'-day grace':'')+(money(A.lateAmt)?' · late fee '+(A.lateType==='flat'?fmtUSD(money(A.lateAmt)):esc(A.lateAmt)+'% of rent'):''));
+   h+=sec(5,'Deposits','Security: '+fmtUSD(money(A.deposit))+(money(A.petDeposit)?' · Pet: '+fmtUSD(money(A.petDeposit)):'')+(A.lastMonth?' · Last month’s rent collected':''));
+   h+=sec(6,'Utilities',UTIL_KEYS.map(function(k){return esc(k)+': '+esc(A.utils[k]);}).join(' · '));
+   h+=sec(7,'Policies','Pets: '+esc(A.pets)+' · Smoking: '+esc(A.smoking)+' · Insurance: '+(A.insurance?'required':'not required')+(A.earlyTerm!=='none'?' · Early-termination buyout':''));
+   var dn=(SD[A.state]?SD[A.state].disc.length:0)+(A.pre1978!=='no'?1:0)+Object.keys(A.extraDisc).filter(function(k){return A.extraDisc[k];}).length;
+   h+=sec(8,'Disclosures',dn+' included');
+   h+=sec(9,'Custom clauses',A.clauses.length?A.clauses.length+' added':'None');
+   return h;
+ },
+ bind:function(root){
+   root.querySelectorAll('[data-go]').forEach(function(b){
+     b.addEventListener('click',function(){cur=+b.dataset.go;rerender();});
+   });
+ },
+ valid:function(){return true;}}
+];
+
+/* ---------- engine ---------- */
+var cur=0;
+var screens={entry:$('screenEntry'),blank:$('screenBlank'),wizard:$('screenWizard'),doc:$('screenDoc')};
+function show(name){
+  Object.keys(screens).forEach(function(k){screens[k].style.display=(k===name)?'':'none';});
+  $('progress').style.display=(name==='wizard')?'':'none';
+  $('toolHead').style.display=(name==='doc')?'none':'';
+  window.scrollTo({top:0});
+}
+window.ACB.show=show;
+function rerender(){
+  var st=steps[cur];
+  var body=$('stepBody');
+  body.innerHTML='<div class="fade"><div class="step-title">'+st.title+'</div><p class="step-sub">'+st.sub+'</p><div id="stepErr"></div>'+st.html()+'</div>';
+  st.bind(body);
+  $('wizBack').style.visibility=cur===0?'hidden':'visible';
+  $('stepDots').textContent='Step '+(cur+1)+' of '+steps.length;
+  $('wizNext').textContent=(cur===steps.length-1)?'Generate My Lease →':'Continue';
+  $('progressBar').style.width=((cur+1)/steps.length*100)+'%';
+}
+window.ACB.rerender=rerender;
+$('wizNext').addEventListener('click',function(){
+  var v=steps[cur].valid();
+  if(v!==true){
+    $('stepErr').innerHTML='<div class="warnbox" role="alert">⚠️ '+esc(v)+'</div>';
+    return;
+  }
+  save();
+  if(cur===steps.length-1){window.ACB.renderDoc();show('doc');return;}
+  cur++;rerender();
+});
+$('wizBack').addEventListener('click',function(){if(cur>0){cur--;rerender();}});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&screens.wizard.style.display!=='none'&&e.target.tagName!=='TEXTAREA'&&e.target.tagName!=='BUTTON'){
+    e.preventDefault();$('wizNext').click();
+  }
+});
+
+/* entry routing */
+$('entryBuild').addEventListener('click',function(){show('wizard');rerender();});
+$('entryBuild').addEventListener('keydown',function(e){if(e.key==='Enter'){show('wizard');rerender();}});
+$('entryBlank').addEventListener('click',function(){window.ACB.initBlank();show('blank');});
+$('entryBlank').addEventListener('keydown',function(e){if(e.key==='Enter'){window.ACB.initBlank();show('blank');}});
+$('blankBack').addEventListener('click',function(){show('entry');});
+$('docEdit').addEventListener('click',function(){cur=steps.length-1;show('wizard');rerender();});
+$('docRestart').addEventListener('click',function(){
+  if(!confirm('Clear all your answers and start over?'))return;
+  try{localStorage.removeItem(LS);}catch(e){}
+  location.reload();
+});
+})();
+</script>
+<script>
+"use strict";
+/* ===================== Document generation ===================== */
+(function(){
+var $=function(id){return document.getElementById(id);};
+var esc=window.ACB.esc,fmtUSD=window.ACB.fmtUSD,money=window.ACB.money;
+
+function fmtDate(iso){
+  if(!iso)return '____________';
+  var d=new Date(iso+'T00:00:00');
+  return d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+}
+function ord(n){n=+n;var s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+
+function buildSections(){
+  var A=window.ACB.A,s=SD[A.state],secs=[];
+  var rent=money(A.rent),dep=money(A.deposit),petDep=money(A.petDeposit),petRent=money(A.petRent);
+  var tenants=A.tenants.filter(function(t){return t.trim();});
+  var tenantNames=tenants.map(function(t){return esc(t);}).join(', ');
+  var addr=esc(A.addr)+(A.unit?', '+esc(A.unit):'')+', '+esc(A.city)+', '+esc(s.n)+' '+esc(A.zip);
+
+  secs.push({h:'PARTIES',b:'<p>This Residential Lease Agreement (“Agreement”) is made between <strong>'+esc(A.llName)+'</strong> (“Landlord”) and <strong>'+tenantNames+'</strong> ('+(tenants.length>1?'collectively, ':'')+'“Tenant”). Each Tenant is jointly and severally liable for all obligations under this Agreement.</p>'});
+
+  var prem='<p>Landlord leases to Tenant the residential premises located at <strong>'+addr+'</strong> (the “Premises”), a '+esc(A.ptype.toLowerCase())+(A.furnished?', furnished':', unfurnished')+'.';
+  if(A.furnished&&A.furnishings.trim())prem+=' The following furnishings and appliances are included: '+esc(A.furnishings)+'.';
+  if(A.parking.trim())prem+=' Parking included: '+esc(A.parking)+'.';
+  if(A.storage.trim())prem+=' Storage included: '+esc(A.storage)+'.';
+  prem+='</p>';
+  secs.push({h:'PREMISES',b:prem});
+
+  if(A.termType==='fixed'){
+    secs.push({h:'TERM',b:'<p>The lease term begins on <strong>'+fmtDate(A.start)+'</strong> and ends on <strong>'+fmtDate(A.end)+'</strong>. If Tenant remains in possession after the end date with Landlord’s consent but without a new written lease, the tenancy converts to month-to-month on the same terms, terminable per the notice rules of '+esc(s.n)+' ('+esc(s.mtm)+').</p>'});
+  }else{
+    secs.push({h:'TERM',b:'<p>The tenancy begins on <strong>'+fmtDate(A.start)+'</strong> and continues month-to-month until terminated. Termination notice: <strong>'+esc(s.mtm)+'</strong>, given in writing.</p>'});
+  }
+
+  var rentB='<p>Tenant shall pay rent of <strong>'+fmtUSD(rent,true)+'</strong> per month, due in advance on the <strong>'+ord(A.dueDay)+'</strong> day of each month'+(petRent?', plus monthly pet rent of '+fmtUSD(petRent,true):'')+'. Payment shall be made to Landlord at the address for notices below'+(A.payMethods.length?' by '+A.payMethods.map(esc).join(', ').replace(/, ([^,]*)$/,' or $1'):'')+'.</p>';
+  if(A.start){
+    var d=new Date(A.start+'T00:00:00');
+    if(d.getDate()!==1&&rent){
+      var dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+      var remain=dim-d.getDate()+1;
+      rentB+='<p>Prorated rent for the first partial month ('+remain+' days) of <strong>'+fmtUSD(rent/dim*remain,true)+'</strong> is due on or before the start date.</p>';
+    }
+  }
+  if(A.lastMonth)rentB+='<p>Tenant shall pay the last month’s rent of '+fmtUSD(rent,true)+' in advance at signing, to be applied to the final month of the tenancy.</p>';
+  secs.push({h:'RENT',b:rentB});
+
+  var late='<p>';
+  if(money(A.lateAmt)){
+    late+='If rent is not received within <strong>'+esc(A.grace||'0')+'</strong> day(s) after the due date, Tenant shall pay a late charge of <strong>'+(A.lateType==='flat'?fmtUSD(money(A.lateAmt),true):esc(A.lateAmt)+'% of the monthly rent')+'</strong>. ';
+  }else{
+    late+='Rent received after the due date'+(A.grace?' plus a grace period of '+esc(A.grace)+' day(s)':'')+' is late. ';
+  }
+  late+='Tenant shall pay a returned-payment fee of <strong>'+fmtUSD(money(A.nsf)||35,true)+'</strong> for any payment returned for insufficient funds. Acceptance of late rent does not waive Landlord’s rights. State rule: '+esc(s.late)+'.</p>';
+  secs.push({h:'LATE CHARGES; RETURNED PAYMENTS',b:late});
+
+  var depB='<p>Tenant shall pay a security deposit of <strong>'+fmtUSD(dep,true)+'</strong>'+(petDep?' and a pet deposit of <strong>'+fmtUSD(petDep,true)+'</strong>':'')+' at signing, held as security for Tenant’s performance. The deposit may be applied to unpaid rent, damages beyond normal wear and tear, and other amounts owed, as permitted by law. Within <strong>'+esc(s.ret)+'</strong> after the tenancy ends and possession is returned, Landlord shall return the deposit less any lawful deductions with an itemized statement, as required by '+esc(s.n)+' law. The deposit may not be applied by Tenant to the last month’s rent. '+(s.dep!=='No statutory cap'?('State deposit limit: '+esc(s.dep)+'.'):'')+'</p>';
+  secs.push({h:'SECURITY DEPOSIT',b:depB});
+
+  var occ='<p>The Premises shall be occupied only by Tenant'+(A.occupants.trim()?' and the following additional occupants: '+esc(A.occupants):'')+(A.maxOcc?', not to exceed '+esc(A.maxOcc)+' total occupants':'')+'. The Premises shall be used solely as a private residence. Guests staying more than fourteen (14) consecutive days require Landlord’s written consent. Tenant shall not use the Premises for any unlawful purpose or in a manner that disturbs neighbors or other tenants.</p>';
+  secs.push({h:'OCCUPANTS; USE OF PREMISES',b:occ});
+
+  var ut='<p>Responsibility for utilities and services is allocated as follows. Services marked “Tenant” must be placed in Tenant’s name and kept current throughout the tenancy.</p><table class="doc-util"><tr><th>Utility / Service</th><th>Paid by</th></tr>';
+  Object.keys(A.utils).forEach(function(k){
+    if(A.utils[k]==='N/A')return;
+    ut+='<tr><td>'+esc(k)+'</td><td>'+esc(A.utils[k])+'</td></tr>';
+  });
+  ut+='</table>';
+  secs.push({h:'UTILITIES AND SERVICES',b:ut});
+
+  secs.push({h:'CONDITION; MAINTENANCE AND REPAIRS',b:'<p>Tenant accepts the Premises in good order and repair, except as noted on any move-in checklist. Tenant shall keep the Premises clean and sanitary, dispose of waste properly, use fixtures and appliances reasonably, promptly report needed repairs and any water intrusion to Landlord, and not commit waste or damage. Landlord shall maintain the Premises in habitable condition and comply with applicable building and housing codes. Tenant is responsible for the cost of repairing damage caused by the negligence or misuse of Tenant, occupants, or guests.</p>'});
+
+  secs.push({h:'LANDLORD’S RIGHT OF ENTRY',b:'<p>Except in emergencies, Landlord shall give Tenant '+esc(s.entL)+' notice before entering the Premises, and shall enter only at reasonable times to inspect, make repairs or improvements, supply services, or show the Premises to prospective tenants, buyers, or lenders. State rule: '+esc(s.ent)+'.</p>'});
+
+  var pets;
+  if(A.pets==='Not allowed'){pets='<p>No animals of any kind may be kept on the Premises without Landlord’s prior written consent, except properly documented assistance animals as required by fair-housing law (which are not pets and are not subject to pet deposits or pet rent).</p>';}
+  else{pets='<p>Pets are '+(A.pets==='Allowed'?'permitted':'permitted only with Landlord’s prior written approval')+(A.petDesc.trim()?', limited to: '+esc(A.petDesc):'')+'.'+(petDep?' A pet deposit of '+fmtUSD(petDep,true)+' applies.':'')+(petRent?' Monthly pet rent of '+fmtUSD(petRent,true)+' applies.':'')+' Tenant is responsible for all damage and nuisance caused by animals. Assistance animals required by fair-housing law are not pets and are not subject to pet charges.</p>';}
+  secs.push({h:'PETS',b:pets});
+
+  secs.push({h:'SMOKING',b:'<p>Smoking (including vaping and e-cigarettes) policy: <strong>'+esc(A.smoking)+'</strong>.'+(A.smoking!=='Allowed'?' Damage from smoking in violation of this policy (odor remediation, painting, cleaning) is beyond normal wear and tear and may be deducted from the security deposit as permitted by law.':'')+'</p>'});
+
+  secs.push({h:'ASSIGNMENT AND SUBLETTING',b:'<p>Assignment, subletting, and short-term/vacation rental of the Premises (including via hosting platforms): <strong>'+esc(A.sublet)+'</strong>. Any unauthorized assignment or sublease is a material breach of this Agreement.</p>'});
+
+  secs.push({h:'ALTERATIONS',b:'<p>Alterations, painting, wallpaper, fixture changes, and installation of equipment (including satellite dishes, security devices, and wall anchors beyond ordinary picture hanging): <strong>'+esc(A.alterations)+'</strong>. Approved alterations become part of the Premises unless Landlord requires restoration at move-out.</p>'});
+
+  if(A.insurance){
+    secs.push({h:'RENTERS INSURANCE',b:'<p>Tenant shall obtain and maintain renters insurance with personal liability coverage of at least <strong>$'+esc(A.insAmt||'100,000')+'</strong> for the duration of the tenancy, and shall provide proof of coverage upon request. Landlord’s insurance does not cover Tenant’s personal property.</p>'});
+  }
+
+  var quiet='<p>Tenant is entitled to quiet enjoyment of the Premises. Tenant shall not disturb the quiet enjoyment of neighbors'+(A.quietHours?', and shall observe quiet hours between 10:00 p.m. and 8:00 a.m.':'.')+'</p>';
+  secs.push({h:'QUIET ENJOYMENT',b:quiet});
+
+  if(A.earlyTerm==='buyout'){
+    secs.push({h:'EARLY TERMINATION OPTION',b:'<p>Tenant may terminate this Agreement before the end of the term by (a) giving at least sixty (60) days’ written notice, (b) paying an early-termination fee of <strong>'+(money(A.etFee)?fmtUSD(money(A.etFee),true):'$________')+'</strong>, and (c) paying all rent due through the termination date. This option does not waive Landlord’s rights regarding damage or other amounts owed, and does not apply where Tenant has a statutory right to terminate (e.g., active-duty military orders under the SCRA, or other rights under state law).</p>'});
+  }
+
+  secs.push({h:'DEFAULT; REMEDIES',b:'<p>If Tenant fails to pay rent or breaches any other provision of this Agreement, Landlord may pursue all remedies available under '+esc(s.n)+' law, including termination of the tenancy and recovery of possession after any legally required notice, recovery of unpaid rent and damages, and reasonable costs as allowed by law or this Agreement. <strong>Any amounts remaining unpaid after the tenancy ends may be referred to a licensed collection agency and reported as permitted by law, which may affect Tenant’s credit.</strong> Tenant shall also reimburse Landlord’s reasonable costs of re-renting to the extent allowed by law. Landlord shall mitigate damages as required by law.</p>'});
+
+  secs.push({h:'ABANDONMENT',b:'<p>If Tenant abandons the Premises before the end of the term, Landlord may retake possession and re-rent as permitted by law. Personal property left behind will be handled according to '+esc(s.n)+'’s abandoned-property procedures.</p>'});
+
+  secs.push({h:'NOTICES',b:'<p>Official notices to Landlord shall be delivered to: <strong>'+(A.llAddr.trim()?esc(A.llAddr):'________________________________')+'</strong>. Notices to Tenant shall be delivered to the Premises. Notices must be in writing; the parties may additionally agree to electronic delivery where permitted by law.</p>'});
+
+  /* Disclosures */
+  var disc='';
+  if(A.pre1978!=='no'){
+    disc+='<p><strong>Lead-Based Paint Disclosure (Federal).</strong> The Premises was built before 1978. Housing built before 1978 may contain lead-based paint. Lead from paint, paint chips, and dust can pose health hazards if not managed properly. Lead exposure is especially harmful to young children and pregnant women. Before renting pre-1978 housing, lessors must disclose the presence of known lead-based paint and/or lead-based paint hazards in the dwelling. Tenants must also receive the federally approved pamphlet “Protect Your Family From Lead in Your Home.” Landlord has no knowledge of lead-based paint and/or lead-based paint hazards in the housing except as otherwise disclosed in writing, and Tenant acknowledges receipt of the EPA pamphlet.</p>';
+  }
+  s.disc.forEach(function(d){disc+='<p><strong>'+esc(d.t)+' ('+esc(s.n)+').</strong> '+esc(d.b)+'</p>';});
+  var XD={mold:{t:'Mold Disclosure & Reporting',b:'Landlord has no knowledge of mold contamination at the Premises beyond ordinary household levels. Tenant agrees to keep the Premises ventilated and clean and to promptly report any visible mold, moisture intrusion, or water damage to Landlord in writing.'},
+    bedbug:{t:'Bed Bug Disclosure',b:'Landlord represents that the Premises is not known to be infested with bed bugs. Tenant agrees to promptly report suspected bed bug activity and to cooperate with inspection and treatment.'},
+    alarm:{t:'Smoke & Carbon Monoxide Alarm Acknowledgment',b:'Tenant acknowledges that smoke alarms (and carbon monoxide alarms where required) are present and operational at move-in, and agrees to test them periodically, replace batteries as needed, never disable them, and report any malfunction to Landlord immediately.'},
+    video:{t:'Move-In Documentation',b:'Either party may document the condition of the Premises by photographs or video at move-in and move-out, and such documentation may be used in assessing damages.'}};
+  Object.keys(XD).forEach(function(k){
+    var dup=s.disc.some(function(d){return d.t.indexOf(XD[k].t.split(' ')[0])===0;});
+    if(A.extraDisc[k]&&!dup)disc+='<p><strong>'+XD[k].t+'.</strong> '+XD[k].b+'</p>';
+  });
+  if(!disc)disc='<p>No additional disclosures apply beyond the general terms of this Agreement.</p>';
+  secs.push({h:'DISCLOSURES',b:disc});
+
+  if(A.clauses.length){
+    var extra='';
+    A.clauses.forEach(function(c,i){extra+='<p>'+String.fromCharCode(97+i)+'. '+esc(c)+'</p>';});
+    secs.push({h:'ADDITIONAL TERMS',b:extra});
+  }
+
+  secs.push({h:'GOVERNING LAW',b:'<p>This Agreement is governed by the laws of '+esc(s.n)+'. If any provision conflicts with applicable law, that provision is modified to the minimum extent necessary to comply, and the remainder stays in effect.</p>'});
+  secs.push({h:'SEVERABILITY; ENTIRE AGREEMENT',b:'<p>If any provision of this Agreement is held invalid, the remaining provisions remain in full force. This Agreement, together with any attached addenda and disclosures, is the entire agreement between the parties and may be amended only in a writing signed by both parties.</p>'});
+  return secs;
+}
+
+window.ACB.renderDoc=function(){
+  var A=window.ACB.A,s=SD[A.state];
+  var secs=buildSections();
+  var tenants=A.tenants.filter(function(t){return t.trim();});
+  var h='<h2 class="doc-title">Residential Lease Agreement</h2>';
+  h+='<p class="doc-sub">State of '+esc(s.n)+'</p>';
+  secs.forEach(function(sec,i){h+='<h3>'+(i+1)+'. '+sec.h+'</h3>'+sec.b;});
+  h+='<p style="margin-top:26px">IN WITNESS WHEREOF, the parties execute this Agreement as of the dates written below.</p>';
+  h+='<div class="sig-grid">';
+  h+='<div class="sig-block"><div class="line"></div><div class="lbl">Landlord: '+esc(A.llName)+' — Signature / Date</div></div>';
+  tenants.forEach(function(t){h+='<div class="sig-block"><div class="line"></div><div class="lbl">Tenant: '+esc(t)+' — Signature / Date</div></div>';});
+  h+='</div>';
+  h+='<div class="doc-foot">Generated free at advancedcb.com — Advanced Collection Bureau’s tools for landlords &amp; property managers.<br>This template is provided for general informational purposes only and is <strong>not legal advice</strong>. State rules referenced are current to the best of our knowledge as of 2025; laws change and local ordinances may add requirements. Have a local attorney review before use.</div>';
+  $('docPaper').innerHTML=h;
+};
+
+/* Word download */
+$('docWord').addEventListener('click',function(){
+  var A=window.ACB.A;
+  var head='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Residential Lease Agreement</title><style>body{font-family:Georgia,"Times New Roman",serif;font-size:12pt;line-height:1.5}h2{text-align:center;text-transform:uppercase}h3{text-transform:uppercase;font-size:12pt}table{border-collapse:collapse}td,th{border:1px solid #999;padding:4pt 8pt}.line{border-bottom:1px solid #000;height:24pt}.lbl{font-size:9pt;color:#444}.doc-foot{font-size:8pt;color:#666;margin-top:24pt;border-top:1px solid #ccc;padding-top:8pt;text-align:center}</style></head><body>';
+  var blob=new Blob(['﻿'+head+$('docPaper').innerHTML+'</body></html>'],{type:'application/msword'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='Residential-Lease-Agreement-'+(A.state||'XX')+'.doc';
+  document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);
+});
+
+/* Copy text */
+$('docCopy').addEventListener('click',function(){
+  var b=this,txt=$('docPaper').innerText;
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){
+    b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy text';},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy text';},1600);}catch(e){}
+    ta.remove();
+  });
+});
+
+/* ===================== Blank fillable PDF ===================== */
+window.ACB.initBlank=function(){
+  var sel=$('blankState');
+  if(!sel.options.length||sel.options.length<2){
+    sel.innerHTML=window.ACB.stateOptions(window.ACB.A.state);
+    sel.addEventListener('change',function(){
+      $('blankFacts').innerHTML=window.ACB.stateFacts(sel.value);
+    });
+  }
+  sel.value=window.ACB.A.state||'';
+  $('blankFacts').innerHTML=window.ACB.stateFacts(sel.value);
+};
+
+$('blankDownload').addEventListener('click',function(){
+  var ab=$('blankState').value;
+  var status=$('blankStatus');
+  if(!ab){status.textContent='Choose a state first.';return;}
+  if(typeof PDFLib==='undefined'){status.textContent='PDF library failed to load — check your connection and refresh.';return;}
+  status.textContent='Building your PDF…';
+  generateBlankPdf(ab).then(function(bytes){
+    var blob=new Blob([bytes],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='Lease-Agreement-Template-'+ab+'.pdf';
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);
+    status.textContent='Done — check your downloads. ✓';
+  }).catch(function(e){status.textContent='Sorry, something went wrong building the PDF.';});
+});
+
+function generateBlankPdf(ab){
+  var s=SD[ab];
+  var P=PDFLib,W=612,H=792,M=54;
+  return P.PDFDocument.create().then(function(doc){
+    return Promise.all([doc.embedFont(P.StandardFonts.Helvetica),doc.embedFont(P.StandardFonts.HelveticaBold),doc.embedFont(P.StandardFonts.HelveticaOblique)]).then(function(fonts){
+      var font=fonts[0],bold=fonts[1],ital=fonts[2];
+      var form=doc.getForm();
+      var page=doc.addPage([W,H]),y=H-M,fc=0;
+      var BLUE=P.rgb(0.24,0.353,0.945),INK=P.rgb(0.1,0.1,0.18),GRAY=P.rgb(0.45,0.45,0.55),LINE=P.rgb(0.7,0.72,0.8);
+
+      function footer(p){
+        p.drawText('Free template from Advanced Collection Bureau  ·  advancedcb.com  ·  Not legal advice — have a local attorney review before use.',{x:M,y:30,size:7,font:ital,color:GRAY});
+      }
+      function newPage(){footer(page);page=doc.addPage([W,H]);y=H-M;}
+      function need(h){if(y-h<M+20)newPage();}
+      function heading(t){
+        need(30);
+        page.drawText(t,{x:M,y:y-12,size:10.5,font:bold,color:INK});
+        page.drawLine({start:{x:M,y:y-17},end:{x:W-M,y:y-17},thickness:0.6,color:LINE});
+        y-=30;
+      }
+      function wrap(text,size,f,maxW){
+        var words=text.split(' '),lines=[],line='';
+        words.forEach(function(w){
+          var t=line?line+' '+w:w;
+          if(f.widthOfTextAtSize(t,size)>maxW){lines.push(line);line=w;}
+          else line=t;
+        });
+        if(line)lines.push(line);
+        return lines;
+      }
+      function para(text,size,f,color){
+        size=size||9;f=f||font;
+        var lines=wrap(text,size,f,W-2*M);
+        lines.forEach(function(l){
+          need(size+4);
+          page.drawText(l,{x:M,y:y-size,size:size,font:f,color:color||INK});
+          y-=size+3.5;
+        });
+        y-=4;
+      }
+      function field(label,w,h){
+        h=h||16;
+        need(h+18);
+        page.drawText(label,{x:M,y:y-8,size:8,font:bold,color:GRAY});
+        var tf=form.createTextField('f'+(fc++));
+        tf.addToPage(page,{x:M,y:y-12-h,width:w||(W-2*M),height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:P.rgb(0.975,0.98,0.995)});
+        tf.setFontSize(9);
+        y-=h+22;
+      }
+      function fieldRow(items){
+        var gap=14,x=M,totalW=W-2*M-gap*(items.length-1);
+        var h=16;
+        need(h+20);
+        items.forEach(function(it){
+          var w=totalW*it.w;
+          page.drawText(it.l,{x:x,y:y-8,size:8,font:bold,color:GRAY});
+          var tf=form.createTextField('f'+(fc++));
+          tf.addToPage(page,{x:x,y:y-12-h,width:w,height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:P.rgb(0.975,0.98,0.995)});
+          tf.setFontSize(9);
+          x+=w+gap;
+        });
+        y-=h+24;
+      }
+      function checks(items,perRow){
+        perRow=perRow||3;
+        var w=(W-2*M)/perRow;
+        for(var i=0;i<items.length;i+=perRow){
+          need(20);
+          for(var j=0;j<perRow&&i+j<items.length;j++){
+            var x=M+j*w;
+            var cb=form.createCheckBox('c'+(fc++));
+            cb.addToPage(page,{x:x,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
+            page.drawText(items[i+j],{x:x+16,y:y-11.5,size:8.5,font:font,color:INK});
+          }
+          y-=20;
+        }
+        y-=4;
+      }
+
+      /* Title */
+      page.drawText(s.n.toUpperCase()+' RESIDENTIAL LEASE AGREEMENT',{x:M,y:y-16,size:15,font:bold,color:INK});
+      page.drawText('Fillable template — complete on your computer or by hand',{x:M,y:y-32,size:9,font:ital,color:GRAY});
+      y-=48;
+
+      /* State facts box */
+      var facts=['Security deposit limit: '+s.dep,'Deposit return deadline: '+s.ret,'Notice before entry: '+s.ent,'Late fees: '+s.late,'Month-to-month termination notice: '+s.mtm];
+      var fh=14;
+      var lineCounts=facts.map(function(f){return wrap(f,8,font,W-2*M-24).length;});
+      var boxH=lineCounts.reduce(function(a,b){return a+b*11;},0)+22;
+      page.drawRectangle({x:M,y:y-boxH,width:W-2*M,height:boxH,borderWidth:0.8,borderColor:BLUE,color:P.rgb(0.933,0.945,0.996)});
+      var fy=y-16;
+      page.drawText(s.n+' quick rules (verify current law):',{x:M+12,y:fy,size:8.5,font:bold,color:BLUE});
+      fy-=12;
+      facts.forEach(function(f){
+        wrap(f,8,font,W-2*M-24).forEach(function(l){
+          page.drawText('•  '+l,{x:M+12,y:fy,size:8,font:font,color:INK});
+          fy-=11;
+        });
+      });
+      y-=boxH+16;
+
+      heading('1. PARTIES');
+      field('Landlord / Property Owner or Company');
+      field('Tenant #1 (full legal name)');
+      fieldRow([{l:'Tenant #2 (if any)',w:.5},{l:'Tenant #3 (if any)',w:.5}]);
+
+      heading('2. PREMISES');
+      field('Street address & unit');
+      fieldRow([{l:'City',w:.45},{l:'State',w:.2},{l:'ZIP',w:.35}]);
+      checks(['House','Apartment','Condo','Townhouse','Duplex','Other'],3);
+
+      heading('3. TERM');
+      fieldRow([{l:'Start date',w:.5},{l:'End date (leave blank if month-to-month)',w:.5}]);
+      checks(['Fixed term','Month-to-month ('+s.mtm+' notice)'],2);
+
+      heading('4. RENT');
+      fieldRow([{l:'Monthly rent ($)',w:.34},{l:'Due on day of month',w:.3},{l:'Payable to / method',w:.36}]);
+      fieldRow([{l:'Grace period (days)',w:.34},{l:'Late fee ($ or %)',w:.3},{l:'Returned-payment fee ($)',w:.36}]);
+      para('State late-fee rule: '+s.late+'.',8,ital,GRAY);
+
+      heading('5. SECURITY DEPOSIT');
+      fieldRow([{l:'Security deposit ($)',w:.5},{l:'Pet deposit ($, if any)',w:.5}]);
+      para('Limit in '+s.n+': '+s.dep+'. Must be returned within '+s.ret+' after move-out, less lawful deductions, with an itemized statement where required.',8,ital,GRAY);
+
+      heading('6. UTILITIES & SERVICES — who pays');
+      ['Electricity','Gas','Water / Sewer','Trash Collection','Internet / Cable','Lawn Care','Snow Removal','Pest Control'].forEach(function(u){
+        need(20);
+        page.drawText(u,{x:M,y:y-11,size:9,font:font,color:INK});
+        var cb1=form.createCheckBox('c'+(fc++));
+        cb1.addToPage(page,{x:M+220,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
+        page.drawText('Tenant',{x:M+236,y:y-11,size:8.5,font:font,color:INK});
+        var cb2=form.createCheckBox('c'+(fc++));
+        cb2.addToPage(page,{x:M+310,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
+        page.drawText('Landlord',{x:M+326,y:y-11,size:8.5,font:font,color:INK});
+        var cb3=form.createCheckBox('c'+(fc++));
+        cb3.addToPage(page,{x:M+410,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
+        page.drawText('N/A',{x:M+426,y:y-11,size:8.5,font:font,color:INK});
+        y-=20;
+      });
+      y-=6;
+
+      heading('7. POLICIES');
+      checks(['Pets: not allowed','Pets: allowed (see below)','Smoking prohibited','Smoking outside only','Renters insurance required','Quiet hours 10pm–8am'],2);
+      field('Pet limits (number / type / weight) and pet rent, if any');
+
+      heading('8. STANDARD TERMS');
+      para('OCCUPANCY & USE: The Premises shall be used only as a private residence by the tenants and occupants listed in this Agreement. Guests staying more than 14 consecutive days require Landlord’s written consent.',8.5);
+      para('MAINTENANCE: Tenant shall keep the Premises clean and promptly report needed repairs and any water intrusion. Landlord shall maintain the Premises in habitable condition as required by law. Tenant pays for damage caused by Tenant’s negligence or misuse.',8.5);
+      para('ENTRY: Except in emergencies, Landlord will give '+s.entL+' notice before entry, at reasonable times, for inspection, repairs, services, or showings. ('+s.n+': '+s.ent+'.)',8.5);
+      para('ASSIGNMENT & SUBLETTING: Not permitted without Landlord’s prior written consent, including short-term and vacation rentals.',8.5);
+      para('DEFAULT: If rent or other amounts go unpaid, Landlord may pursue all remedies allowed by '+s.n+' law. Unpaid balances remaining after the tenancy ends may be referred to a licensed collection agency, which may affect Tenant’s credit.',8.5);
+      para('SEVERABILITY; ENTIRE AGREEMENT: Invalid provisions are severed and the remainder stays in effect. This document plus attached addenda is the entire agreement; changes must be in writing and signed.',8.5);
+      para('GOVERNING LAW: This Agreement is governed by the laws of '+s.n+'.',8.5);
+
+      var discTitles=[];
+      if(s.disc.length)s.disc.forEach(function(d){discTitles.push(d.t);});
+      heading('9. DISCLOSURES');
+      para('LEAD-BASED PAINT (federal): If the building was built before 1978, the lead-based paint disclosure and the EPA pamphlet “Protect Your Family From Lead in Your Home” must be provided and acknowledged.',8.5);
+      if(discTitles.length)para(s.n+' also requires: '+discTitles.join('; ')+'. Attach or include these disclosures.',8.5);
+      var cbL=form.createCheckBox('c'+(fc++));
+      need(20);
+      cbL.addToPage(page,{x:M,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
+      page.drawText('Built before 1978 — lead disclosure & EPA pamphlet attached',{x:M+16,y:y-11.5,size:8.5,font:font,color:INK});
+      y-=24;
+
+      heading('10. ADDITIONAL TERMS');
+      var ta=form.createTextField('f'+(fc++));
+      ta.enableMultiline();
+      need(90);
+      ta.addToPage(page,{x:M,y:y-84,width:W-2*M,height:80,borderWidth:0.75,borderColor:LINE,backgroundColor:P.rgb(0.975,0.98,0.995)});
+      ta.setFontSize(9);
+      y-=96;
+
+      heading('SIGNATURES');
+      [['Landlord signature','Date'],['Tenant #1 signature','Date'],['Tenant #2 signature','Date']].forEach(function(r){
+        fieldRow([{l:r[0],w:.68},{l:r[1],w:.32}]);
+      });
+
+      footer(page);
+      form.updateFieldAppearances(font);
+      return doc.save();
+    });
+  });
+}
+})();
+</script>
+
+<script>
+(function(){
+  var SEED={value:4.9,count:853};
+  var KEY='acb:lease-agreement-generator:rating';
+  var box=document.getElementById('acbStars'),meta=document.getElementById('acbRatingMeta');
+  var mine=parseInt(localStorage.getItem(KEY)||'0',10);
+  function agg(){var c=SEED.count+(mine?1:0);
+    var v=mine?((SEED.value*SEED.count+mine)/c):SEED.value;
+    return {v:Math.round(v*10)/10,c:c};}
+  function render(hover){
+    var a=agg();box.innerHTML='';
+    for(var i=1;i<=5;i++){(function(i){
+      var b=document.createElement('button');
+      b.type='button';b.className='acb-star'+((hover||mine||Math.round(a.v))>=i?' on':'');
+      b.setAttribute('aria-label',i+' star'+(i>1?'s':''));b.textContent='★';
+      b.onmouseenter=function(){render(i)};b.onmouseleave=function(){render(0)};
+      b.onclick=function(){mine=i;localStorage.setItem(KEY,String(i));render(0);
+        try{fetch('https://formsubmit.co/ajax/RATINGS_EMAIL',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({tool:'lease-agreement-generator',rating:i,_subject:'Tool rating: lease-agreement-generator'})
+        }).catch(function(){});}catch(e){}};
+      box.appendChild(b);})(i);}
+    meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
+  }
+  render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var last=0;
+  function send(){
+    var h=document.documentElement.scrollHeight;
+    if(Math.abs(h-last)>2){last=h;parent.postMessage({acbTool:'lease-agreement-generator',height:h},'*');}
+  }
+  if(window.ResizeObserver){new ResizeObserver(send).observe(document.body);}
+  window.addEventListener('load',send);
+  setInterval(send,800);
+})();
+</script>
+</body>
+</html>
