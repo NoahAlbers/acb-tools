@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <style>
 :root{
   --acb-blue:#3D5AF1;--acb-blue-dark:#2D45C6;--acb-blue-light:#EEF1FE;--acb-blue-mid:#D5DBFC;
@@ -22,7 +23,7 @@ body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-te
 .tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
 .tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
 .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.badge{font-size:12px;font-weight:500;color:#7E88B8;background:rgba(61,90,241,.045);border:1px solid rgba(61,90,241,.10);border-radius:50px;padding:4px 12px;letter-spacing:.01em}
 .grid{display:grid;grid-template-columns:10fr 11fr;gap:22px;align-items:start}
 @media(max-width:960px){.grid{grid-template-columns:1fr}}
 .card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
@@ -72,6 +73,47 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
 .sw input:checked+.knob:after{transform:translateX(16px)}
 .use-btn{display:inline-block;margin-left:6px;padding:4px 14px;border-radius:50px;border:1.5px solid var(--acb-blue);background:var(--acb-blue-light);color:var(--acb-blue);font-size:12.5px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s}
 .use-btn:hover{background:var(--acb-blue);color:#fff}
+/* tooltips v2 */
+.acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
+.acb-tip:hover,.acb-tip:focus,.acb-tip.open{color:var(--acb-blue)}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 10px 30px rgba(26,26,46,.14);font-size:12.5px;font-weight:400;line-height:1.6;padding:12px 14px;border-radius:12px;width:270px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;text-transform:none;letter-spacing:normal;text-align:left}
+.acb-tip-bubble::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#fff;filter:drop-shadow(0 1.5px 0 var(--acb-border))}
+.acb-tip-bubble b{display:block;font-size:12px;font-weight:700;color:var(--acb-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.acb-tip-bubble i{font-style:normal;display:block}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:720px){.acb-tip-bubble{left:auto;right:-12px;transform:none}.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{transform:none}.acb-tip-bubble::after{left:auto;right:14px;transform:none}}
+/* calendar date picker */
+.acb-cal{position:absolute;z-index:120;background:#fff;border:1px solid var(--acb-border);border-radius:14px;box-shadow:0 12px 32px rgba(26,26,46,.14);padding:14px;width:264px;font-family:inherit}
+.acb-cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.acb-cal-title{font-weight:700;font-size:14px}
+.acb-cal-nav{width:30px;height:30px;border:1px solid var(--acb-border);background:#fff;border-radius:8px;cursor:pointer;color:var(--acb-text-mid);font-size:14px}
+.acb-cal-nav:hover{border-color:var(--acb-blue);color:var(--acb-blue)}
+.acb-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.acb-cal-dow{font-size:10.5px;font-weight:700;color:var(--acb-text-light);padding:4px 0;text-transform:uppercase}
+.acb-cal-d{border:none;background:none;border-radius:8px;padding:7px 0;font-size:13px;font-family:inherit;cursor:pointer;color:var(--acb-text)}
+.acb-cal-d:hover{background:var(--acb-blue-light)}
+.acb-cal-d.out{color:#C9CDDC}
+.acb-cal-d.today{box-shadow:inset 0 0 0 1.5px var(--acb-blue-mid)}
+.acb-cal-d.sel{background:var(--acb-blue);color:#fff;font-weight:700}
+.acb-cal-foot{display:flex;justify-content:space-between;margin-top:8px}
+.acb-cal-foot button{border:none;background:none;color:var(--acb-blue);font-weight:600;font-size:12.5px;cursor:pointer;font-family:inherit;padding:4px 6px}
+/* first-run guided walkthrough */
+.acb-coach-ring{position:relative;z-index:91}
+.acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:12px 15px;font-size:13px;line-height:1.5;width:230px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach.side-r::before{content:"";position:absolute;right:100%;top:18px;border:8px solid transparent;border-right-color:var(--acb-text)}
+.acb-coach.side-l::before{content:"";position:absolute;left:100%;top:18px;border:8px solid transparent;border-left-color:var(--acb-text)}
+.acb-coach b{display:block;margin-bottom:3px}
+.acb-coach .step-dots{font-size:11px;opacity:.7;margin-top:7px}
+.acb-coach .skip{background:none;border:none;color:#fff;opacity:.75;font-size:11.5px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0;margin-top:7px;display:block}
+@media(max-width:840px){.acb-coach{position:absolute;width:210px}}
+/* rating prompt */
+.acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
+.acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
+.acb-rate-card p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:12px}
+.acb-rate-card .skip{margin-top:10px;background:none;border:none;color:var(--acb-text-light);font-size:12.5px;cursor:pointer;font-family:inherit;text-decoration:underline}
 /* document preview */
 .preview-shell{padding:18px}
 .doc{background:#fff;border:1px solid var(--acb-border);border-radius:8px;padding:34px 32px;font-size:13px;color:#15151f;line-height:1.5}
@@ -91,7 +133,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
 .lt-cos .ct{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
 .lt-cb{display:inline-block;width:10px;height:10px;border:1.3px solid #333;vertical-align:-1px;margin-right:6px}
 .lt-cos p{font-size:11.5px;color:#26263a;line-height:1.7;margin-bottom:6px}
-.doc-legal{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:16px;border-top:1px solid #d8d8e0;padding-top:8px}
+.doc-foot{margin-top:16px;border-top:1px solid #d8d8e0;padding-top:8px}
+.doc-foot .df1{font-size:12px;color:#26263a;line-height:1.5}
+.doc-foot .df2{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:4px}
 /* actions / education */
 .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 .btn-secondary{padding:11px 24px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s;min-height:44px}
@@ -117,14 +161,16 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
 .fade{animation:fadeIn .35s ease both}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media print{
-  @page{margin:.7in}
+  @page{margin:0.75in}
   body{background:#fff}
   .no-print{display:none!important}
   .wrap{max-width:none;padding:0}
   .grid{display:block}
   #previewCard{border:none;box-shadow:none;padding:0;border-radius:0;margin:0}
   .doc{border:none;border-radius:0;padding:0;font-size:12.5px}
-  .lt-box,.lt-sig,.lt-cos{page-break-inside:avoid;break-inside:avoid}
+  .doc-title,.lt-re,.lt-cos .ct{break-after:avoid;page-break-after:avoid}
+  .lt-box,.lt-sig,.lt-cos,.doc-foot{page-break-inside:avoid;break-inside:avoid}
+  .lt-para,.lt-addr{orphans:3;widows:3}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -143,7 +189,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
       <div class="card">
         <div class="sec-label">1 · Where is the property?</div>
         <div class="field">
-          <label for="inState">State</label>
+          <label for="inState">State
+            <span class="acb-tip" tabindex="0" data-t="State rules"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Each state sets a minimum notice period for raising rent, and a few states cap how much rent can rise per year. Picking your state loads both into the letter.</span></span>
+          </label>
           <select id="inState"></select>
         </div>
         <div class="field">
@@ -191,7 +239,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
             <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="inCurrent" inputmode="decimal" placeholder="2,000"></div>
           </div>
           <div class="field">
-            <label for="inNew">New monthly rent</label>
+            <label for="inNew">New monthly rent
+              <span class="acb-tip" tabindex="0" data-t="New monthly rent"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">The full new monthly amount, not the increase. We compute the dollar and percent change and check it against your state's rent-control caps.</span></span>
+            </label>
             <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="inNew" inputmode="decimal" placeholder="2,100"></div>
           </div>
         </div>
@@ -200,15 +250,19 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
           <div class="stat-chip">Increase %<b id="incPct">—</b></div>
           <div class="stat-chip">New annual cost<b id="incAnnual">—</b></div>
         </div>
-        <div class="chip-bad" id="capWarn" hidden role="alert"></div>
-        <div class="chip-warn" id="capSoftWarn" hidden role="alert"></div>
-        <div class="chip-warn" id="freqWarn" hidden role="alert"></div>
+        <div id="warnWrap">
+          <div class="chip-bad" id="capWarn" hidden role="alert"></div>
+          <div class="chip-warn" id="capSoftWarn" hidden role="alert"></div>
+          <div class="chip-warn" id="freqWarn" hidden role="alert"></div>
+        </div>
       </div>
 
       <div class="card">
         <div class="sec-label">4 · Dates &amp; tenancy</div>
         <div class="field">
-          <label>Tenancy type</label>
+          <label>Tenancy type
+            <span class="acb-tip" tabindex="0" data-t="Tenancy type"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Month-to-month increases take effect with a rental period after proper notice. Under a fixed-term lease, rent generally can't change until renewal — the letter proposes the renewal rate.</span></span>
+          </label>
           <div class="pills" role="radiogroup" aria-label="Tenancy type">
             <button type="button" class="pill" id="ttM2m" role="radio">Month-to-month</button>
             <button type="button" class="pill" id="ttFixed" role="radio">Fixed-term renewal</button>
@@ -266,10 +320,11 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
         <div class="doc" id="docPreview" aria-live="polite"></div>
       </div>
       <div class="actions no-print">
-        <button type="button" class="acb-btn-primary" id="printBtn">Print / Save as PDF</button>
+        <button type="button" class="acb-btn-primary" id="pdfBtn">Download PDF</button>
+        <button type="button" class="btn-secondary" id="printBtn">Print</button>
         <button type="button" class="btn-secondary" id="copyBtn">Copy text</button>
       </div>
-      <p class="hint no-print" style="text-align:center;margin-top:10px">"Print / Save as PDF" prints only the notice letter. Everything stays on your device — nothing is uploaded or shared.</p>
+      <p class="hint no-print" id="pdfStatus" aria-live="polite" style="text-align:center;margin-top:10px">"Download PDF" builds a fillable PDF of this notice with your answers pre-filled; "Print" prints only the notice letter. Everything stays on your device — nothing is uploaded or shared.</p>
     </div>
   </div>
 
@@ -300,6 +355,132 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
   <p class="disclaimer no-print">This generator produces a general-purpose template and notice-period guidance for informational purposes only — it is not legal advice. Rent increase rules change frequently and vary by state, county, and city; rent control and rent stabilization ordinances add their own caps and procedures. Review the notice with a local attorney and verify current requirements before sending. © Advanced Collection Bureau, Inc.</p>
 </div>
 
+<script>
+/* ===== shared UI v3 helpers (see docs/ui-v3-spec.md) ===== */
+var ACB_REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tweenText(el,fmt,to,ms){
+  if(!el)return;
+  if(ACB_REDUCED||!isFinite(to)){el.textContent=fmt(isFinite(to)?to:0);el.__tv=isFinite(to)?to:0;return;}
+  var from=isFinite(el.__tv)?el.__tv:0;
+  el.__tv=to;
+  if(from===to){el.textContent=fmt(to);return;}
+  var t0=performance.now();ms=ms||480;
+  (function step(){
+    var p=Math.min(1,(performance.now()-t0)/ms);p=1-Math.pow(1-p,3);
+    el.textContent=fmt(from+(to-from)*p);
+    if(p<1)requestAnimationFrame(step);
+  })();
+}
+function smoothResize(el,mutate){
+  if(ACB_REDUCED||!el){if(mutate)mutate();return;}
+  var h0=el.offsetHeight;if(mutate)mutate();var h1=el.offsetHeight;
+  if(Math.abs(h0-h1)<3)return;
+  el.style.height=h0+'px';el.style.overflow='hidden';el.style.transition='height .3s ease';
+  void el.offsetHeight;
+  el.style.height=h1+'px';
+  setTimeout(function(){el.style.height='';el.style.overflow='';el.style.transition='';},320);
+}
+function acbTipUpgrade(root){
+  (root||document).querySelectorAll('.acb-tip').forEach(function(t){
+    if(t.__up)return;t.__up=true;
+    var bub=t.querySelector('.acb-tip-bubble');
+    if(bub&&!bub.querySelector('b')){
+      var body=bub.innerHTML;
+      var title=t.dataset.t||'';
+      if(!title){
+        var host=t.closest('label')||t.parentNode;
+        if(host){var c=host.cloneNode(true);var tip=c.querySelector('.acb-tip');if(tip)tip.remove();title=c.textContent.replace(/\s+/g,' ').trim();}
+      }
+      bub.innerHTML='<i>'+body+'</i>';
+      var b=document.createElement('b');b.textContent=(title||'About this field').slice(0,42);
+      bub.insertBefore(b,bub.firstChild);
+    }else if(bub){
+      var bb=bub.querySelector('b');
+      if(bb&&!bb.textContent)bb.textContent=(t.dataset.t||'About this field').slice(0,42);
+    }
+    t.addEventListener('click',function(e){e.stopPropagation();t.classList.toggle('open');});
+  });
+}
+document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
+function acbCoachSeq(slug,steps){
+  try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
+  var i=-1,el=null,tip=null;
+  function markDone(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}}
+  function clear(){if(el)el.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;tip=null;}
+  function stop(){markDone();clear();}
+  function show(n){
+    clear();i=n;
+    if(i>=steps.length){stop();return;}
+    var st=steps[i];
+    el=typeof st.target==='string'?document.querySelector(st.target):st.target;
+    if(!el){show(i+1);return;}
+    el.classList.add('acb-coach-ring');
+    try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
+    var wrap=el.closest('.field')||el.parentNode;
+    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+    tip=document.createElement('div');tip.className='acb-coach';
+    tip.innerHTML='<b>'+st.title+'</b>'+st.body
+      +'<div class="step-dots">Step '+(i+1)+' of '+steps.length+'</div>'
+      +'<button type="button" class="skip">Skip tour</button>';
+    wrap.appendChild(tip);
+    var spaceR=wrap.clientWidth-(el.offsetLeft+el.offsetWidth);
+    if(spaceR>250){tip.classList.add('side-r');tip.style.left=(el.offsetLeft+el.offsetWidth+14)+'px';tip.style.top=el.offsetTop+'px';}
+    else if(el.offsetLeft>250){tip.classList.add('side-l');tip.style.left=(el.offsetLeft-244)+'px';tip.style.top=el.offsetTop+'px';}
+    else{tip.style.left=Math.max(0,Math.min(el.offsetLeft+20,wrap.clientWidth-240))+'px';tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';}
+    tip.querySelector('.skip').addEventListener('click',stop);
+    var adv=function(){el.removeEventListener('input',adv);el.removeEventListener('change',adv);setTimeout(function(){show(i+1);},350);};
+    el.addEventListener('input',adv);el.addEventListener('change',adv);
+  }
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){stop();document.removeEventListener('keydown',esc);}});
+  show(0);
+}
+function acbDate(input){
+  var pop=null,view;
+  function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  function close(){if(pop){pop.remove();pop=null;document.removeEventListener('mousedown',onDoc);}}
+  function onDoc(e){if(pop&&!pop.contains(e.target)&&e.target!==input)close();}
+  function set(d){input.value=iso(d);input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));close();}
+  function render(){
+    var sel=input.value?new Date(input.value+'T00:00:00'):null;
+    var today=new Date();today.setHours(0,0,0,0);
+    var y=view.getFullYear(),m=view.getMonth();
+    var first=new Date(y,m,1),startDow=first.getDay(),dim=new Date(y,m+1,0).getDate();
+    var h='<div class="acb-cal-head"><button type="button" class="acb-cal-nav" data-n="-1" aria-label="Previous month">‹</button><span class="acb-cal-title">'+view.toLocaleDateString('en-US',{month:'long',year:'numeric'})+'</span><button type="button" class="acb-cal-nav" data-n="1" aria-label="Next month">›</button></div><div class="acb-cal-grid">';
+    ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(function(d){h+='<span class="acb-cal-dow">'+d+'</span>';});
+    var prev=new Date(y,m,0).getDate();
+    for(var i=0;i<startDow;i++)h+='<button type="button" class="acb-cal-d out" data-d="'+iso(new Date(y,m-1,prev-startDow+1+i))+'">'+(prev-startDow+1+i)+'</button>';
+    for(var d=1;d<=dim;d++){
+      var cur=new Date(y,m,d),cls='acb-cal-d';
+      if(sel&&cur.getTime()===sel.getTime())cls+=' sel';
+      if(cur.getTime()===today.getTime())cls+=' today';
+      h+='<button type="button" class="'+cls+'" data-d="'+iso(cur)+'">'+d+'</button>';
+    }
+    var cells=startDow+dim,next=1;
+    for(var j=cells;j%7!==0;j++)h+='<button type="button" class="acb-cal-d out" data-d="'+iso(new Date(y,m+1,next))+'">'+(next++)+'</button>';
+    h+='</div><div class="acb-cal-foot"><button type="button" data-t="1">Today</button><button type="button" data-c="1">Close</button></div>';
+    pop.innerHTML=h;
+    pop.querySelectorAll('[data-n]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();view.setMonth(view.getMonth()+(+b.dataset.n));render();});});
+    pop.querySelectorAll('[data-d]').forEach(function(b){b.addEventListener('click',function(){set(new Date(b.dataset.d+'T00:00:00'));});});
+    pop.querySelector('[data-t]').addEventListener('click',function(){set(new Date());});
+    pop.querySelector('[data-c]').addEventListener('click',close);
+  }
+  function open(){
+    if(pop)return;
+    view=input.value?new Date(input.value+'T00:00:00'):new Date();view.setDate(1);
+    pop=document.createElement('div');pop.className='acb-cal';
+    var r=input.getBoundingClientRect();
+    var wrap=input.closest('.field')||input.parentNode;
+    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+    wrap.appendChild(pop);
+    pop.style.top=(input.offsetTop+input.offsetHeight+6)+'px';
+    pop.style.left=Math.max(0,Math.min(input.offsetLeft,wrap.clientWidth-270))+'px';
+    render();
+    setTimeout(function(){document.addEventListener('mousedown',onDoc);},0);
+  }
+  input.addEventListener('click',function(e){e.preventDefault();open();});
+  input.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}if(e.key==='Escape')close();});
+}
+</script>
 <script>
 /* ============ Pure data + letter model (no DOM access in this block) ============ */
 "use strict";
@@ -497,17 +678,20 @@ function letterModel(S){
   var noticeSentence='This notice is being given at least '+ev.days+' days before the effective date, consistent with '+st.n+'’s minimum notice requirement for this change — '+(o&&o.rule?o.rule:st.mtm+' under '+st.n+'’s month-to-month notice rules.');
   if(S.st==='CA'&&p>10)noticeSentence+=' Because this increase exceeds 10% of the rent charged during the past 12 months, California requires at least 90 days’ written notice.';
   paras.push(noticeSentence);
-  /* what happens next */
+  /* continuation terms */
   if(S.tenancy==='m2m'){
-    paras.push('What happens next: no action is needed to accept this change. Your tenancy will continue on its existing terms at the new monthly rent beginning '+fmtDate(eff)+'; all other terms of your rental agreement remain unchanged. If you do not wish to continue at the new rent, you may end your tenancy by giving written notice as required by your rental agreement and '+st.n+' law.');
+    paras.push('No action is needed to accept this change. Your tenancy will continue on its existing terms at the new monthly rent beginning '+fmtDate(eff)+'; all other terms of your rental agreement remain unchanged. If you do not wish to continue at the new rent, you may end your tenancy by giving written notice as required by your rental agreement and '+st.n+' law.');
   }else{
-    paras.push('What happens next: your current lease term ends on '+fmtDate(eff)+'. We would be glad to renew your lease at the new monthly rent of '+moneyTxt(neu)+' beginning '+fmtDate(eff)+', with all other terms remaining as in your current lease unless we agree otherwise in writing. If you choose not to renew, your tenancy will end on the date provided by your lease and '+st.n+' law.');
+    paras.push('Your current lease term ends on '+fmtDate(eff)+'. We would be glad to renew your lease at the new monthly rent of '+moneyTxt(neu)+' beginning '+fmtDate(eff)+', with all other terms remaining as in your current lease unless we agree otherwise in writing. If you choose not to renew, your tenancy will end on the date provided by your lease and '+st.n+' law.');
   }
   var reply=parseISO(S.replyBy);
   if(reply)paras.push('Please reply by '+fmtDate(reply)+' to let us know your decision.');
   paras.push('Thank you for your tenancy. If you have any questions about this notice, please contact us.');
-  return {st:st,del:del,eff:eff,cur:cur,neu:neu,inc:inc,pct:p,tenants:tenants,addr:addr,paras:paras,ruleTxt:ruleTxt};
+  return {st:st,del:del,eff:eff,cur:cur,neu:neu,inc:inc,pct:p,tenants:tenants,addr:addr,paras:paras,ruleTxt:ruleTxt,noticeSentence:noticeSentence,reasonTxt:reason};
 }
+var FOOT_LINE1='This Rent Increase Notice was created with Advanced Collection Bureau, Inc. (advancedcb.com)';
+var FOOT_LEGAL='This resource from Advanced Collection Bureau, Inc. is for general informational purposes. It is not legal advice. Rent increase rules vary by state, county, and city — rent control ordinances add caps and procedures — and laws change; verify current requirements with a local attorney before sending.';
+function docFootHtml(){return '<div class="doc-foot"><div class="df1">'+escHtml(FOOT_LINE1)+'</div><div class="df2">'+escHtml(FOOT_LEGAL)+'</div></div>';}
 function renderLetterHtml(S){
   var m=letterModel(S);
   var h='<div class="doc-title">NOTICE OF RENT INCREASE</div><div class="doc-rule"></div>';
@@ -534,7 +718,7 @@ function renderLetterHtml(S){
       +'<p><span class="lt-cb"></span>Personal delivery&nbsp;&nbsp;&nbsp;<span class="lt-cb"></span>First-class mail, postage prepaid&nbsp;&nbsp;&nbsp;<span class="lt-cb"></span>Certified mail&nbsp;&nbsp;&nbsp;<span class="lt-cb"></span>Posting at the premises and mailing</p>'
       +'<p>Served by (name): ______________________________&nbsp;&nbsp;Signature: ______________________________</p></div>';
   }
-  h+='<p class="doc-legal">This notice was created with a free generator provided by Advanced Collection Bureau (advancedcb.com) for general informational purposes. It is not legal advice. Rent increase rules vary by state, county, and city — rent control ordinances add caps and procedures — and laws change; verify current requirements with a local attorney before sending.</p>';
+  h+=docFootHtml();
   return h;
 }
 function renderLetterText(S){
@@ -559,8 +743,106 @@ function renderLetterText(S){
     out.push('[ ] Personal delivery   [ ] First-class mail   [ ] Certified mail   [ ] Posting at the premises and mailing');
     out.push('Served by: ______________________________   Signature: ______________________________');
   }
-  out.push('','---','Created with the free Rent Increase Notice Generator by Advanced Collection Bureau (advancedcb.com). Not legal advice — verify current state and local requirements.');
+  out.push('','---',FOOT_LINE1,FOOT_LEGAL);
   return out.join('\n');
+}
+
+/* ---------- Download PDF: pre-filled fillable AcroForm (pdf-lib) ---------- */
+var COS_METHODS=[
+  {k:'personal',t:'Personal delivery to the tenant'},
+  {k:'mail',t:'First-class mail, postage prepaid'},
+  {k:'cert',t:'Certified mail, return receipt requested'},
+  {k:'post',t:'Posting at the premises and mailing a copy'}
+];
+function buildNoticePdf(S){
+  var m=letterModel(S),ev=evalEffective(S),P=PDFLib,W=612,H=792,MG=54,fc=0;
+  return P.PDFDocument.create().then(function(doc){
+    return Promise.all([doc.embedFont(P.StandardFonts.Helvetica),doc.embedFont(P.StandardFonts.HelveticaBold),doc.embedFont(P.StandardFonts.HelveticaOblique)]).then(function(fonts){
+      var font=fonts[0],bold=fonts[1],ital=fonts[2];
+      var form=doc.getForm();
+      var page=doc.addPage([W,H]),y=H-MG;
+      var INK=P.rgb(0.1,0.1,0.18),GRAY=P.rgb(0.45,0.45,0.55),LINE=P.rgb(0.7,0.72,0.8),BG=P.rgb(0.975,0.98,0.995);
+      function need(h){if(y-h<MG+30){page=doc.addPage([W,H]);y=H-MG;}}
+      function wrapTxt(text,size,f,maxW){
+        var words=String(text).split(' '),lines=[],line='';
+        words.forEach(function(wd){var t=line?line+' '+wd:wd;
+          if(f.widthOfTextAtSize(t,size)>maxW){lines.push(line);line=wd;}else line=t;});
+        if(line)lines.push(line);return lines;
+      }
+      function para(text,size,f,color){
+        size=size||9.5;f=f||font;
+        wrapTxt(text,size,f,W-2*MG).forEach(function(l){need(size+4);page.drawText(l,{x:MG,y:y-size,size:size,font:f,color:color||INK});y-=size+3.5;});
+        y-=4;
+      }
+      function tf(label,val,wd,h,multi){
+        h=h||16;need(h+20);
+        if(label)page.drawText(label,{x:MG,y:y-8,size:8,font:bold,color:GRAY});
+        var f=form.createTextField('f'+(fc++));
+        if(multi)f.enableMultiline();
+        f.addToPage(page,{x:MG,y:y-12-h,width:wd||(W-2*MG),height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:BG});
+        f.setFontSize(9);
+        if(val)f.setText(String(val));
+        y-=h+22;return f;
+      }
+      function row2(items){
+        var gap=14,x=MG,tw=W-2*MG-gap*(items.length-1),h=16;
+        need(h+20);
+        items.forEach(function(it){
+          var wd=tw*it.w;
+          if(it.l)page.drawText(it.l,{x:x,y:y-8,size:8,font:bold,color:GRAY});
+          var f=form.createTextField('f'+(fc++));
+          f.addToPage(page,{x:x,y:y-12-h,width:wd,height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:BG});
+          f.setFontSize(9);
+          if(it.v)f.setText(String(it.v));
+          x+=wd+gap;
+        });
+        y-=h+24;
+      }
+      function heading(t){
+        need(30);
+        page.drawText(t,{x:MG,y:y-12,size:10.5,font:bold,color:INK});
+        page.drawLine({start:{x:MG,y:y-17},end:{x:W-MG,y:y-17},thickness:0.6,color:LINE});
+        y-=28;
+      }
+      var hasAmts=(m.cur>0&&m.neu>0);
+      page.drawText('NOTICE OF RENT INCREASE',{x:MG,y:y-16,size:15,font:bold,color:INK});
+      page.drawText('State of '+m.st.n,{x:MG,y:y-32,size:9,font:ital,color:GRAY});
+      y-=48;
+      row2([{l:'From (landlord / management company)',w:.62,v:S.landlord},{l:'Date of notice',w:.38,v:m.del?fmtDate(m.del):''}]);
+      tf('Landlord mailing address & phone',S.landlordAddr);
+      tf('To (tenant name(s))',S.tenants);
+      tf('Rental property address',S.addr);
+      heading('RENT ADJUSTMENT');
+      row2([{l:'Current monthly rent',w:.5,v:m.cur>0?fmtUSD(m.cur,m.cur%1!==0):''},{l:'New monthly rent',w:.5,v:m.neu>0?fmtUSD(m.neu,m.neu%1!==0):''}]);
+      row2([{l:'Increase per month',w:.34,v:hasAmts?fmtUSD(m.inc,m.inc%1!==0):''},{l:'Increase percent',w:.33,v:hasAmts?m.pct.toFixed(1)+'%':''},{l:'New rent effective date',w:.33,v:fmtDate(m.eff)}]);
+      para(m.noticeSentence,9.5,font);
+      tf('Reason for the increase',m.reasonTxt||'');
+      tf('Please reply by (optional)',S.replyBy&&parseISO(S.replyBy)?fmtDate(parseISO(S.replyBy)):'',220);
+      y-=4;
+      row2([{l:'Landlord / agent (print + sign)',w:.68,v:S.landlord},{l:'Date',w:.32,v:m.del?fmtDate(m.del):''}]);
+      if(S.cos){
+        need(200); /* keep the certificate-of-service block together */
+        heading('CERTIFICATE OF SERVICE');
+        para('I certify that on the date below I served a copy of this Notice of Rent Increase on the tenant(s) named above by:',9,font);
+        COS_METHODS.forEach(function(mt){
+          need(20);
+          var cb=form.createCheckBox('c'+(fc++));
+          cb.addToPage(page,{x:MG,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
+          if(mt.k==='mail')cb.check(); /* editable default — first-class mail is the most common service method */
+          page.drawText(mt.t,{x:MG+16,y:y-11.5,size:8.5,font:font,color:INK});
+          y-=20;
+        });
+        y-=6;
+        row2([{l:'Date served',w:.32,v:m.del?fmtDate(m.del):''},{l:'Served by (name)',w:.34,v:S.landlord},{l:'Signature',w:.34,v:''}]);
+      }
+      page.drawText(FOOT_LINE1,{x:MG,y:36,size:8,font:font,color:GRAY});
+      wrapTxt(FOOT_LEGAL,6.5,ital,W-2*MG).forEach(function(l,idx){
+        page.drawText(l,{x:MG,y:26-idx*8,size:6.5,font:ital,color:GRAY});
+      });
+      form.updateFieldAppearances(font);
+      return doc.save();
+    });
+  });
 }
 </script>
 
@@ -619,20 +901,29 @@ function chips(){
   var c=money(S.cur),n=money(S.neu);
   var ok=c>0&&n>0;
   var inc=n-c,p=pctOf(S);
-  $('incAmt').textContent=ok?((inc>=0?'+':'−')+fmtUSD(Math.abs(inc),inc%1!==0))+'/mo':'—';
-  $('incAmt').className=ok?(inc>0?'up':(inc<0?'down':'')):'';
-  $('incPct').textContent=ok?p.toFixed(1)+'%':'—';
-  $('incPct').className=ok?(p>0?'up':(p<0?'down':'')):'';
-  $('incAnnual').textContent=n>0?fmtUSD(n*12)+'/yr':'—';
-  $('incAnnual').className='';
-  var w=capWarning(S);
-  $('capWarn').hidden=!(w&&w.level==='hard');
-  if(w&&w.level==='hard')$('capWarn').textContent='⚠ '+w.text;
-  $('capSoftWarn').hidden=!(w&&w.level==='soft');
-  if(w&&w.level==='soft')$('capSoftWarn').textContent='⚠ '+w.text;
-  var fq=INC[S.st]&&INC[S.st].freq;
-  $('freqWarn').hidden=!fq;
-  if(fq)$('freqWarn').textContent='⚠ Reminder: '+fq;
+  var amtEl=$('incAmt'),pctEl=$('incPct'),annEl=$('incAnnual');
+  if(ok){
+    tweenText(amtEl,function(v){return (v>=0?'+':'−')+fmtUSD(Math.abs(v),inc%1!==0)+'/mo';},inc);
+    tweenText(pctEl,function(v){return v.toFixed(1)+'%';},p);
+  }else{
+    amtEl.textContent='—';amtEl.__tv=0;
+    pctEl.textContent='—';pctEl.__tv=0;
+  }
+  amtEl.className=ok?(inc>0?'up':(inc<0?'down':'')):'';
+  pctEl.className=ok?(p>0?'up':(p<0?'down':'')):'';
+  if(n>0){tweenText(annEl,function(v){return fmtUSD(v)+'/yr';},n*12);}
+  else{annEl.textContent='—';annEl.__tv=0;}
+  annEl.className='';
+  smoothResize($('warnWrap'),function(){
+    var w=capWarning(S);
+    $('capWarn').hidden=!(w&&w.level==='hard');
+    if(w&&w.level==='hard')$('capWarn').textContent='⚠ '+w.text;
+    $('capSoftWarn').hidden=!(w&&w.level==='soft');
+    if(w&&w.level==='soft')$('capSoftWarn').textContent='⚠ '+w.text;
+    var fq=INC[S.st]&&INC[S.st].freq;
+    $('freqWarn').hidden=!fq;
+    if(fq)$('freqWarn').textContent='⚠ Reminder: '+fq;
+  });
 }
 function effMsg(){
   var ev=evalEffective(S),el=$('effMsg'),h='';
@@ -648,7 +939,7 @@ function effMsg(){
   }else{
     h='<div class="chip-ok">✓ Valid — at least '+ev.days+' days’ notice'+(S.tenancy==='m2m'?' and aligned to a rental period start':'')+'.</div>';
   }
-  el.innerHTML=h;
+  smoothResize(el,function(){el.innerHTML=h;});
 }
 function tenancyPills(){
   $('ttM2m').classList.toggle('sel',S.tenancy==='m2m');
@@ -680,7 +971,7 @@ function update(){
   var fn=function(){S[b[1]]=el.value;update();};
   el.addEventListener('input',fn);el.addEventListener('change',fn);
 });
-stSel.addEventListener('change',function(){S.st=stSel.value;update();});
+stSel.addEventListener('change',function(){S.st=stSel.value;smoothResize($('rulesPanel'),update);});
 $('inOcc').value=S.occ;
 $('inOcc').addEventListener('change',function(){S.occ=this.value;update();});
 $('optReason').value=S.reason;
@@ -713,8 +1004,34 @@ $('copyBtn').addEventListener('click',function(){
     document.body.removeChild(ta);
   });
 });
+$('pdfBtn').addEventListener('click',function(){
+  var b=this;
+  if(typeof PDFLib==='undefined'){$('pdfStatus').textContent='PDF library failed to load — check your connection and refresh.';return;}
+  b.disabled=true;b.textContent='Building PDF…';
+  buildNoticePdf(S).then(function(bytes){
+    var blob=new Blob([bytes],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='Rent-Increase-Notice-'+(S.st||'XX')+'.pdf';
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);
+    b.disabled=false;b.textContent='Download PDF';
+  }).catch(function(){
+    b.disabled=false;b.textContent='Download PDF';
+    $('pdfStatus').textContent='Sorry, something went wrong building the PDF.';
+  });
+});
 
 update();
+
+/* ---- UI v3 init ---- */
+document.querySelectorAll('input[type=date]').forEach(acbDate);
+acbTipUpgrade(document);
+acbCoachSeq('rent-increase-notice-generator',[
+  {target:'#inState',title:'1. Your state',body:'Pick your state — we load its notice rules and rent-control caps.'},
+  {target:'#inCurrent',title:'2. Current rent',body:'Today’s rent — e.g. 2,000.'},
+  {target:'#inNew',title:'3. New rent',body:'The new rent — we compute the % and flag anything over your state’s limits.'}
+]);
 })();
 </script>
 
@@ -744,6 +1061,37 @@ update();
       +(mine?' · Thanks for rating!':' · Rate this tool');
   }
   render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var SLUG='rent-increase-notice-generator',clicks=0,shown=false,t0=Date.now();
+  try{if(localStorage.getItem('acb:'+SLUG+':ratePrompted')||localStorage.getItem('acb:'+SLUG+':rating'))return;}catch(e){return;}
+  document.addEventListener('click',function(){clicks++;maybe();});
+  setTimeout(maybe,121000);
+  function maybe(){
+    if(shown||clicks<6||Date.now()-t0<120000)return;
+    shown=true;
+    try{localStorage.setItem('acb:'+SLUG+':ratePrompted','1');}catch(e){}
+    var pop=document.createElement('div');pop.className='acb-rate-pop';
+    pop.innerHTML='<div class="acb-rate-card"><h3>Quick favor?</h3><p>If this tool saved you time, a rating helps other landlords find it.</p><div class="acb-rate-stars"></div><button type="button" class="skip">Maybe later</button></div>';
+    document.body.appendChild(pop);
+    var stars=pop.querySelector('.acb-rate-stars');
+    for(var i=1;i<=5;i++)(function(i){
+      var b=document.createElement('button');b.type='button';b.className='acb-star';b.textContent='★';b.style.fontSize='34px';
+      b.onmouseenter=function(){[].forEach.call(stars.children,function(s,j){s.classList.toggle('on',j<i);});};
+      b.onclick=function(){
+        var w=document.querySelectorAll('#acbStars .acb-star')[i-1];
+        if(w)w.click(); /* routes through the real vote path */
+        pop.querySelector('.acb-rate-card').innerHTML='<h3>Thank you! ⭐</h3><p>Your rating was recorded.</p>';
+        setTimeout(function(){pop.remove();},1400);
+      };
+      stars.appendChild(b);
+    })(i);
+    pop.querySelector('.skip').addEventListener('click',function(){pop.remove();});
+    pop.addEventListener('click',function(e){if(e.target===pop)pop.remove();});
+  }
 })();
 </script>
 
