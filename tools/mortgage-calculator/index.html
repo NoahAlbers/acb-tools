@@ -401,20 +401,20 @@ function acbTipUpgrade(root){
 document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
 function acbCoachSeq(slug,steps){
   try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
-  var i=-1,el=null,tip=null;
+  var i=-1,el=null,ring=null,tip=null;
   function markDone(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}}
-  function clear(){if(el)el.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;tip=null;window.removeEventListener('resize',rePlace);}
+  function clear(){if(ring)ring.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;ring=null;tip=null;window.removeEventListener('resize',rePlace);}
   function stop(){markDone();clear();}
   function place(){
-    if(!el||!tip)return;
-    var r=el.getBoundingClientRect();
+    if(!ring||!tip)return;
+    var r=ring.getBoundingClientRect();
     var sx=window.scrollX||document.documentElement.scrollLeft||0;
     var sy=window.scrollY||document.documentElement.scrollTop||0;
     var W=290,vw=document.documentElement.clientWidth;
     tip.classList.remove('side-r','side-l','below');
-    /* prefer hanging in the side margins so nothing is covered */
-    if(vw-r.right>=W+30){tip.classList.add('side-r');tip.style.left=(r.right+sx+18)+'px';tip.style.top=Math.max(8,r.top+sy-10)+'px';}
-    else if(r.left>=W+30){tip.classList.add('side-l');tip.style.left=(r.left+sx-W-18)+'px';tip.style.top=Math.max(8,r.top+sy-10)+'px';}
+    /* hang in the margins: LEFT first, then right, then below */
+    if(r.left>=W+30){tip.classList.add('side-l');tip.style.left=(r.left+sx-W-18)+'px';tip.style.top=Math.max(8,r.top+sy-10)+'px';}
+    else if(vw-r.right>=W+30){tip.classList.add('side-r');tip.style.left=(r.right+sx+18)+'px';tip.style.top=Math.max(8,r.top+sy-10)+'px';}
     else{tip.classList.add('below');tip.style.left=Math.max(8+sx,Math.min(r.left+sx,vw-W-8+sx))+'px';tip.style.top=(r.bottom+sy+16)+'px';}
   }
   function rePlace(){place();}
@@ -424,16 +424,20 @@ function acbCoachSeq(slug,steps){
     var st=steps[i];
     el=typeof st.target==='string'?document.querySelector(st.target):st.target;
     if(!el){show(i+1);return;}
-    el.classList.add('acb-coach-ring');
-    try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
+    /* inputs/selects are replaced elements and cannot render the ::before/::after
+       pulse ring - highlight their wrapper instead */
+    ring=(el.matches&&el.matches('input,select,textarea'))
+      ?(el.closest('.in-wrap')||el.closest('.field')||el.parentNode||el):el;
+    ring.classList.add('acb-coach-ring');
+    try{ring.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
     tip=document.createElement('div');tip.className='acb-coach';
     tip.innerHTML='<b>'+st.title+'</b>'+st.body
       +'<div class="acb-coach-foot"><span class="step-dots">Step '+(i+1)+' of '+steps.length+'</span>'
-      +'<button type="button" class="nextb">'+(i+1>=steps.length?'Done ✓':'Next →')+'</button></div>'
+      +'<button type="button" class="nextb">'+(i+1>=steps.length?'Done \u2713':'Next \u2192')+'</button></div>'
       +'<button type="button" class="skip">Skip tour</button>';
     document.body.appendChild(tip);
     place();
-    setTimeout(place,380); /* re-place after smooth scroll settles */
+    setTimeout(place,380);
     window.addEventListener('resize',rePlace);
     tip.querySelector('.skip').addEventListener('click',stop);
     tip.querySelector('.nextb').addEventListener('click',function(){show(i+1);});
@@ -908,8 +912,8 @@ applyHash();
 calc();
 acbTipUpgrade(document);
 acbCoachSeq('mortgage-calculator',[
-  {target:'#price',title:'Home price',body:'What the home costs \u2014 e.g. 350,000.'},
-  {target:'#rate',title:'Interest rate',body:'Your loan\u2019s yearly rate \u2014 e.g. 6.5.'},
+  {target:'#price',title:'Home price',body:'What the home costs.'},
+  {target:'#rate',title:'Interest rate',body:'Your loan\u2019s yearly rate.5.'},
   {target:'.hero',title:'Monthly payment',body:'Your total monthly payment shows here and updates as you type. Click it to finish.'}
 ]);
 (function(){var h=document.querySelector('.hero');if(!h)return;h.addEventListener('click',function adv(){if(!h.classList.contains('acb-coach-ring'))return;h.removeEventListener('click',adv);h.dispatchEvent(new Event('change'));});})();

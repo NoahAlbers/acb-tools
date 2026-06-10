@@ -459,20 +459,20 @@ function acbTipUpgrade(root){
 document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
 function acbCoachSeq(slug,steps){
   try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
-  var i=-1,el=null,tip=null;
+  var i=-1,el=null,ring=null,tip=null;
   function markDone(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}}
-  function clear(){if(el)el.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;tip=null;window.removeEventListener('resize',rePlace);}
+  function clear(){if(ring)ring.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;ring=null;tip=null;window.removeEventListener('resize',rePlace);}
   function stop(){markDone();clear();}
   function place(){
-    if(!el||!tip)return;
-    var r=el.getBoundingClientRect();
+    if(!ring||!tip)return;
+    var r=ring.getBoundingClientRect();
     var sx=window.scrollX||document.documentElement.scrollLeft||0;
     var sy=window.scrollY||document.documentElement.scrollTop||0;
     var W=290,vw=document.documentElement.clientWidth;
     tip.classList.remove('side-r','side-l','below');
-    /* prefer hanging in the side margins so nothing is covered */
-    if(vw-r.right>=W+30){tip.classList.add('side-r');tip.style.left=(r.right+sx+18)+'px';tip.style.top=Math.max(8,r.top+sy-10)+'px';}
-    else if(r.left>=W+30){tip.classList.add('side-l');tip.style.left=(r.left+sx-W-18)+'px';tip.style.top=Math.max(8,r.top+sy-10)+'px';}
+    /* hang in the margins: LEFT first, then right, then below */
+    if(r.left>=W+30){tip.classList.add('side-l');tip.style.left=(r.left+sx-W-18)+'px';tip.style.top=Math.max(8,r.top+sy-10)+'px';}
+    else if(vw-r.right>=W+30){tip.classList.add('side-r');tip.style.left=(r.right+sx+18)+'px';tip.style.top=Math.max(8,r.top+sy-10)+'px';}
     else{tip.classList.add('below');tip.style.left=Math.max(8+sx,Math.min(r.left+sx,vw-W-8+sx))+'px';tip.style.top=(r.bottom+sy+16)+'px';}
   }
   function rePlace(){place();}
@@ -482,22 +482,25 @@ function acbCoachSeq(slug,steps){
     var st=steps[i];
     el=typeof st.target==='string'?document.querySelector(st.target):st.target;
     if(!el){show(i+1);return;}
-    el.classList.add('acb-coach-ring');
-    try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
+    /* inputs/selects are replaced elements and cannot render the ::before/::after
+       pulse ring - highlight their wrapper instead */
+    ring=(el.matches&&el.matches('input,select,textarea'))
+      ?(el.closest('.in-wrap')||el.closest('.field')||el.parentNode||el):el;
+    ring.classList.add('acb-coach-ring');
+    try{ring.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
     tip=document.createElement('div');tip.className='acb-coach';
     tip.innerHTML='<b>'+st.title+'</b>'+st.body
       +'<div class="acb-coach-foot"><span class="step-dots">Step '+(i+1)+' of '+steps.length+'</span>'
-      +'<button type="button" class="nextb">'+(i+1>=steps.length?'Done ✓':'Next →')+'</button></div>'
+      +'<button type="button" class="nextb">'+(i+1>=steps.length?'Done \u2713':'Next \u2192')+'</button></div>'
       +'<button type="button" class="skip">Skip tour</button>';
     document.body.appendChild(tip);
     place();
-    setTimeout(place,380); /* re-place after smooth scroll settles */
+    setTimeout(place,380);
     window.addEventListener('resize',rePlace);
     tip.querySelector('.skip').addEventListener('click',stop);
     tip.querySelector('.nextb').addEventListener('click',function(){show(i+1);});
-    var adv=function(){el.removeEventListener('input',adv);el.removeEventListener('change',adv);el.removeEventListener('click',adv);setTimeout(function(){if(i===n)show(i+1);},400);};
+    var adv=function(){el.removeEventListener('input',adv);el.removeEventListener('change',adv);setTimeout(function(){if(i===n)show(i+1);},400);};
     el.addEventListener('input',adv);el.addEventListener('change',adv);
-    if(!/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName))el.addEventListener('click',adv); /* non-input targets advance on click */
   }
   document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){stop();document.removeEventListener('keydown',esc);}});
   show(0);
@@ -1088,7 +1091,7 @@ $('pdfBtn').addEventListener('click',function(){
 update();
 acbTipUpgrade(document);
 acbCoachSeq('rental-application-generator',[
-  {target:'#inProperty',title:'Property or company name',body:'Type the name applicants will see at the top of the form — e.g. Maple Court Apartments.'},
+  {target:'#inProperty',title:'Property or company name',body:'Type the name applicants will see at the top of the form.'},
   {target:'#sec-coapp .sw',title:'Pick your sections',body:'Switch sections on or off — the form on the right rebuilds instantly.'},
   {target:'#pdfBtn',title:'Download PDF',body:'Download a fillable PDF applicants can type into — your details are already filled in.'}
 ]);
