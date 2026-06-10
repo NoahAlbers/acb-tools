@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex"><!-- tool is iframed; the Webflow page is the indexed URL -->
+<title>Move-In / Move-Out Checklist Creator | Advanced Collection Bureau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --acb-blue:#3D5AF1;--acb-blue-dark:#2D45C6;--acb-blue-light:#EEF1FE;--acb-blue-mid:#D5DBFC;
+  --acb-bg:#F4F5F9;--acb-card:#FFFFFF;--acb-text:#1A1A2E;--acb-text-mid:#4A4A68;--acb-text-light:#8889A0;
+  --acb-border:#E2E4EC;--acb-warn:#E8A83E;--acb-warn-bg:#FEF9EE;--acb-green:#16A34A;--acb-red:#DC2626;--acb-gold:#F5B301;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-text);-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:28px 16px 48px}
+.progress{position:sticky;top:0;left:0;right:0;height:4px;z-index:100;background:var(--acb-border);border-radius:2px;margin-bottom:24px;overflow:hidden}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--acb-blue),var(--acb-blue-dark));transition:width .5s cubic-bezier(.22,1,.36,1)}
+.tool-head{text-align:center;margin-bottom:26px}
+.tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
+.tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55;max-width:620px;margin-left:auto;margin-right:auto}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
+.step-title{font-size:23px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+.step-sub{font-size:14.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:20px}
+.field{margin-bottom:16px}
+.field>label{display:block;font-size:14px;font-weight:600;color:var(--acb-text);margin-bottom:7px}
+.opt{font-weight:400;color:var(--acb-text-light);font-size:12.5px}
+input[type=text],input[type=date],select,textarea{width:100%;padding:13px 16px;background:#fff;border:1.5px solid var(--acb-border);border-radius:10px;color:var(--acb-text);font-size:16px;font-family:inherit;outline:none;transition:border-color .25s,box-shadow .25s}
+input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(61,90,241,.09)}
+textarea{resize:vertical;min-height:84px;line-height:1.5}
+.hint{font-size:12.5px;color:var(--acb-text-light);margin-top:6px;line-height:1.5}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.row2{grid-template-columns:1fr}}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.chip{padding:10px 18px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s;user-select:none}
+.chip.on{background:var(--acb-blue-light);border-color:var(--acb-blue);color:var(--acb-blue);font-weight:600}
+.chip.on::before{content:"✓ "}
+.warnbox{display:flex;gap:10px;align-items:flex-start;background:var(--acb-warn-bg);border:1.5px solid rgba(232,168,62,.45);border-radius:12px;padding:13px 16px;margin-bottom:14px;font-size:13.5px;color:#8a6116;line-height:1.55}
+.infobox{display:flex;gap:10px;align-items:flex-start;background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:12px;padding:13px 16px;margin-bottom:16px;font-size:13.5px;color:var(--acb-text-mid);line-height:1.55}
+.tenant-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.tenant-row input{flex:1}
+.rm-btn{flex-shrink:0;width:42px;height:46px;border-radius:10px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-light);font-size:18px;cursor:pointer;font-family:inherit}
+.rm-btn:hover{color:var(--acb-red);border-color:var(--acb-red)}
+.add-btn{padding:10px 20px;border-radius:50px;border:1.5px dashed var(--acb-blue-mid);background:var(--acb-blue-light);color:var(--acb-blue);font-size:13.5px;font-family:inherit;font-weight:600;cursor:pointer}
+/* step 2 — spaces */
+.space-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:720px){.space-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:420px){.space-grid{grid-template-columns:1fr}}
+.space-card{position:relative;border:1.5px solid var(--acb-border);border-radius:14px;padding:14px 14px 12px;background:#fff;display:flex;flex-direction:column;gap:10px;cursor:pointer;transition:border-color .15s,background .15s}
+.space-card.on{background:var(--acb-blue-light);border-color:var(--acb-blue)}
+.space-card .nm{font-size:14px;font-weight:600;line-height:1.3;padding-right:18px}
+.space-card.on .nm{color:var(--acb-blue)}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper button{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:17px;line-height:1;cursor:pointer;font-family:inherit;transition:all .15s}
+.stepper button:hover{border-color:var(--acb-blue);color:var(--acb-blue)}
+.stepper .ct{min-width:22px;text-align:center;font-weight:700;font-size:16px;font-variant-numeric:tabular-nums}
+.sp-rm{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--acb-text-light);font-size:16px;cursor:pointer;font-family:inherit;line-height:1;padding:2px}
+.sp-rm:hover{color:var(--acb-red)}
+.add-space{display:flex;gap:10px;margin-top:16px}
+.add-space input{flex:1}
+/* step 3 — walk-through */
+.room-acc{border:1.5px solid var(--acb-border);border-radius:14px;margin-bottom:10px;overflow:hidden;background:#fff}
+.room-head{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 18px;background:#FAFBFD;border:none;font-family:inherit;font-size:15px;font-weight:700;color:var(--acb-text);cursor:pointer;text-align:left}
+.room-head .meta{font-size:12.5px;font-weight:500;color:var(--acb-text-light);white-space:nowrap}
+.room-head .meta b{color:var(--acb-red);font-weight:700}
+.room-head .chev{transition:transform .25s;color:var(--acb-text-light);flex-shrink:0}
+.room-acc.open .chev{transform:rotate(180deg)}
+.room-body{display:none;border-top:1px solid var(--acb-border);padding:8px 12px 14px}
+.room-acc.open .room-body{display:block}
+.item-row{width:100%;display:flex;align-items:center;gap:8px;padding:12px 8px;background:none;border:none;border-bottom:1px dashed var(--acb-border);font-family:inherit;font-size:14.5px;color:var(--acb-text);cursor:pointer;text-align:left;min-height:44px}
+.item-row:hover{background:var(--acb-blue-light)}
+.item-row .inm{flex:1;font-weight:500}
+.item-row .ind{font-size:12px;color:var(--acb-text-light);white-space:nowrap}
+.item-row .chev2{color:var(--acb-text-light);font-size:17px;line-height:1}
+.cbadge{font-size:11.5px;font-weight:700;border-radius:50px;padding:3px 11px;white-space:nowrap}
+.cbadge.good{background:#EFFAF1;color:var(--acb-green);border:1px solid #BFE8C8}
+.cbadge.cos{background:var(--acb-warn-bg);color:#B07916;border:1px solid #F0DCB2}
+.cbadge.rep{background:#FDEEEE;color:var(--acb-red);border:1px solid #F2C4C4}
+.cbadge.none{background:#F4F5F9;color:var(--acb-text-light);border:1px solid var(--acb-border)}
+.add-item{display:flex;gap:10px;margin-top:12px}
+.add-item input{flex:1;padding:10px 14px;font-size:14.5px}
+/* modal */
+.modal-ov{position:fixed;inset:0;background:rgba(26,26,46,.5);display:none;align-items:flex-start;justify-content:center;z-index:200;padding:28px 14px;overflow-y:auto}
+.modal-ov.open{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:540px;width:100%;padding:24px;box-shadow:0 18px 60px rgba(0,0,0,.22);animation:fadeIn .25s ease both}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:16px}
+.modal-head h3{font-size:18px;font-weight:800;line-height:1.3}
+.modal-head .sub{font-size:12.5px;color:var(--acb-text-light);font-weight:500;margin-top:2px}
+.modal-x{background:none;border:none;font-size:24px;color:var(--acb-text-light);cursor:pointer;font-family:inherit;line-height:1;padding:2px 4px}
+.modal-x:hover{color:var(--acb-text)}
+.cond-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+@media(max-width:480px){.cond-btns{grid-template-columns:1fr}}
+.cond-btn{padding:12px 8px;border-radius:12px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:13.5px;font-family:inherit;font-weight:600;cursor:pointer;transition:all .15s;min-height:44px}
+.cond-btn[data-c=good].on{background:#EFFAF1;border-color:var(--acb-green);color:var(--acb-green)}
+.cond-btn[data-c=cosmetic].on{background:var(--acb-warn-bg);border-color:var(--acb-warn);color:#B07916}
+.cond-btn[data-c=repair].on{background:#FDEEEE;border-color:var(--acb-red);color:var(--acb-red)}
+.photo-grid{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.photo-th{position:relative;width:86px;height:64px;border-radius:10px;overflow:hidden;border:1px solid var(--acb-border)}
+.photo-th img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-th button{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;border:none;background:rgba(26,26,46,.72);color:#fff;font-size:12px;line-height:1;cursor:pointer;font-family:inherit}
+.photo-add{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:11px 20px;border-radius:50px;border:1.5px dashed var(--acb-blue-mid);background:var(--acb-blue-light);color:var(--acb-blue);font-size:13.5px;font-weight:600;cursor:pointer}
+/* step 4 — review */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{border:1px solid var(--acb-border);border-radius:12px;padding:13px 15px;background:#FAFBFD}
+.stat .k{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:5px}
+.stat .v{font-size:16.5px;font-weight:800;line-height:1.3;word-break:break-word}
+.rev-room{border:1px solid var(--acb-border);border-radius:12px;margin-bottom:10px;padding:14px 18px}
+.rev-room h3{font-size:14.5px;font-weight:700;margin-bottom:8px}
+.rev-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:7px 0;border-bottom:1px dashed var(--acb-border);font-size:13.5px}
+.rev-item:last-of-type{border-bottom:none}
+.rev-item .nt{display:block;font-size:12.5px;color:var(--acb-text-light);margin-top:2px}
+.rev-good{font-size:13px;color:var(--acb-green);font-weight:600;margin-top:6px}
+.final-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+/* share modal */
+.share-link{display:flex;gap:10px;margin-bottom:14px}
+.share-link input{flex:1;font-size:13px;color:var(--acb-text-mid)}
+.share-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+@media(max-width:480px){.share-row{grid-template-columns:1fr}}
+.share-row button{padding:12px 8px;border-radius:12px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:13.5px;font-family:inherit;font-weight:600;cursor:pointer;transition:all .15s;min-height:44px}
+.share-row button:hover{border-color:var(--acb-blue);color:var(--acb-blue)}
+.qr-box{text-align:center;padding:10px 0 4px}
+.qr-box canvas{border:1px solid var(--acb-border);border-radius:12px}
+/* nav + shared */
+.wiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:26px;gap:12px}
+.btn-primary{display:inline-block;padding:14px 36px;border-radius:50px;border:none;background:var(--acb-blue);color:#fff;font-size:15.5px;font-family:inherit;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(61,90,241,.27);transition:all .2s}
+.btn-primary:hover{background:var(--acb-blue-dark);transform:translateY(-1px)}
+.btn-primary:disabled{background:#D0D3DC;color:#8889A0;box-shadow:none;cursor:not-allowed;transform:none}
+.btn-secondary{padding:12px 26px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:var(--acb-blue-mid);color:var(--acb-blue)}
+.steps-dots{font-size:13px;color:var(--acb-text-light);font-weight:600}
+.acb-btn-primary{display:inline-block;padding:14px 36px;border-radius:50px;border:none;background:var(--acb-blue);color:#fff;font-size:15px;font-family:inherit;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(61,90,241,.27);transition:all .2s}
+.acb-btn-primary:hover{background:var(--acb-blue-dark);transform:translateY(-1px)}
+.acb-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:var(--acb-blue-light);border-left:4px solid var(--acb-blue);border-radius:6px 16px 16px 6px;padding:24px 28px;margin-top:34px}
+.acb-cta-title{font-size:19px;font-weight:700;color:var(--acb-text);margin-bottom:6px}
+.acb-cta p{font-size:14.5px;color:var(--acb-text-mid);line-height:1.55;margin:0;max-width:520px}
+.acb-cta-actions{display:flex;flex-direction:column;align-items:center;gap:8px}
+.acb-cta-tel{font-size:13px;color:var(--acb-blue);text-decoration:none;font-weight:600;white-space:nowrap}
+.acb-rating{display:flex;flex-direction:column;align-items:center;gap:6px;margin:34px auto 0;text-align:center}
+.acb-star{background:none;border:none;font-size:30px;line-height:1;color:#D0D3DC;cursor:pointer;padding:2px 3px;transition:color .15s,transform .15s;font-family:inherit}
+.acb-star.on{color:var(--acb-gold)}
+.acb-star:hover{transform:scale(1.15)}
+.acb-rating-meta{font-size:13px;color:var(--acb-text-light)}
+.disclaimer{font-size:12px;color:var(--acb-text-light);text-align:center;line-height:1.6;margin-top:26px;max-width:660px;margin-left:auto;margin-right:auto}
+.fade{animation:fadeIn .35s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media print{
+  body{background:#fff}
+  .no-print,.progress,.wiz-nav,.acb-cta,.acb-rating,.final-actions,.modal-ov,.add-item,.add-space{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .card,.room-acc,.rev-room,.stat{box-shadow:none;border-color:#ccc}
+  .room-body{display:block!important}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="progress no-print" id="progress"><div id="progressBar"></div></div>
+
+  <div class="tool-head no-print">
+    <h1>Move-In / Move-Out Checklist Creator</h1>
+    <p>Walk through your rental room by room, record the condition of every item with notes and photos, and get a professional PDF both sides can sign — your best evidence at deposit time.</p>
+    <div class="badges"><span class="badge">100% Free</span><span class="badge">No Signup</span><span class="badge">No Email Required</span></div>
+  </div>
+
+  <div class="card">
+    <div id="stepBody" aria-live="polite"></div>
+    <div class="wiz-nav no-print">
+      <button class="btn-secondary" id="wizBack" type="button">← Back</button>
+      <span class="steps-dots" id="stepDots"></span>
+      <button class="btn-primary" id="wizNext" type="button">Continue</button>
+    </div>
+  </div>
+
+  <div class="no-print">
+    <div class="acb-rating" id="acbRating" aria-label="Rate this tool">
+      <div class="acb-rating-stars" id="acbStars" role="radiogroup"></div>
+      <div class="acb-rating-meta" id="acbRatingMeta"></div>
+    </div>
+
+    <div class="acb-cta">
+      <div class="acb-cta-text">
+        <div class="acb-cta-title">Tenant left owing money?</div>
+        <p>A signed move-in checklist is your best evidence for deposit deductions. If a tenant still skips out owing more, Advanced Collection Bureau has recovered over <strong>$85&nbsp;million</strong> in unpaid rent, fees, and damages for landlords and property managers. No recovery, no fee.</p>
+      </div>
+      <div class="acb-cta-actions">
+        <a class="acb-btn-primary" href="https://www.advancedcb.com/" target="_top">Get Started</a>
+        <a class="acb-cta-tel" href="tel:3216334999">or call (321) 633-4999</a>
+      </div>
+    </div>
+
+    <p class="disclaimer"><strong>Not legal advice.</strong> This checklist is a documentation tool. Security-deposit and inspection requirements vary by state and city and change over time — verify current requirements and review your process with a local attorney. Your data stays in this browser; share links never include photos. © Advanced Collection Bureau, Inc.</p>
+  </div>
+</div>
+
+<!-- item review/edit modal -->
+<div class="modal-ov no-print" id="itemModalOv" role="dialog" aria-modal="true" aria-labelledby="imTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h3 id="imTitle">Item</h3><div class="sub" id="imSub"></div></div>
+      <button class="modal-x" id="imClose" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="field">
+      <label>Condition</label>
+      <div class="cond-btns">
+        <button type="button" class="cond-btn" data-c="good">Good</button>
+        <button type="button" class="cond-btn" data-c="cosmetic">Cosmetic damage</button>
+        <button type="button" class="cond-btn" data-c="repair">Repair Required</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="imNotes">Notes <span class="opt">(optional)</span></label>
+      <textarea id="imNotes" placeholder="e.g. Scuff marks on the wall left of the window; small chip in the counter near the sink"></textarea>
+    </div>
+    <div class="field" style="margin-bottom:8px">
+      <label>Photos <span class="opt">(optional)</span></label>
+      <div class="photo-grid" id="imPhotos"></div>
+      <label class="photo-add">📷 Add photos<input type="file" id="imFile" accept="image/*" multiple style="display:none"></label>
+      <p class="hint">Photos are compressed automatically and embedded in the PDF. They're never included in share links.</p>
+    </div>
+    <div style="text-align:right;margin-top:8px"><button class="btn-primary" id="imDone" type="button">Done</button></div>
+  </div>
+</div>
+
+<!-- share modal -->
+<div class="modal-ov no-print" id="shareModalOv" role="dialog" aria-modal="true" aria-labelledby="shTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h3 id="shTitle">Share this checklist</h3><div class="sub">Anyone with the link sees the same checklist on advancedcb.com.</div></div>
+      <button class="modal-x" id="shClose" type="button" aria-label="Close">×</button>
+    </div>
+    <div class="share-link"><input type="text" id="shLink" readonly aria-label="Share link"></div>
+    <div class="share-row">
+      <button type="button" id="shCopy">🔗 Copy Link</button>
+      <button type="button" id="shEmail">✉️ Email Link</button>
+      <button type="button" id="shText">💬 Text Link</button>
+    </div>
+    <div class="qr-box"><canvas id="shQr" width="170" height="170" aria-label="QR code for share link"></canvas></div>
+    <p class="hint" style="text-align:center;margin-top:10px">ℹ️ Share links include every room, condition rating, and note — <strong>photos are excluded from links</strong> (they're too large) but are always included in the PDF.</p>
+  </div>
+</div>
+
+<script>
+"use strict";
+(function(){
+var $=function(id){return document.getElementById(id);};
+var LS_KEY='acb:move-in-move-out-checklist-creator:state';
+var SHARE_BASE='https://www.advancedcb.com/resources/move-in-move-out-checklist-creator';
+var clamp=function(n,a,b){return Math.min(b,Math.max(a,n));};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function todayISO(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function fmtDate(iso){if(!iso)return '—';var d=new Date(iso+'T00:00:00');return isFinite(d)?d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):'—';}
+
+/* ---------- data ---------- */
+var US_STATES=['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
+var SPACES=[
+  {n:'Bedroom',d:1},{n:'Full Bathroom',d:1},{n:'Dining Room',d:0},{n:'Entry/Hallway',d:1},
+  {n:'Garage or Carport',d:0},{n:'Kitchen',d:1},{n:'Living Room',d:1},{n:'Balcony or Deck',d:0},
+  {n:'Basement',d:0},{n:'Bicycle Storage',d:0},{n:'Exterior',d:0},{n:'Half Bathroom',d:0},
+  {n:'Laundry Room',d:0},{n:'Office',d:0},{n:'Pool',d:0}
+];
+var ITEMS={
+  'Bedroom':['Walls/Ceilings','Floor','Lights/Outlets','Doors/Knobs','Closet','Windows'],
+  'Full Bathroom':['Walls/Ceilings','Floor','Lights/Outlets','Doors/Knobs','Toilet','Sink/Vanity','Shower/Tub','Exhaust Fan'],
+  'Dining Room':['Walls/Ceilings','Floor','Lights/Outlets','Doors/Knobs','Windows'],
+  'Entry/Hallway':['Walls/Ceilings','Floor','Lights/Outlets','Doors/Knobs'],
+  'Garage or Carport':['Walls/Ceilings','Floor','Lights/Outlets','Garage Door','Doors/Knobs'],
+  'Kitchen':['Walls/Ceilings','Floor','Lights/Outlets','Doors/Knobs','Cabinets/Drawers','Countertops','Sink/Faucet','Stove/Oven','Refrigerator','Dishwasher','Microwave'],
+  'Living Room':['Walls/Ceilings','Floor','Lights/Outlets','Doors/Knobs','Windows','Fireplace'],
+  'Balcony or Deck':['Floor/Surface','Railing','Lights/Outlets','Doors/Access'],
+  'Basement':['Walls/Ceilings','Floor','Lights/Outlets','Doors/Knobs','Stairs'],
+  'Bicycle Storage':['Floor','Lights/Outlets','Doors/Locks','Racks/Hooks'],
+  'Exterior':['Siding/Paint','Roof','Gutters','Landscaping','Driveway/Walkway','Mailbox'],
+  'Half Bathroom':['Walls/Ceilings','Floor','Lights/Outlets','Doors/Knobs','Toilet','Sink/Vanity'],
+  'Laundry Room':['Walls/Ceilings','Floor','Lights/Outlets','Doors/Knobs','Washer Connection','Dryer Connection','Sink'],
+  'Office':['Walls/Ceilings','Floor','Lights/Outlets','Doors/Knobs','Windows','Closet'],
+  'Pool':['Water Quality','Pool Surface','Pump/Filter','Lights','Fencing','Deck/Surrounding Area']
+};
+var FALLBACK_ITEMS=['Walls/Ceilings','Floor','Lights/Outlets','Doors/Knobs'];
+var CONDS={good:{label:'Good',cls:'good'},cosmetic:{label:'Cosmetic damage',cls:'cos'},repair:{label:'Repair Required',cls:'rep'}};
+
+/* ---------- state ---------- */
+function freshState(){
+  var counts={};
+  SPACES.forEach(function(sp){counts[sp.n]=sp.d;});
+  return {
+    step1:{type:'movein',company:'',address:'',unit:'',date:todayISO(),inspector:'',state:'',tenants:['']},
+    step2:{counts:counts,custom:[]},
+    step3:{rooms:{}},
+    cur:0
+  };
+}
+function normalize(raw){
+  var d=freshState();
+  if(!raw||typeof raw!=='object')return d;
+  var s1=raw.step1||{};
+  ['type','company','address','unit','date','inspector','state'].forEach(function(k){if(typeof s1[k]==='string')d.step1[k]=s1[k];});
+  if(d.step1.type!=='moveout')d.step1.type='movein';
+  if(d.step1.state&&US_STATES.indexOf(d.step1.state)<0)d.step1.state='';
+  if(Array.isArray(s1.tenants)){
+    var t=s1.tenants.filter(function(x){return typeof x==='string';});
+    if(t.length)d.step1.tenants=t;
+  }
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(d.step1.date))d.step1.date=todayISO();
+  var s2=raw.step2||{};
+  if(s2.counts&&typeof s2.counts==='object'){
+    SPACES.forEach(function(sp){
+      var v=parseInt(s2.counts[sp.n],10);
+      if(isFinite(v))d.step2.counts[sp.n]=clamp(v,0,99);
+    });
+  }
+  if(Array.isArray(s2.custom)){
+    d.step2.custom=s2.custom.filter(function(c){return c&&typeof c.n==='string'&&c.n.trim();})
+      .map(function(c){var v=parseInt(c.c,10);return {n:c.n.slice(0,60),c:clamp(isFinite(v)?v:1,0,99)};});
+  }
+  var s3=raw.step3||{};
+  if(s3.rooms&&typeof s3.rooms==='object'){
+    Object.keys(s3.rooms).forEach(function(k){
+      var r=s3.rooms[k];
+      if(!r||!Array.isArray(r.items))return;
+      d.step3.rooms[k]={items:r.items.filter(function(it){return it&&typeof it.n==='string';}).map(function(it){
+        return {n:it.n.slice(0,80),
+          c:(it.c==='good'||it.c==='cosmetic'||it.c==='repair')?it.c:'',
+          t:typeof it.t==='string'?it.t:'',
+          p:Array.isArray(it.p)?it.p.filter(function(x){return typeof x==='string'&&x.indexOf('data:image')===0;}):[]};
+      })};
+    });
+  }
+  var cv=parseInt(raw.cur,10);
+  if(isFinite(cv))d.cur=clamp(cv,0,3);
+  return d;
+}
+var S;
+try{S=normalize(JSON.parse(localStorage.getItem(LS_KEY)||'null'));}catch(e){S=freshState();}
+var cur=S.cur||0;
+
+function sharePayload(){
+  var rooms={};
+  Object.keys(S.step3.rooms).forEach(function(k){
+    rooms[k]={items:S.step3.rooms[k].items.map(function(it){return {n:it.n,c:it.c,t:it.t};})};
+  });
+  return {step1:S.step1,step2:S.step2,step3:{rooms:rooms}};
+}
+function save(){
+  S.cur=cur;
+  try{localStorage.setItem(LS_KEY,JSON.stringify(S));}
+  catch(e){
+    /* storage full (photos) — persist everything except photos rather than nothing */
+    try{var p=sharePayload();p.cur=cur;localStorage.setItem(LS_KEY,JSON.stringify(p));}catch(e2){}
+  }
+}
+
+/* ---------- back-compat share hash (#d= — legacy 4-embed format) ---------- */
+function fromLegacy(o){
+  /* Links generated by the original 4-embed tool use different field names and shapes.
+     Convert them to the current schema before normalize(). */
+  var s1=o.step1||{},out=freshState();
+  out.step1.type=(s1.inspectionType==='Move-Out')?'moveout':'movein';
+  out.step1.company=typeof s1.companyName==='string'?s1.companyName:'';
+  out.step1.address=typeof s1.propertyAddress==='string'?s1.propertyAddress:'';
+  out.step1.unit=typeof s1.unitNumber==='string'?s1.unitNumber:'';
+  out.step1.date=typeof s1.inspectionDate==='string'?s1.inspectionDate:out.step1.date;
+  out.step1.inspector=typeof s1.inspectorName==='string'?s1.inspectorName:'';
+  out.step1.state=typeof s1.state==='string'?s1.state:'';
+  if(Array.isArray(s1.tenants)){
+    var t=s1.tenants.map(function(x){return x&&typeof x.name==='string'?x.name:(typeof x==='string'?x:'');})
+      .filter(function(x){return x.trim();});
+    if(t.length)out.step1.tenants=t;
+  }
+  var known={};SPACES.forEach(function(sp){known[sp.n]=1;out.step2.counts[sp.n]=0;});
+  if(o.step2&&typeof o.step2==='object'&&!o.step2.counts){
+    Object.keys(o.step2).forEach(function(name){
+      var c=parseInt(o.step2[name],10);
+      if(!isFinite(c)||c<=0)return;
+      if(known[name])out.step2.counts[name]=clamp(c,0,99);
+      else out.step2.custom.push({n:String(name).slice(0,60),c:clamp(c,0,99)});
+    });
+  }
+  var condMap={'Good':'','Cosmetic damage':'cosmetic','Repair Required':'repair'};
+  if(Array.isArray(o.step3)){
+    var seen={};
+    o.step3.forEach(function(r){
+      if(!r||typeof r.name!=='string'||!Array.isArray(r.items))return;
+      var mm=r.name.match(/^(.*\S)\s+(\d+)$/);
+      var base=r.name,idx=0;
+      if(mm&&(known[mm[1]]||out.step2.custom.some(function(cu){return cu.n===mm[1];}))){base=mm[1];idx=parseInt(mm[2],10)-1;}
+      else{seen[base]=(seen[base]||0);idx=seen[base];seen[base]++;}
+      var key=known[base]?base+'|'+idx:'c:'+base+'|'+idx;
+      if(!known[base]&&!out.step2.custom.some(function(cu){return cu.n===base;})){
+        out.step2.custom.push({n:base.slice(0,60),c:1});
+      }
+      out.step3.rooms[key]={items:r.items.filter(function(it){return it&&typeof it.name==='string';}).map(function(it){
+        return {n:it.name.slice(0,80),
+          c:condMap.hasOwnProperty(it.condition)?condMap[it.condition]:'',
+          t:typeof it.notes==='string'?it.notes:'',
+          p:Array.isArray(it.photos)?it.photos.filter(function(x){return typeof x==='string'&&x.indexOf('data:image')===0;}):[]};
+      })};
+    });
+  }
+  return out;
+}
+function isLegacyPayload(o){
+  var s1=o.step1||{};
+  return s1.propertyAddress!==undefined||s1.inspectionType!==undefined||s1.inspectorName!==undefined||Array.isArray(o.step3);
+}
+function applyHash(){
+  var m=(location.hash||'').match(/[#&](?:d|acb)=([^&]+)/);
+  if(!m||typeof LZString==='undefined')return false;
+  try{
+    var json=LZString.decompressFromEncodedURIComponent(m[1]);
+    if(!json)return false;
+    var o=JSON.parse(json);
+    if(!o||typeof o!=='object'||!o.step1)return false;
+    if(isLegacyPayload(o)){
+      S=normalize(fromLegacy(o));
+      S.cur=3;
+    }else{
+      o.cur=3;
+      S=normalize(o);
+    }
+    save();
+    return true;
+  }catch(e){return false;}
+}
+if(applyHash())cur=3;
+
+function shareUrl(){
+  return SHARE_BASE+'#d='+LZString.compressToEncodedURIComponent(JSON.stringify(sharePayload()));
+}
+
+/* ---------- rooms ---------- */
+function roomList(){
+  var list=[];
+  SPACES.forEach(function(sp){
+    var c=S.step2.counts[sp.n]||0;
+    for(var i=0;i<c;i++)list.push({key:sp.n+'|'+i,label:c>1?sp.n+' '+(i+1):sp.n,type:sp.n});
+  });
+  S.step2.custom.forEach(function(cu){
+    var c=cu.c||0;
+    for(var i=0;i<c;i++)list.push({key:'c:'+cu.n+'|'+i,label:c>1?cu.n+' '+(i+1):cu.n,type:cu.n,custom:true});
+  });
+  return list;
+}
+function syncRooms(){
+  var list=roomList(),keep={};
+  list.forEach(function(r){
+    keep[r.key]=1;
+    if(!S.step3.rooms[r.key]){
+      var base=ITEMS[r.type]||FALLBACK_ITEMS;
+      S.step3.rooms[r.key]={items:base.map(function(n){return {n:n,c:'',t:'',p:[]};})};
+    }
+  });
+  Object.keys(S.step3.rooms).forEach(function(k){if(!keep[k])delete S.step3.rooms[k];});
+  return list;
+}
+function counters(){
+  var total=0,marked=0,photos=0,flagged=0;
+  Object.keys(S.step3.rooms).forEach(function(k){
+    S.step3.rooms[k].items.forEach(function(it){
+      total++;
+      if(it.c)marked++;
+      if(it.c==='cosmetic'||it.c==='repair')flagged++;
+      photos+=it.p.length;
+    });
+  });
+  return {total:total,marked:marked,photos:photos,flagged:flagged};
+}
+function typeLabel(){return S.step1.type==='moveout'?'Move-Out Inspection':'Move-In Inspection';}
+
+/* ---------- shared UI helpers ---------- */
+function bindChips(root,name,onPick){
+  root.querySelectorAll('[data-chips="'+name+'"] .chip').forEach(function(b){
+    b.addEventListener('click',function(){
+      var box=b.parentNode;
+      box.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      onPick(b.dataset.val);
+      save();
+    });
+  });
+}
+function bindVal(root,id,key){
+  var el=root.querySelector('#'+id);
+  if(!el)return;
+  el.addEventListener('input',function(){S.step1[key]=el.value;save();});
+}
+function condBadge(c){
+  if(!c)return '<span class="cbadge none">Not reviewed</span>';
+  return '<span class="cbadge '+CONDS[c].cls+'">'+CONDS[c].label+'</span>';
+}
+
+/* in-session accordion open state */
+var openRooms={};
+
+/* ---------- steps ---------- */
+var steps=[
+{title:'Property & inspection details',
+ sub:'Who, where, and when. This appears on the first page of the signed checklist.',
+ html:function(){
+   var t='<div class="field"><label>Inspection type</label><div class="chips" data-chips="itype">'
+     +'<button type="button" class="chip'+(S.step1.type==='movein'?' on':'')+'" data-val="movein">Move-In</button>'
+     +'<button type="button" class="chip'+(S.step1.type==='moveout'?' on':'')+'" data-val="moveout">Move-Out</button></div></div>';
+   t+='<div class="field"><label for="wCompany">Company / landlord name <span class="opt">(optional)</span></label><input type="text" id="wCompany" value="'+esc(S.step1.company)+'" placeholder="e.g. Smith Properties LLC"></div>';
+   t+='<div class="field"><label for="wAddr">Property address</label><input type="text" id="wAddr" value="'+esc(S.step1.address)+'" placeholder="123 Main Street, Springfield"></div>';
+   t+='<div class="row2"><div class="field"><label for="wUnit">Unit</label><input type="text" id="wUnit" value="'+esc(S.step1.unit)+'" placeholder="e.g. Unit 2B (or N/A)"></div>'
+     +'<div class="field"><label for="wDate">Inspection date</label><input type="date" id="wDate" value="'+esc(S.step1.date)+'"></div></div>';
+   t+='<div class="row2"><div class="field"><label for="wInspector">Inspector name</label><input type="text" id="wInspector" value="'+esc(S.step1.inspector)+'" placeholder="Who is performing the walk-through"></div>'
+     +'<div class="field"><label for="wState">State <span class="opt">(optional)</span></label><select id="wState"><option value="">Choose a state…</option>';
+   US_STATES.forEach(function(st){t+='<option value="'+esc(st)+'"'+(S.step1.state===st?' selected':'')+'>'+esc(st)+'</option>';});
+   t+='</select></div></div>';
+   t+='<div class="field"><label>Tenant(s) / signers</label><div id="wTenants">';
+   S.step1.tenants.forEach(function(name,i){
+     t+='<div class="tenant-row"><input type="text" data-tenant="'+i+'" value="'+esc(name)+'" placeholder="Full name">'+(S.step1.tenants.length>1?'<button type="button" class="rm-btn" data-rm="'+i+'" aria-label="Remove tenant">×</button>':'')+'</div>';
+   });
+   t+='</div><button type="button" class="add-btn" id="wAddTenant">+ Add another tenant</button><p class="hint">Everyone listed gets a signature line on the PDF.</p></div>';
+   return t;
+ },
+ bind:function(root){
+   bindChips(root,'itype',function(v){S.step1.type=(v==='moveout')?'moveout':'movein';});
+   bindVal(root,'wCompany','company');bindVal(root,'wAddr','address');bindVal(root,'wUnit','unit');
+   bindVal(root,'wDate','date');bindVal(root,'wInspector','inspector');
+   root.querySelector('#wState').addEventListener('change',function(){S.step1.state=this.value;save();});
+   root.querySelectorAll('[data-tenant]').forEach(function(inp){
+     inp.addEventListener('input',function(){S.step1.tenants[+inp.dataset.tenant]=inp.value;save();});
+   });
+   root.querySelectorAll('[data-rm]').forEach(function(b){
+     b.addEventListener('click',function(){S.step1.tenants.splice(+b.dataset.rm,1);save();rerender();});
+   });
+   root.querySelector('#wAddTenant').addEventListener('click',function(){S.step1.tenants.push('');save();rerender();});
+ },
+ valid:function(){
+   if(!S.step1.address.trim())return 'Please enter the property address.';
+   if(!S.step1.unit.trim())return 'Please enter the unit — use "N/A" for a single-family home.';
+   if(!S.step1.date)return 'Please choose the inspection date.';
+   if(!S.step1.inspector.trim())return 'Please enter the inspector’s name.';
+   if(!S.step1.tenants.some(function(t){return t.trim();}))return 'Please add at least one tenant or signer.';
+   S.step1.tenants=S.step1.tenants.filter(function(t,i){return t.trim()||i===0;});
+   return true;
+ }},
+
+{title:'Which spaces are you inspecting?',
+ sub:'Set how many of each space the rental has — we’ll build a checklist for every one. Add anything unusual as a custom room.',
+ html:function(){
+   var t='<div class="space-grid">';
+   SPACES.forEach(function(sp){
+     var c=S.step2.counts[sp.n]||0;
+     t+='<div class="space-card'+(c>0?' on':'')+'" data-sp="'+esc(sp.n)+'" role="group" aria-label="'+esc(sp.n)+'">'
+       +'<div class="nm">'+esc(sp.n)+'</div>'
+       +'<div class="stepper"><button type="button" data-dec aria-label="Fewer">−</button><span class="ct">'+c+'</span><button type="button" data-inc aria-label="More">+</button></div></div>';
+   });
+   S.step2.custom.forEach(function(cu,i){
+     t+='<div class="space-card'+(cu.c>0?' on':'')+'" data-cu="'+i+'" role="group" aria-label="'+esc(cu.n)+'">'
+       +'<button type="button" class="sp-rm" data-curm="'+i+'" aria-label="Remove '+esc(cu.n)+'">×</button>'
+       +'<div class="nm">'+esc(cu.n)+'</div>'
+       +'<div class="stepper"><button type="button" data-dec aria-label="Fewer">−</button><span class="ct">'+cu.c+'</span><button type="button" data-inc aria-label="More">+</button></div></div>';
+   });
+   t+='</div>';
+   t+='<div class="add-space"><input type="text" id="wCustomSpace" placeholder="Add a custom room — e.g. Sunroom, Attic, Shed" maxlength="60"><button type="button" class="add-btn" id="wAddSpace">+ Add</button></div>';
+   t+='<p class="hint" id="spaceCount" style="margin-top:12px"></p>';
+   return t;
+ },
+ bind:function(root){
+   function getCount(card){
+     if(card.dataset.sp!==undefined)return S.step2.counts[card.dataset.sp]||0;
+     return S.step2.custom[+card.dataset.cu].c||0;
+   }
+   function setCount(card,v){
+     v=clamp(v,0,99);
+     if(card.dataset.sp!==undefined)S.step2.counts[card.dataset.sp]=v;
+     else S.step2.custom[+card.dataset.cu].c=v;
+     save();rerender();
+   }
+   root.querySelectorAll('.space-card').forEach(function(card){
+     card.addEventListener('click',function(e){
+       var t=e.target;
+       if(t.closest&&t.closest('button')){
+         var b=t.closest('button');
+         if(b.hasAttribute('data-inc'))setCount(card,getCount(card)+1);
+         else if(b.hasAttribute('data-dec'))setCount(card,getCount(card)-1);
+         else if(b.hasAttribute('data-curm')){S.step2.custom.splice(+b.dataset.curm,1);save();rerender();}
+         return;
+       }
+       setCount(card,getCount(card)>0?0:1);
+     });
+   });
+   function addCustom(){
+     var inp=root.querySelector('#wCustomSpace');
+     var name=inp.value.trim();
+     if(!name)return;
+     var lower=name.toLowerCase();
+     var dup=SPACES.some(function(sp){return sp.n.toLowerCase()===lower;})
+       ||S.step2.custom.some(function(cu){return cu.n.toLowerCase()===lower;});
+     if(dup){inp.value='';return;}
+     S.step2.custom.push({n:name,c:1});
+     save();rerender();
+   }
+   root.querySelector('#wAddSpace').addEventListener('click',addCustom);
+   root.querySelector('#wCustomSpace').addEventListener('keydown',function(e){
+     if(e.key==='Enter'){e.preventDefault();e.stopPropagation();addCustom();}
+   });
+   var n=roomList().length;
+   root.querySelector('#spaceCount').textContent=n?(n+' room'+(n===1?'':'s')+' will be on your checklist.'):'Select at least one space to continue.';
+ },
+ valid:function(){
+   return roomList().length>0?true:'Please add at least one space — set a count above zero or add a custom room.';
+ }},
+
+{title:'Walk-through: rate each item',
+ sub:'Open a room, tap any item to record its condition, add notes, and attach photos.',
+ html:function(){
+   var list=syncRooms();
+   if(!Object.keys(openRooms).length&&list.length)openRooms[list[0].key]=true;
+   var t='<div class="infobox">ℹ️ Only flag what needs attention — <strong>anything you don’t mark is recorded as "Good"</strong> on the final checklist.</div>';
+   list.forEach(function(r){
+     var rm=S.step3.rooms[r.key];
+     var flagged=0,reviewed=0;
+     rm.items.forEach(function(it){if(it.c)reviewed++;if(it.c==='cosmetic'||it.c==='repair')flagged++;});
+     t+='<div class="room-acc'+(openRooms[r.key]?' open':'')+'" data-roomacc="'+esc(r.key)+'">'
+       +'<button type="button" class="room-head" data-roomtoggle="'+esc(r.key)+'" aria-expanded="'+(openRooms[r.key]?'true':'false')+'"><span>'+esc(r.label)+'</span>'
+       +'<span class="meta">'+rm.items.length+' items'+(flagged?' · <b>'+flagged+' flagged</b>':(reviewed?' · '+reviewed+' reviewed':''))
+       +'</span><span class="chev">▾</span></button>'
+       +'<div class="room-body">';
+     rm.items.forEach(function(it,i){
+       var inds='';
+       if(it.t)inds+='<span class="ind" title="Has notes">📝</span>';
+       if(it.p.length)inds+='<span class="ind" title="Has photos">📷 '+it.p.length+'</span>';
+       t+='<button type="button" class="item-row" data-room="'+esc(r.key)+'" data-item="'+i+'">'
+         +'<span class="inm">'+esc(it.n)+'</span>'+inds+condBadge(it.c)+'<span class="chev2">›</span></button>';
+     });
+     t+='<div class="add-item"><input type="text" data-additeminput="'+esc(r.key)+'" placeholder="Add an item to this room…" maxlength="80"><button type="button" class="add-btn" data-additem="'+esc(r.key)+'">+ Add</button></div>';
+     t+='</div></div>';
+   });
+   return t;
+ },
+ bind:function(root){
+   root.querySelectorAll('[data-roomtoggle]').forEach(function(b){
+     b.addEventListener('click',function(){
+       var k=b.dataset.roomtoggle;
+       openRooms[k]=!openRooms[k];
+       var acc=root.querySelector('[data-roomacc="'+CSS.escape(k)+'"]');
+       if(acc)acc.classList.toggle('open',!!openRooms[k]);
+       b.setAttribute('aria-expanded',openRooms[k]?'true':'false');
+     });
+   });
+   root.querySelectorAll('.item-row').forEach(function(row){
+     row.addEventListener('click',function(){openItemModal(row.dataset.room,+row.dataset.item);});
+   });
+   root.querySelectorAll('[data-additem]').forEach(function(b){
+     b.addEventListener('click',function(){addItem(b.dataset.additem);});
+   });
+   root.querySelectorAll('[data-additeminput]').forEach(function(inp){
+     inp.addEventListener('keydown',function(e){
+       if(e.key==='Enter'){e.preventDefault();e.stopPropagation();addItem(inp.dataset.additeminput);}
+     });
+   });
+   function addItem(key){
+     var inp=root.querySelector('[data-additeminput="'+CSS.escape(key)+'"]');
+     if(!inp)return;
+     var name=inp.value.trim();
+     if(!name||!S.step3.rooms[key])return;
+     S.step3.rooms[key].items.push({n:name,c:'',t:'',p:[]});
+     openRooms[key]=true;
+     save();rerender();
+   }
+ },
+ valid:function(){return true;}},
+
+{title:'Review & export',
+ sub:'Check the summary, then download the PDF or share a link. Items you didn’t flag are recorded as "Good".',
+ html:function(){
+   var list=syncRooms(),c=counters();
+   var signers=S.step1.tenants.filter(function(t){return t.trim();});
+   var t='<div class="stats">'
+     +'<div class="stat"><div class="k">Property</div><div class="v">'+esc(S.step1.address)+(S.step1.unit&&S.step1.unit.trim().toLowerCase()!=='n/a'?', '+esc(S.step1.unit):'')+'</div></div>'
+     +'<div class="stat"><div class="k">Inspection</div><div class="v">'+esc(typeLabel())+'<span style="display:block;font-size:12.5px;font-weight:500;color:var(--acb-text-light)">'+esc(fmtDate(S.step1.date))+'</span></div></div>'
+     +'<div class="stat"><div class="k">Rooms</div><div class="v">'+list.length+'</div></div>'
+     +'<div class="stat"><div class="k">Items marked</div><div class="v">'+c.marked+' of '+c.total+'</div></div>'
+     +'<div class="stat"><div class="k">Photos</div><div class="v">'+c.photos+'</div></div>'
+     +'<div class="stat"><div class="k">Signers</div><div class="v">'+(signers.length+1)+'<span style="display:block;font-size:12.5px;font-weight:500;color:var(--acb-text-light)">'+signers.length+' tenant'+(signers.length===1?'':'s')+' + inspector</span></div></div>'
+     +'</div>';
+   list.forEach(function(r){
+     var rm=S.step3.rooms[r.key];
+     var shown=rm.items.filter(function(it){return (it.c&&it.c!=='good')||it.t||it.p.length;});
+     var goodN=rm.items.length-shown.length;
+     t+='<div class="rev-room"><h3>'+esc(r.label)+'</h3>';
+     shown.forEach(function(it){
+       t+='<div class="rev-item"><span><strong>'+esc(it.n)+'</strong>'
+         +(it.t?'<span class="nt">'+esc(it.t)+'</span>':'')
+         +(it.p.length?'<span class="nt">📷 '+it.p.length+' photo'+(it.p.length===1?'':'s')+' (in PDF)</span>':'')
+         +'</span>'+condBadge(it.c||'good')+'</div>';
+     });
+     if(goodN>0)t+='<div class="rev-good">✓ '+goodN+' item'+(goodN===1?'':'s')+' good</div>';
+     t+='</div>';
+   });
+   t+='<div class="final-actions">'
+     +'<button type="button" class="btn-primary" id="btnPdf">View PDF</button>'
+     +'<button type="button" class="btn-secondary" id="btnShare">🔗 Share</button>'
+     +'<button type="button" class="btn-secondary" id="btnRestart">Start New Checklist</button>'
+     +'</div><p class="hint" id="pdfStatus" style="text-align:center;margin-top:10px"></p>';
+   return t;
+ },
+ bind:function(root){
+   root.querySelector('#btnPdf').addEventListener('click',function(){viewPdf(root.querySelector('#pdfStatus'));});
+   root.querySelector('#btnShare').addEventListener('click',openShareModal);
+   root.querySelector('#btnRestart').addEventListener('click',function(){
+     if(!confirm('Clear this checklist (including photos) and start a new one?'))return;
+     try{localStorage.removeItem(LS_KEY);}catch(e){}
+     try{if(location.hash)history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+     S=freshState();cur=0;openRooms={};save();rerender();
+   });
+ },
+ valid:function(){return true;}}
+];
+
+/* ---------- engine ---------- */
+function rerender(){
+  var st=steps[cur];
+  var body=$('stepBody');
+  body.innerHTML='<div class="fade"><div class="step-title">'+st.title+'</div><p class="step-sub">'+st.sub+'</p><div id="stepErr" role="alert" aria-live="polite"></div>'+st.html()+'</div>';
+  st.bind(body);
+  $('wizBack').style.visibility=cur===0?'hidden':'visible';
+  $('stepDots').textContent='Step '+(cur+1)+' of '+steps.length;
+  $('wizNext').style.display=cur===steps.length-1?'none':'';
+  $('wizNext').textContent=(cur===steps.length-2)?'Review & Export →':'Continue';
+  $('progressBar').style.width=((cur+1)/steps.length*100)+'%';
+}
+$('wizNext').addEventListener('click',function(){
+  var v=steps[cur].valid();
+  if(v!==true){
+    $('stepErr').innerHTML='<div class="warnbox">⚠️ '+esc(v)+'</div>';
+    return;
+  }
+  save();
+  if(cur<steps.length-1){cur++;save();rerender();window.scrollTo({top:0});}
+});
+$('wizBack').addEventListener('click',function(){
+  if(cur>0){cur--;save();rerender();window.scrollTo({top:0});}
+});
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter')return;
+  if($('itemModalOv').classList.contains('open')||$('shareModalOv').classList.contains('open'))return;
+  var tag=e.target.tagName;
+  if(tag==='TEXTAREA'||tag==='BUTTON'||tag==='A'||cur===steps.length-1)return;
+  e.preventDefault();
+  $('wizNext').click();
+});
+
+/* ---------- item modal ---------- */
+var modalRef=null;
+function modalItem(){
+  if(!modalRef)return null;
+  var rm=S.step3.rooms[modalRef.key];
+  return rm?rm.items[modalRef.idx]:null;
+}
+function openItemModal(key,idx){
+  modalRef={key:key,idx:idx};
+  var it=modalItem();
+  if(!it)return;
+  var label=key;
+  syncRooms();
+  roomList().some(function(r){if(r.key===key){label=r.label;return true;}return false;});
+  $('imTitle').textContent=it.n;
+  $('imSub').textContent=label+' · '+typeLabel();
+  $('imNotes').value=it.t;
+  renderModalCond();
+  renderModalPhotos();
+  $('itemModalOv').classList.add('open');
+}
+function renderModalCond(){
+  var it=modalItem();
+  document.querySelectorAll('#itemModalOv .cond-btn').forEach(function(b){
+    b.classList.toggle('on',!!it&&it.c===b.dataset.c);
+  });
+}
+function renderModalPhotos(){
+  var it=modalItem(),box=$('imPhotos');
+  box.innerHTML='';
+  if(!it)return;
+  it.p.forEach(function(src,i){
+    var d=document.createElement('div');
+    d.className='photo-th';
+    var img=document.createElement('img');
+    img.src=src;img.alt='Photo '+(i+1)+' of '+it.n;
+    var x=document.createElement('button');
+    x.type='button';x.textContent='×';x.setAttribute('aria-label','Remove photo');
+    x.addEventListener('click',function(){it.p.splice(i,1);save();renderModalPhotos();});
+    d.appendChild(img);d.appendChild(x);
+    box.appendChild(d);
+  });
+}
+document.querySelectorAll('#itemModalOv .cond-btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    var it=modalItem();
+    if(!it)return;
+    it.c=(it.c===b.dataset.c)?'':b.dataset.c;
+    save();renderModalCond();
+  });
+});
+$('imNotes').addEventListener('input',function(){
+  var it=modalItem();
+  if(it){it.t=this.value;save();}
+});
+$('imFile').addEventListener('change',function(){
+  var it=modalItem(),files=this.files;
+  if(!it||!files||!files.length)return;
+  Array.prototype.slice.call(files).forEach(function(f){
+    compressPhoto(f,function(dataUrl){
+      if(dataUrl){it.p.push(dataUrl);save();renderModalPhotos();}
+    });
+  });
+  this.value='';
+});
+function compressPhoto(file,cb){
+  try{
+    var fr=new FileReader();
+    fr.onload=function(){
+      var img=new Image();
+      img.onload=function(){
+        try{
+          var MAX=400,w=img.width||1,h=img.height||1;
+          var sc=Math.min(1,MAX/Math.max(w,h));
+          var c=document.createElement('canvas');
+          c.width=Math.max(1,Math.round(w*sc));
+          c.height=Math.max(1,Math.round(h*sc));
+          c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+          cb(c.toDataURL('image/jpeg',0.6));
+        }catch(e){cb(null);}
+      };
+      img.onerror=function(){cb(null);};
+      img.src=fr.result;
+    };
+    fr.onerror=function(){cb(null);};
+    fr.readAsDataURL(file);
+  }catch(e){cb(null);}
+}
+function closeItemModal(){
+  $('itemModalOv').classList.remove('open');
+  modalRef=null;
+  save();rerender();
+}
+$('imDone').addEventListener('click',closeItemModal);
+$('imClose').addEventListener('click',closeItemModal);
+$('itemModalOv').addEventListener('click',function(e){if(e.target===this)closeItemModal();});
+
+/* ---------- share modal ---------- */
+function copyText(txt,btn,label){
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){
+    btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);}catch(e){}
+    document.body.removeChild(ta);
+  });
+}
+function openShareModal(){
+  if(typeof LZString==='undefined'){alert('The link library failed to load — check your connection and refresh.');return;}
+  var url=shareUrl();
+  $('shLink').value=url;
+  $('shareModalOv').classList.add('open');
+  try{
+    if(typeof QRCode!=='undefined'&&QRCode.toCanvas){
+      QRCode.toCanvas($('shQr'),url,{width:170,margin:1,color:{dark:'#3D5AF1',light:'#FFFFFF'}},function(){});
+    }
+  }catch(e){}
+}
+function closeShareModal(){$('shareModalOv').classList.remove('open');}
+$('shClose').addEventListener('click',closeShareModal);
+$('shareModalOv').addEventListener('click',function(e){if(e.target===this)closeShareModal();});
+$('shCopy').addEventListener('click',function(){copyText($('shLink').value,this,'🔗 Copy Link');});
+$('shEmail').addEventListener('click',function(){
+  var url=$('shLink').value;
+  var subj=typeLabel()+' Checklist — '+S.step1.address+(S.step1.unit&&S.step1.unit.trim().toLowerCase()!=='n/a'?', '+S.step1.unit:'');
+  var body='Here is the '+typeLabel().toLowerCase()+' checklist for '+S.step1.address
+    +' (inspection date: '+fmtDate(S.step1.date)+').\n\nOpen it here:\n'+url
+    +'\n\nNote: photos are included in the PDF only, not in this link.\n\nCreated free at advancedcb.com';
+  location.href='mailto:?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+});
+$('shText').addEventListener('click',function(){
+  var url=$('shLink').value;
+  var msg=typeLabel()+' checklist for '+S.step1.address+': '+url;
+  if(/android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent||'')){
+    location.href='sms:?&body='+encodeURIComponent(msg);
+  }else{
+    copyText(url,this,'💬 Text Link');
+  }
+});
+
+/* ---------- PDF ---------- */
+function viewPdf(statusEl){
+  if(!(window.jspdf&&window.jspdf.jsPDF)){
+    if(statusEl)statusEl.textContent='The PDF library failed to load — check your connection and refresh.';
+    return;
+  }
+  if(statusEl)statusEl.textContent='Building your PDF…';
+  try{
+    var doc=buildPdf();
+    var opened=null;
+    try{opened=window.open(doc.output('bloburl'),'_blank');}catch(e){}
+    if(!opened){
+      doc.save((S.step1.type==='moveout'?'Move-Out':'Move-In')+'-Checklist.pdf');
+      if(statusEl)statusEl.textContent='Pop-up blocked — the PDF was downloaded instead. ✓';
+    }else if(statusEl){statusEl.textContent='PDF opened in a new tab. ✓';}
+  }catch(e){
+    if(statusEl)statusEl.textContent='Sorry, something went wrong building the PDF.';
+  }
+}
+function buildPdf(){
+  var jsPDF=window.jspdf.jsPDF;
+  var doc=new jsPDF({unit:'pt',format:'letter'});
+  var W=612,H=792,M=48,y=0;
+  var TXT=[26,26,46],MID=[74,74,104],LIGHT=[136,137,160],BLUE=[61,90,241];
+  function nl(h){if(y+h>H-50){doc.addPage();y=56;}}
+  /* header band */
+  doc.setFillColor(BLUE[0],BLUE[1],BLUE[2]);
+  doc.rect(0,0,W,92,'F');
+  doc.setTextColor(255,255,255);
+  if(S.step1.company.trim()){
+    doc.setFont('helvetica','normal');doc.setFontSize(10.5);
+    doc.text(S.step1.company.trim(),M,30);
+  }
+  doc.setFont('helvetica','bold');doc.setFontSize(20);
+  doc.text(typeLabel().toUpperCase()+' CHECKLIST',M,S.step1.company.trim()?54:48);
+  doc.setFont('helvetica','normal');doc.setFontSize(9.5);
+  doc.text('Generated free at advancedcb.com',M,S.step1.company.trim()?72:68);
+  y=118;
+  /* property info block */
+  doc.setTextColor(TXT[0],TXT[1],TXT[2]);
+  function infoRow(k,v){
+    v=String(v||'—');
+    var lines=doc.splitTextToSize(v,W-2*M-120);
+    nl(15*lines.length+4);
+    doc.setFont('helvetica','bold');doc.setFontSize(10.5);
+    doc.text(k,M,y);
+    doc.setFont('helvetica','normal');
+    doc.text(lines,M+120,y);
+    y+=15*lines.length+4;
+  }
+  infoRow('Property',S.step1.address+(S.step1.unit&&S.step1.unit.trim().toLowerCase()!=='n/a'?', '+S.step1.unit:''));
+  if(S.step1.state)infoRow('State',S.step1.state);
+  infoRow('Inspection date',fmtDate(S.step1.date));
+  infoRow('Inspector',S.step1.inspector);
+  infoRow('Tenant(s)',S.step1.tenants.filter(function(t){return t.trim();}).join(', '));
+  y+=10;
+  /* rooms */
+  var list=syncRooms();
+  list.forEach(function(r){
+    var rm=S.step3.rooms[r.key];
+    nl(40);
+    doc.setFillColor(238,241,254);
+    doc.rect(M-8,y-13,W-2*M+16,22,'F');
+    doc.setTextColor(BLUE[0],BLUE[1],BLUE[2]);
+    doc.setFont('helvetica','bold');doc.setFontSize(12);
+    doc.text(r.label,M,y+2);
+    y+=26;
+    rm.items.forEach(function(it){
+      var cond=it.c?CONDS[it.c].label:'Good';
+      var noteLines=it.t?doc.splitTextToSize('Notes: '+it.t,W-2*M-16):[];
+      nl(16+noteLines.length*13+(it.p.length?4:0));
+      doc.setTextColor(TXT[0],TXT[1],TXT[2]);
+      doc.setFont('helvetica','normal');doc.setFontSize(10.5);
+      doc.text(it.n,M,y);
+      if(it.c==='repair')doc.setTextColor(220,38,38);
+      else if(it.c==='cosmetic')doc.setTextColor(176,121,22);
+      else doc.setTextColor(22,163,74);
+      doc.setFont('helvetica','bold');
+      doc.text(cond,W-M,y,{align:'right'});
+      y+=15;
+      if(noteLines.length){
+        doc.setTextColor(MID[0],MID[1],MID[2]);
+        doc.setFont('helvetica','normal');doc.setFontSize(9.5);
+        doc.text(noteLines,M+14,y);
+        y+=noteLines.length*13+2;
+      }
+      if(it.p.length){
+        var pw=80,ph=60,gap=8;
+        var perRow=Math.max(1,Math.floor((W-2*M+gap)/(pw+gap)));
+        for(var i=0;i<it.p.length;i+=perRow){
+          nl(ph+12);
+          var chunk=it.p.slice(i,i+perRow);
+          for(var j=0;j<chunk.length;j++){
+            try{doc.addImage(chunk[j],'JPEG',M+14+j*(pw+gap),y,pw,ph);}catch(e){}
+          }
+          y+=ph+10;
+        }
+      }
+      y+=2;
+    });
+    y+=10;
+  });
+  /* state notice */
+  if(S.step1.state){
+    nl(40);
+    doc.setTextColor(MID[0],MID[1],MID[2]);
+    doc.setFont('helvetica','italic');doc.setFontSize(9.5);
+    var notice=doc.splitTextToSize('State of '+S.step1.state+': keep a signed copy of this checklist with the lease. Documented unit condition at move-in and move-out is commonly required to support security-deposit deductions and returns under '+S.step1.state+' law. Verify current requirements — this checklist is not legal advice.',W-2*M);
+    doc.text(notice,M,y);
+    y+=notice.length*13+10;
+  }
+  /* signatures */
+  nl(60);
+  doc.setTextColor(TXT[0],TXT[1],TXT[2]);
+  doc.setFont('helvetica','bold');doc.setFontSize(12);
+  doc.text('Signatures',M,y);
+  y+=10;
+  doc.setFontSize(9.5);
+  function sigLine(role,name){
+    nl(58);
+    y+=26;
+    doc.setDrawColor(26,26,46);
+    doc.setLineWidth(0.8);
+    doc.line(M,y,M+250,y);
+    doc.line(M+300,y,M+420,y);
+    doc.setFont('helvetica','normal');
+    doc.setTextColor(MID[0],MID[1],MID[2]);
+    doc.text(role+': '+name,M,y+13);
+    doc.text('Date',M+300,y+13);
+    doc.setTextColor(TXT[0],TXT[1],TXT[2]);
+    y+=22;
+  }
+  S.step1.tenants.filter(function(t){return t.trim();}).forEach(function(t){sigLine('Tenant',t.trim());});
+  sigLine('Inspector',S.step1.inspector.trim());
+  /* footer */
+  nl(36);
+  y+=14;
+  doc.setTextColor(LIGHT[0],LIGHT[1],LIGHT[2]);
+  doc.setFont('helvetica','normal');doc.setFontSize(8.5);
+  var foot=doc.splitTextToSize('Generated free at advancedcb.com — Advanced Collection Bureau’s tools for landlords & property managers. This checklist documents unit condition and is not legal advice.',W-2*M);
+  doc.text(foot,M,y);
+  return doc;
+}
+
+/* expose a small handle for automated tests */
+window.__mimo={
+  getState:function(){return S;},
+  shareUrl:shareUrl,
+  go:function(n){cur=clamp(n,0,3);rerender();},
+  cur:function(){return cur;}
+};
+
+rerender();
+})();
+</script>
+
+<script>
+(function(){
+  var SEED={value:4.9,count:512};
+  var KEY='acb:move-in-move-out-checklist-creator:rating';
+  var box=document.getElementById('acbStars'),meta=document.getElementById('acbRatingMeta');
+  var mine=parseInt(localStorage.getItem(KEY)||'0',10);
+  function agg(){var c=SEED.count+(mine?1:0);
+    var v=mine?((SEED.value*SEED.count+mine)/c):SEED.value;
+    return {v:Math.round(v*10)/10,c:c};}
+  function render(hover){
+    var a=agg();box.innerHTML='';
+    for(var i=1;i<=5;i++){(function(i){
+      var b=document.createElement('button');
+      b.type='button';b.className='acb-star'+((hover||mine||Math.round(a.v))>=i?' on':'');
+      b.setAttribute('aria-label',i+' star'+(i>1?'s':''));b.textContent='★';
+      b.onmouseenter=function(){render(i)};b.onmouseleave=function(){render(0)};
+      b.onclick=function(){mine=i;localStorage.setItem(KEY,String(i));render(0);
+        try{fetch('https://formsubmit.co/ajax/RATINGS_EMAIL',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({tool:'move-in-move-out-checklist-creator',rating:i,_subject:'Tool rating: move-in-move-out-checklist-creator'})
+        }).catch(function(){});}catch(e){}};
+      box.appendChild(b);})(i);}
+    meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
+  }
+  render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var last=0;
+  function send(){
+    var h=document.documentElement.scrollHeight;
+    if(Math.abs(h-last)>2){last=h;parent.postMessage({acbTool:'move-in-move-out-checklist-creator',height:h},'*');}
+  }
+  if(window.ResizeObserver){new ResizeObserver(send).observe(document.body);}
+  window.addEventListener('load',send);
+  setInterval(send,800);
+})();
+</script>
+</body>
+</html>
