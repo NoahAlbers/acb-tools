@@ -138,10 +138,13 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 .acb-coach-ring{position:relative;z-index:91}
 .acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
 @keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
-.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.55;width:250px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
-.acb-coach::before{content:"";position:absolute;bottom:100%;left:24px;border:8px solid transparent;border-bottom-color:var(--acb-text)}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:12px 15px;font-size:13px;line-height:1.5;width:230px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach.side-r::before{content:"";position:absolute;right:100%;top:18px;border:8px solid transparent;border-right-color:var(--acb-text)}
+.acb-coach.side-l::before{content:"";position:absolute;left:100%;top:18px;border:8px solid transparent;border-left-color:var(--acb-text)}
 .acb-coach b{display:block;margin-bottom:3px}
-.acb-coach button{margin-top:9px;background:#fff;color:var(--acb-text);border:none;border-radius:50px;padding:6px 16px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+.acb-coach .step-dots{font-size:11px;opacity:.7;margin-top:7px}
+.acb-coach .skip{background:none;border:none;color:#fff;opacity:.75;font-size:11.5px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0;margin-top:7px;display:block}
+@media(max-width:840px){.acb-coach{position:absolute;width:210px}}
 .acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
 .acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
 .acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
@@ -150,15 +153,17 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 .fade{animation:fadeIn .35s ease both}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media print{
-  @page{margin:.6in}
+  @page{margin:.75in}
   body{background:#fff}
-  .no-print,.acb-rate-pop,.acb-coach,.acb-coach-ring::after{display:none!important}
+  .no-print,.acb-rate-pop,.acb-coach,.acb-coach-ring::after,.acb-tip{display:none!important}
   .wrap{max-width:none;padding:0}
   .grid{display:block}
   #previewCard{border:none;box-shadow:none;padding:0;border-radius:0;margin:0}
   .doc{border:none;border-radius:0;padding:0;font-size:12.5px}
   .doc-h,.doc-sh{page-break-after:avoid;break-after:avoid}
-  .doc-row,.doc-yn,.doc-chk,.doc-notes,.doc-eho{page-break-inside:avoid;break-inside:avoid}
+  .doc-row,.doc-yn,.doc-chk,.doc-notes,.doc-eho,.doc-foot1,.doc-legal{page-break-inside:avoid;break-inside:avoid}
+  .doc-sig,.doc-legal{page-break-before:avoid;break-before:avoid}
+  .doc-para,.doc-note{orphans:3;widows:3}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -448,26 +453,40 @@ function acbTipUpgrade(root){
   });
 }
 document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
-function acbCoach(slug,target,title,body){
+function acbCoachSeq(slug,steps){
   try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
-  var el=typeof target==='string'?document.querySelector(target):target;
-  if(!el)return;
-  var tip=null;
-  function done(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}
-    el.classList.remove('acb-coach-ring');if(tip)tip.remove();
-    document.removeEventListener('input',done,true);}
-  el.classList.add('acb-coach-ring');
-  var wrap=el.closest('.field')||el.parentNode;
-  if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
-  tip=document.createElement('div');tip.className='acb-coach';
-  tip.innerHTML='<b>'+title+'</b>'+body+'<br><button type="button">Got it</button>';
-  wrap.appendChild(tip);
-  tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';
-  tip.style.left=Math.max(0,Math.min(el.offsetLeft,wrap.clientWidth-260))+'px';
-  tip.querySelector('button').addEventListener('click',done);
-  document.addEventListener('input',done,true);
-  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){done();document.removeEventListener('keydown',esc);}});
+  var i=-1,el=null,tip=null;
+  function markDone(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}}
+  function clear(){if(el)el.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;tip=null;}
+  function stop(){markDone();clear();}
+  function show(n){
+    clear();i=n;
+    if(i>=steps.length){stop();return;}
+    var st=steps[i];
+    el=typeof st.target==='string'?document.querySelector(st.target):st.target;
+    if(!el){show(i+1);return;}
+    el.classList.add('acb-coach-ring');
+    try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
+    var wrap=el.closest('.field')||el.parentNode;
+    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+    tip=document.createElement('div');tip.className='acb-coach';
+    tip.innerHTML='<b>'+st.title+'</b>'+st.body
+      +'<div class="step-dots">Step '+(i+1)+' of '+steps.length+'</div>'
+      +'<button type="button" class="skip">Skip tour</button>';
+    wrap.appendChild(tip);
+    var spaceR=wrap.clientWidth-(el.offsetLeft+el.offsetWidth);
+    if(spaceR>250){tip.classList.add('side-r');tip.style.left=(el.offsetLeft+el.offsetWidth+14)+'px';tip.style.top=el.offsetTop+'px';}
+    else if(el.offsetLeft>250){tip.classList.add('side-l');tip.style.left=(el.offsetLeft-244)+'px';tip.style.top=el.offsetTop+'px';}
+    else{tip.style.left=Math.max(0,Math.min(el.offsetLeft+20,wrap.clientWidth-240))+'px';tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';}
+    tip.querySelector('.skip').addEventListener('click',stop);
+    var adv=function(){el.removeEventListener('input',adv);el.removeEventListener('change',adv);el.removeEventListener('click',adv);setTimeout(function(){show(i+1);},350);};
+    el.addEventListener('input',adv);el.addEventListener('change',adv);
+    if(!/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName))el.addEventListener('click',adv); /* non-input targets advance on click */
+  }
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){stop();document.removeEventListener('keydown',esc);}});
+  show(0);
 }
+function acbCoach(slug,target,title,body){acbCoachSeq(slug,[{target:target,title:title,body:body}]);}
 </script>
 <script>
 /* ============ Pure data + document model (no DOM access in this block) ============ */
@@ -479,6 +498,8 @@ var STATES=[["AL","Alabama"],["AK","Alaska"],["AZ","Arizona"],["AR","Arkansas"],
 function stateName(code){for(var i=0;i<STATES.length;i++){if(STATES[i][0]===code)return STATES[i][1];}return code;}
 
 var DEFAULT_FEE_NOTE='No statutory statewide cap on application fees — keep fees reasonable, uniform for every applicant, and tied to your actual screening costs. Local ordinances may add rules.';
+/* document-safe variant: states facts only, no advice to the landlord (ui-v3-spec §5b) */
+var DOC_DEFAULT_FEE_NOTE='No statewide statutory cap on application fees applies in this state. Local ordinances may impose additional requirements.';
 var VERIFY_LINE='Laws change frequently — verify current state and local rules before relying on this form.';
 
 /* cap: numeric dollar cap (0 = fees generally prohibited); capNote: cap wording when not a flat number;
@@ -634,7 +655,7 @@ function buildFieldList(d){
   /* Pets */
   if(d.sec.pet){
     h('Pets');
-    L.push({t:'note',text:'Note: service and assistance animals are not pets under fair-housing law and are not subject to pet restrictions, pet rent, or pet fees. You are not required to list an assistance animal here.'});
+    L.push({t:'note',text:'Service and assistance animals are not pets under fair-housing law and are not subject to pet restrictions, pet rent, or pet fees. You are not required to list an assistance animal here.'});
     for(i=1;i<=d.petCount;i++){
       row([{label:'Pet '+i+' — type & breed',flex:1.6},{label:'Weight',flex:.5},{label:'Age',flex:.4}]);
       row([{label:'Pet name',flex:1},{label:'Spayed/neutered? (Y/N)',flex:1}]);
@@ -651,7 +672,6 @@ function buildFieldList(d){
   }
   if(qs.length){
     h('Background Questions');
-    L.push({t:'note',text:'Please answer honestly. Verified history, reviewed against written criteria, is generally weighed more favorably than information discovered after the fact.'});
     for(i=0;i<qs.length;i++){
       L.push({t:'yn',label:qs[i].label});
       if(qs[i].ex)row([{label:'If yes, please explain (dates & circumstances)',flex:1}]);
@@ -672,10 +692,13 @@ function buildFieldList(d){
     }
   }
 
-  /* State notes */
+  /* State notes — legal content only; builder-side advice sentences are stripped (ui-v3-spec §5b) */
   var sn=STATE_NOTES[d.st]||null;
-  var lines=[(sn&&sn.fee)||DEFAULT_FEE_NOTE];
-  if(sn&&sn.crim&&d.sec.bg&&d.bg.felony)lines.push('Criminal-history caution: '+sn.crim);
+  var lines=[(sn&&sn.fee)||DOC_DEFAULT_FEE_NOTE];
+  if(sn&&sn.crim&&d.sec.bg&&d.bg.felony){
+    var crimDoc=sn.crim.replace(/\s*(?:Remove the felony question|Don['’]t use (?:this|a felony) question)[^.]*\.\s*$/,'');
+    lines.push('Criminal-history caution: '+crimDoc);
+  }
   lines.push(VERIFY_LINE);
   L.push({t:'notes',title:'State Notes — '+stateName(d.st),lines:lines});
 
@@ -906,8 +929,8 @@ async function makePdf(d){
   }
   function textField(x,wd,label){
     var tf=form.createTextField(fname(label));
-    tf.setFontSize(9);
     tf.addToPage(page,{x:x,y:y-16.5,width:Math.max(wd,28),height:15,borderWidth:.8,borderColor:lineC,backgroundColor:white});
+    tf.setFontSize(9); /* must come after addToPage — pdf-lib 1.17.1 needs a /DA entry first */
     return tf;
   }
 
@@ -927,16 +950,20 @@ async function makePdf(d){
     }else if(it.t==='gap'){
       y-=it.h;
     }else if(it.t==='h'){
-      y-=6;need(28);
+      /* keep the heading with its first unit (a sub-heading + row, or a row) — never strand it at a page bottom */
+      var nx=list[ii+1];
+      var nxH=nx?(nx.t==='sh'?16+24:nx.t==='row'?24:nx.t==='yn'?22:(nx.t==='note'||nx.t==='para')?12:16):0;
+      y-=6;need(23+nxH);
       page.drawText(it.text.toUpperCase(),{x:MX,y:y-10.5,size:10.5,font:bold,color:ink});
       page.drawRectangle({x:MX,y:y-15.5,width:usable,height:.9,color:ink});
       y-=23;
     }else if(it.t==='sh'){
-      need(18);
+      need(16+24); /* sub-heading + its first row stay together */
       page.drawText(it.text,{x:MX,y:y-9.5,size:9.5,font:bold,color:ink});
       y-=16;
     }else if(it.t==='row'){
-      need(24);
+      /* a printed-name row followed by its signature line is one unit */
+      need(list[ii+1]&&list[ii+1].t==='sig'?24+34:24);
       var totalFlex=0,gp=14,k;
       for(k=0;k<it.fields.length;k++)totalFlex+=(it.fields[k].flex||1);
       var x=MX,avail=usable-gp*(it.fields.length-1);
@@ -969,7 +996,7 @@ async function makePdf(d){
     }else if(it.t==='para'){
       para(it.text,helv,8.7,11.6);y-=4;
     }else if(it.t==='sig'){
-      need(30);
+      need(34); /* full signature line height — never split */
       page.drawText('X',{x:MX,y:y-13,size:11,font:bold,color:ink});
       textField(MX+14,250,it.label);
       page.drawText(it.label,{x:MX+14,y:y-26,size:7.5,font:helv,color:gray});
@@ -1005,6 +1032,9 @@ async function makePdf(d){
       els2.forEach(function(l){page.drawText(l,{x:tx,y:ey,size:7.3,font:helv,color:gray});ey-=9;});
       y=Math.min(y-34,ey-2);
     }else if(it.t==='foot'){
+      /* keep the two-line ACB footer together */
+      var f1=wrap(it.line1,helv,8.6,usable),f2=wrap(it.line2,obl,7.8,usable);
+      need(8+f1.length*11+2+f2.length*10);
       y-=8;para(it.line1,helv,8.6,11,ink);y-=2;para(it.line2,obl,7.8,10,gray);
     }
   }
@@ -1040,7 +1070,11 @@ $('pdfBtn').addEventListener('click',function(){
 
 update();
 acbTipUpgrade(document);
-acbCoach('rental-application-generator','#inProperty','Start here','Name the property, toggle the sections you want, and watch the application build itself on the right.');
+acbCoachSeq('rental-application-generator',[
+  {target:'#inProperty',title:'1. Property or company name',body:'Type the name applicants will see at the top of the form — e.g. Maple Court Apartments.'},
+  {target:'#sec-coapp .sw',title:'2. Pick your sections',body:'Switch sections on or off — the form on the right rebuilds instantly.'},
+  {target:'#pdfBtn',title:'3. Download PDF',body:'Download a fillable PDF applicants can type into — your details are already filled in.'}
+]);
 })();
 </script>
 
