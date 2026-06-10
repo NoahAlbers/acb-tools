@@ -34,8 +34,11 @@ collections funnel.
 | NOI Calculator | /resources/net-operating-income-calculator | Itemized income & expenses with benchmark checks. |
 | Turnover Cost Estimator | /resources/turnover-cost-estimator | What a turnover really costs vs. keeping your tenant. |
 | 70% Rule Calculator | /resources/70-percent-rule-calculator | Max allowable offer for fix & flip deals. |
-| Move-In/Move-Out Checklist | /resources/move-in-move-out-checklist-creator | (existing tool) |
-| + any other existing tools | | Prorated rent, security deposit, rental yield, rent increase, eviction notice |
+| Move-In/Move-Out Checklist | /resources/move-in-move-out-checklist-creator | Room-by-room inspection with photos and a signed-ready PDF. |
+| Prorated Rent Calculator | /resources/prorated-rent-calculator | Exact partial-month rent for any move-in date and billing day. |
+| Rent Increase Calculator | /resources/rent-increase-calculator | Project rent growth over 1–50 years with CSV export. |
+| Security Deposit Interest Calculator | /resources/security-deposit-interest-calculator | Daily-compounded interest plus state deposit rules. |
+| + any remaining legacy tools | | Rental yield, eviction notice — can be ported the same way |
 
 4. CTA band at the bottom (same copy as the tools' CTA band):
    > **Tenant left owing money?** Advanced Collection Bureau has recovered over $85 million in unpaid rent, fees, and damages. No recovery, no fee. [Get Started](https://www.advancedcb.com/) · (321) 633-4999

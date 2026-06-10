@@ -69,7 +69,10 @@ Income property is priced as **Value = NOI ÷ Cap Rate**. At a 6% market cap rat
    [Turnover Cost Estimator](/resources/turnover-cost-estimator) ·
    [Lease Agreement Generator](/resources/lease-agreement-generator) ·
    [Rental Application Generator](/resources/rental-application-generator) ·
-   [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator)
+   [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator) ·
+   [Prorated Rent Calculator](/resources/prorated-rent-calculator) ·
+   [Rent Increase Calculator](/resources/rent-increase-calculator) ·
+   [Security Deposit Interest Calculator](/resources/security-deposit-interest-calculator)
 
 ## Embed block #2 — JSON-LD (paste in page head custom code)
 

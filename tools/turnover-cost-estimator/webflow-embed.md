@@ -69,7 +69,10 @@ Respond to maintenance fast (it's the #1 cited reason for not renewing), start r
    [70% Rule Calculator](/resources/70-percent-rule-calculator) ·
    [Lease Agreement Generator](/resources/lease-agreement-generator) ·
    [Rental Application Generator](/resources/rental-application-generator) ·
-   [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator)
+   [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator) ·
+   [Prorated Rent Calculator](/resources/prorated-rent-calculator) ·
+   [Rent Increase Calculator](/resources/rent-increase-calculator) ·
+   [Security Deposit Interest Calculator](/resources/security-deposit-interest-calculator)
 
 ## Embed block #2 — JSON-LD (paste in page head custom code)
 

@@ -63,6 +63,9 @@ Collect the deposit and first month's rent before handing over keys, complete a 
    [Security Deposit Return Letter](/resources/security-deposit-return-letter-generator) ·
    [Rent Increase Notice Generator](/resources/rent-increase-notice-generator) ·
    [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator) ·
+   [Prorated Rent Calculator](/resources/prorated-rent-calculator) ·
+   [Rent Increase Calculator](/resources/rent-increase-calculator) ·
+   [Security Deposit Interest Calculator](/resources/security-deposit-interest-calculator) ·
    [Rental Property ROI Calculator](/resources/rental-property-roi-calculator) ·
    [Cap Rate Calculator](/resources/cap-rate-calculator) ·
    [NOI Calculator](/resources/net-operating-income-calculator) ·

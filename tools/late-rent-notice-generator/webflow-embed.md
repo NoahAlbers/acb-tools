@@ -66,6 +66,9 @@ If the tenant pays within the cure period, the matter ends — accept the paymen
    [Security Deposit Return Letter Generator](/resources/security-deposit-return-letter-generator) ·
    [Rent Increase Notice Generator](/resources/rent-increase-notice-generator) ·
    [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator) ·
+   [Prorated Rent Calculator](/resources/prorated-rent-calculator) ·
+   [Rent Increase Calculator](/resources/rent-increase-calculator) ·
+   [Security Deposit Interest Calculator](/resources/security-deposit-interest-calculator) ·
    [Rental Property ROI Calculator](/resources/rental-property-roi-calculator) ·
    [Mortgage Calculator](/resources/mortgage-calculator) ·
    [Cap Rate Calculator](/resources/cap-rate-calculator) ·

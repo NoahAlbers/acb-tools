@@ -63,6 +63,9 @@ Both come out of this generator from the same template. The **printed form** (Pr
    [Security Deposit Return Letter](/resources/security-deposit-return-letter-generator) ·
    [Rent Increase Notice Generator](/resources/rent-increase-notice-generator) ·
    [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator) ·
+   [Prorated Rent Calculator](/resources/prorated-rent-calculator) ·
+   [Rent Increase Calculator](/resources/rent-increase-calculator) ·
+   [Security Deposit Interest Calculator](/resources/security-deposit-interest-calculator) ·
    [Turnover Cost Estimator](/resources/turnover-cost-estimator) ·
    [Rental Property ROI Calculator](/resources/rental-property-roi-calculator) ·
    [Cap Rate Calculator](/resources/cap-rate-calculator) ·

@@ -67,7 +67,10 @@ Add up all income (rent, parking, laundry, pet rent), subtract vacancy, then sub
    [Late Rent Notice Generator](/resources/late-rent-notice-generator) ·
    [Security Deposit Return Letter](/resources/security-deposit-return-letter-generator) ·
    [Rent Increase Notice Generator](/resources/rent-increase-notice-generator) ·
-   [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator)
+   [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator) ·
+   [Prorated Rent Calculator](/resources/prorated-rent-calculator) ·
+   [Rent Increase Calculator](/resources/rent-increase-calculator) ·
+   [Security Deposit Interest Calculator](/resources/security-deposit-interest-calculator)
 
 ## Embed block #2 — JSON-LD (paste in page head custom code)
 

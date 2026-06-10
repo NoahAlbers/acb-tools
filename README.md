@@ -1,6 +1,6 @@
 # ACB Tools — Free Landlord Tools for advancedcb.com
 
-Eleven production-ready, embeddable tools for Advanced Collection Bureau's Webflow site.
+Fifteen production-ready, embeddable tools for Advanced Collection Bureau's Webflow site.
 Every tool is a single self-contained `index.html` (vanilla JS, no build step) styled to ACB's
 brand, plus a `webflow-embed.md` page kit with everything needed to publish the page: title tag,
 meta description, intro copy, the iframe embed snippet, SEO body content, FAQ section, and
@@ -21,12 +21,25 @@ JSON-LD (star ratings, FAQ, breadcrumbs).
 | NOI Calculator (itemized builder, benchmarks, CSV export) | `tools/net-operating-income-calculator` | Calculator |
 | Turnover Cost Estimator (turnover vs. retention, portfolio mode) | `tools/turnover-cost-estimator` | Calculator |
 | 70% Rule Calculator (MAO + deal check) | `tools/70-percent-rule-calculator` | Calculator |
+| Move-In/Move-Out Checklist Creator (rooms, photos, PDF report, share links/QR) | `tools/move-in-move-out-checklist-creator` | Inspection tool |
+| Prorated Rent Calculator (cross-month proration, embed-code card) | `tools/prorated-rent-calculator` | Calculator |
+| Rent Increase Calculator (growth projection, CSV) | `tools/rent-increase-calculator` | Calculator |
+| Security Deposit Interest Calculator (daily compounding + 50-state rules) | `tools/security-deposit-interest-calculator` | Calculator |
 
 **Shareable scenario links:** every calculator encodes its inputs in a `#acb=` URL fragment with
 a "Copy link to this scenario" button. The embed snippets forward the Webflow page's hash into
 the iframe, so shared links open the tool pre-filled on advancedcb.com. (Document/notice tools
 intentionally skip this — they contain personal names.) See `docs/competitive-analysis.md` for
 the persona analysis behind the v2 feature set.
+
+**Legacy tool ports:** the four tools that previously lived as pasted Webflow embeds
+(move-in/move-out checklist, prorated rent, rent increase, security deposit interest) are now
+first-class tools here in the same design system — each kit notes that it replaces the old
+embeds on its live page. Backward compatibility is preserved: the checklist still reads legacy
+`#d=` share links, and the three calculators still accept their old query-param links. The old
+two-part "Rental Calculator" embed is superseded by the Rental Property ROI Calculator. The
+legacy 50-state deposit-rules data is preserved verbatim in
+`docs/legacy/security-deposit-state-rules.js`.
 
 `index.html` at the repo root is a directory page linking all tools (handy as the deployed
 host's homepage).

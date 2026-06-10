@@ -66,6 +66,9 @@ A perfect letter delivered wrong is an invalid notice. Check your lease and stat
    [Late Rent Notice Generator](/resources/late-rent-notice-generator) ·
    [Security Deposit Return Letter Generator](/resources/security-deposit-return-letter-generator) ·
    [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator) ·
+   [Prorated Rent Calculator](/resources/prorated-rent-calculator) ·
+   [Rent Increase Calculator](/resources/rent-increase-calculator) ·
+   [Security Deposit Interest Calculator](/resources/security-deposit-interest-calculator) ·
    [Turnover Cost Estimator](/resources/turnover-cost-estimator) ·
    [Rental Property ROI Calculator](/resources/rental-property-roi-calculator) ·
    [Cap Rate Calculator](/resources/cap-rate-calculator) ·
