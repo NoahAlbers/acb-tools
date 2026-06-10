@@ -22,7 +22,7 @@ Target URL: `https://www.advancedcb.com/resources/late-rent-notice-generator`
 (function(){
   var f=document.getElementById('acb-tool-frame');
   /* forward #acb=… links into the tool */
-  f.src='https://YOUR-TOOLS-HOST/tools/late-rent-notice-generator/'+(location.hash||'');
+  f.src='https://noahalbers.github.io/acb-tools/tools/late-rent-notice-generator/'+(location.hash||'');
   window.addEventListener('message',function(e){
     if(e.data&&e.data.acbTool==='late-rent-notice-generator'&&e.data.height){
       f.style.height=(e.data.height+2)+'px';
@@ -32,7 +32,7 @@ Target URL: `https://www.advancedcb.com/resources/late-rent-notice-generator`
 </script>
 ```
 
-(Replace `YOUR-TOOLS-HOST` with the deployed host — see repo README for GitHub Pages setup. Note: this tool intentionally has no share-link feature — notices contain tenants' personal information — so the hash forwarding is simply unused.)
+(The iframe points at the GitHub Pages host — see repo README for the Pages setup.)
 
 4. **SEO content section** (rich text below the tool — H2s matter):
 

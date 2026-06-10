@@ -33,21 +33,28 @@ host's homepage).
 
 ## How to publish (two steps)
 
-### Step 1 — Host the tool files
+### Step 1 — GitHub Pages hosting (same setup as `acb-form`)
 
-The tools are static files; host them anywhere and iframe them into Webflow. Easiest options:
+The tools are static files served straight from this repo via GitHub Pages. Every embed snippet
+in the `webflow-embed.md` kits already points at the live host:
+`https://noahalbers.github.io/acb-tools/tools/<slug>/`
 
-**GitHub Pages (recommended)**
-1. Repo → Settings → Pages → Source: *Deploy from a branch* → branch `main`, folder `/ (root)`.
-2. Your tools are then at `https://<user>.github.io/acb-tools/tools/<slug>/`.
-3. Note: GitHub Pages on a **private** repo requires a paid GitHub plan — either upgrade or make
-   this repo public (the published files contain nothing sensitive; the `acb-form` repo is
-   already public).
-4. Optional: add a custom domain like `tools.advancedcb.com` in the Pages settings (then add the
-   CNAME record in your DNS).
+To turn it on (one time):
 
-**Alternatives:** Cloudflare Pages or Netlify (both free, connect the repo, no build command,
-publish directory = repo root).
+1. **Merge this branch into `main`** (the tools were built on
+   `claude/advanced-cb-tools-xoi2la`).
+2. **Make the repo public** — GitHub Pages on a private repo requires a paid plan. The
+   published files contain nothing sensitive, and `acb-form` is already public.
+3. **Settings → Pages → Build and deployment → Source: “Deploy from a branch” →
+   branch `main`, folder `/ (root)` → Save.** The site goes live a minute later.
+
+Sanity checks once enabled:
+- `https://noahalbers.github.io/acb-tools/` → the tools directory page
+- `https://noahalbers.github.io/acb-tools/tools/cap-rate-calculator/` → a working calculator
+
+(A `.nojekyll` file is included so Pages serves files as-is.) Optional later: add a custom
+domain like `tools.advancedcb.com` in the same Pages settings screen and update the kit URLs.
+Pushes to `main` redeploy automatically — that's the whole pipeline.
 
 ### Step 2 — Create the Webflow pages
 
@@ -57,8 +64,7 @@ For each tool, create a Webflow page at `/resources/<slug>` and follow that tool
 1. Set the **title tag** and **meta description** from the kit.
 2. Add the **H1 + intro copy**.
 3. Paste **Embed block #1** (the iframe + auto-resize listener) into an Embed element —
-   replace `YOUR-TOOLS-HOST` with your host from Step 1
-   (e.g. `https://noahalbers.github.io/acb-tools`).
+   it already points at the GitHub Pages host.
 4. Add the **SEO content sections and FAQ** below the tool (rich text).
 5. Paste **Embed block #2** (JSON-LD) into Page Settings → Custom Code → Head.
 6. Add the **related tools** link section.
@@ -77,7 +83,8 @@ Also see `docs/webflow-resources-hub.md` for the `/resources` hub landing page a
   widget) matching the `aggregateRating` in its page kit's JSON-LD. As real votes come in via
   email, periodically update both together so the visible rating and the schema stay truthful
   and in sync. ⚠️ Google requires the schema rating to match what the page displays.
-- **Iframe host** — `YOUR-TOOLS-HOST` placeholder appears only in the `webflow-embed.md` kits.
+- **Iframe host** — hard-coded to `https://noahalbers.github.io/acb-tools` in the
+  `webflow-embed.md` kits; change there if you later move to a custom domain.
 
 ## Engineering notes
 

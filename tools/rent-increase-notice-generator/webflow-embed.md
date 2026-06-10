@@ -22,7 +22,7 @@ Target URL: `https://www.advancedcb.com/resources/rent-increase-notice-generator
 (function(){
   var f=document.getElementById('acb-tool-frame');
   /* forward #… fragments into the tool */
-  f.src='https://YOUR-TOOLS-HOST/tools/rent-increase-notice-generator/'+(location.hash||'');
+  f.src='https://noahalbers.github.io/acb-tools/tools/rent-increase-notice-generator/'+(location.hash||'');
   window.addEventListener('message',function(e){
     if(e.data&&e.data.acbTool==='rent-increase-notice-generator'&&e.data.height){
       f.style.height=(e.data.height+2)+'px';
@@ -32,7 +32,7 @@ Target URL: `https://www.advancedcb.com/resources/rent-increase-notice-generator
 </script>
 ```
 
-(Replace `YOUR-TOOLS-HOST` with the deployed host — see repo README for GitHub Pages setup.)
+(The iframe points at the GitHub Pages host — see repo README for the Pages setup.)
 
 4. **SEO content section** (rich text below the tool — H2s matter):
 

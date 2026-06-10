@@ -16,7 +16,7 @@ Target URL: `https://www.advancedcb.com/resources/lease-agreement-generator`
 3. **Embed block #1** — the tool iframe (paste in an Embed element):
 
 ```html
-<iframe id="acb-tool-frame" src="https://YOUR-TOOLS-HOST/tools/lease-agreement-generator/"
+<iframe id="acb-tool-frame" src="https://noahalbers.github.io/acb-tools/tools/lease-agreement-generator/"
   title="Lease Agreement Generator" style="width:1px;min-width:100%;border:0;height:1200px"
   loading="eager"></iframe>
 <script>
@@ -29,7 +29,7 @@ window.addEventListener('message',function(e){
 </script>
 ```
 
-(Replace `YOUR-TOOLS-HOST` with the deployed host — see repo README.)
+(The iframe points at the GitHub Pages host — see repo README for the Pages setup.)
 
 4. **SEO content section** (rich text below the tool):
 

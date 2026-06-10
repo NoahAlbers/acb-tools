@@ -22,7 +22,7 @@ Target URL: `https://www.advancedcb.com/resources/turnover-cost-estimator`
 (function(){
   var f=document.getElementById('acb-tool-frame');
   /* forward #acb=… shared-scenario links into the tool */
-  f.src='https://YOUR-TOOLS-HOST/tools/turnover-cost-estimator/'+(location.hash||'');
+  f.src='https://noahalbers.github.io/acb-tools/tools/turnover-cost-estimator/'+(location.hash||'');
   window.addEventListener('message',function(e){
     if(e.data&&e.data.acbTool==='turnover-cost-estimator'&&e.data.height){
       f.style.height=(e.data.height+2)+'px';
@@ -32,7 +32,7 @@ Target URL: `https://www.advancedcb.com/resources/turnover-cost-estimator`
 </script>
 ```
 
-(Replace `YOUR-TOOLS-HOST` with the deployed host — see repo README for GitHub Pages setup.)
+(The iframe points at the GitHub Pages host — see repo README for the Pages setup.)
 
 4. **SEO content section** (rich text below the tool — H2s matter):
 
