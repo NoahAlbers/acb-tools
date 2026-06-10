@@ -133,43 +133,90 @@ document.addEventListener('click',function(){document.querySelectorAll('.acb-tip
 When migrating existing tooltips, wrap the body in `<b></b><i>old text</i>` and set `data-t` to the
 term being explained (e.g. the field label).
 
-## 5. First-run coach mark
+## 5. First-run guided walkthrough (acbCoachSeq — replaces the single coach mark)
 
-Once per tool ever. Pulsing ring on the primary input + a bubble saying what to do. Dismiss on
-"Got it", Escape, or the first real input anywhere.
+A SEQUENTIAL walkthrough, once per tool ever. Each step: pulse-highlight the field, show a
+bubble BESIDE it (right of the field when space allows, else left — never covering the field or
+its label), written in plain terms ("Enter the monthly rent — e.g. 2,200"). When the user fills
+that field (input/change on the target), advance to the next step automatically. 2–4 steps max:
+just enough to reach one simple output, not every field. "Skip tour" link on every bubble.
 ```css
 .acb-coach-ring{position:relative;z-index:91}
 .acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
 @keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
-.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.55;width:250px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
-.acb-coach::before{content:"";position:absolute;bottom:100%;left:24px;border:8px solid transparent;border-bottom-color:var(--acb-text)}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:12px 15px;font-size:13px;line-height:1.5;width:230px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach.side-r::before{content:"";position:absolute;right:100%;top:18px;border:8px solid transparent;border-right-color:var(--acb-text)}
+.acb-coach.side-l::before{content:"";position:absolute;left:100%;top:18px;border:8px solid transparent;border-left-color:var(--acb-text)}
 .acb-coach b{display:block;margin-bottom:3px}
-.acb-coach button{margin-top:9px;background:#fff;color:var(--acb-text);border:none;border-radius:50px;padding:6px 16px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+.acb-coach .step-dots{font-size:11px;opacity:.7;margin-top:7px}
+.acb-coach .skip{background:none;border:none;color:#fff;opacity:.75;font-size:11.5px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0;margin-top:7px;display:block}
+@media(max-width:840px){.acb-coach{position:absolute;width:210px}}
 ```
 ```js
-function acbCoach(slug,target,title,body){
+function acbCoachSeq(slug,steps){
   try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
-  var el=typeof target==='string'?document.querySelector(target):target;
-  if(!el)return;
-  function done(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}
-    el.classList.remove('acb-coach-ring');if(tip)tip.remove();
-    document.removeEventListener('input',done,true);}
-  el.classList.add('acb-coach-ring');
-  var wrap=el.closest('.field')||el.parentNode;
-  if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
-  var tip=document.createElement('div');tip.className='acb-coach';
-  tip.innerHTML='<b>'+title+'</b>'+body+'<br><button type="button">Got it</button>';
-  wrap.appendChild(tip);
-  tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';
-  tip.style.left=Math.max(0,Math.min(el.offsetLeft,wrap.clientWidth-260))+'px';
-  tip.querySelector('button').addEventListener('click',done);
-  document.addEventListener('input',done,true);
-  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){done();document.removeEventListener('keydown',esc);}});
+  var i=-1,el=null,tip=null;
+  function markDone(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}}
+  function clear(){if(el)el.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;tip=null;}
+  function stop(){markDone();clear();}
+  function show(n){
+    clear();i=n;
+    if(i>=steps.length){stop();return;}
+    var st=steps[i];
+    el=typeof st.target==='string'?document.querySelector(st.target):st.target;
+    if(!el){show(i+1);return;}
+    el.classList.add('acb-coach-ring');
+    try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
+    var wrap=el.closest('.field')||el.parentNode;
+    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+    tip=document.createElement('div');tip.className='acb-coach';
+    tip.innerHTML='<b>'+st.title+'</b>'+st.body
+      +'<div class="step-dots">Step '+(i+1)+' of '+steps.length+'</div>'
+      +'<button type="button" class="skip">Skip tour</button>';
+    wrap.appendChild(tip);
+    /* place BESIDE the field: right if it fits, else left; vertically aligned to the field */
+    var spaceR=wrap.clientWidth-(el.offsetLeft+el.offsetWidth);
+    if(spaceR>250){tip.classList.add('side-r');tip.style.left=(el.offsetLeft+el.offsetWidth+14)+'px';tip.style.top=el.offsetTop+'px';}
+    else if(el.offsetLeft>250){tip.classList.add('side-l');tip.style.left=(el.offsetLeft-244)+'px';tip.style.top=el.offsetTop+'px';}
+    else{/* narrow layouts: below, offset so the label stays visible */
+      tip.classList.add('side-r');tip.style.left=Math.max(0,Math.min(el.offsetLeft+20,wrap.clientWidth-240))+'px';tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';tip.classList.remove('side-r');
+    }
+    tip.querySelector('.skip').addEventListener('click',stop);
+    var adv=function(){el.removeEventListener('input',adv);el.removeEventListener('change',adv);setTimeout(function(){show(i+1);},350);};
+    el.addEventListener('input',adv);el.addEventListener('change',adv);
+  }
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){stop();document.removeEventListener('keydown',esc);}});
+  show(0);
 }
 ```
-Call after initial render, e.g.
-`acbCoach('cap-rate-calculator','#price','Start here','Enter the property’s price — results update live as you type.');`
-Wizards: point at the first meaningful control of step 1. Builders: the first setup field.
+Usage example (cap-rate): `acbCoachSeq('cap-rate-calculator',[{target:'#price',title:'1. Property price',body:'What you\'d pay for the property — e.g. 350,000.'},{target:'#noiInput',title:'2. Yearly income (NOI)',body:'Rent minus operating costs for a year. Don\'t know it? Use the helper just below.'}]);`
+The old single-bubble `acbCoach` is deprecated — replace calls with a 2–4 step `acbCoachSeq`.
+
+## 5b. Deliverables are professional documents — no tips on them
+
+Anything that prints or downloads (the letter/lease/application/checklist itself) must contain
+ONLY document content: parties, terms, tables, signatures, the two-line ACB footer. NO
+"Tip:", "Pro tip", "Hint", emoji, coaching language, or builder-side guidance may appear in the
+generated document, the print output, or the PDF. Guidance belongs in the builder UI (hints,
+tooltips, info cards marked `.no-print`). Audit `@media print` rules: everything except the
+document node gets `display:none`.
+
+## 5c. Pagination (print + PDF)
+
+Print CSS for every document tool:
+```css
+@media print{
+  @page{margin:0.75in}
+  .doc h3,.doc .sh{break-after:avoid;page-break-after:avoid}
+  .doc table,.doc tr,.sig-grid,.sig-block,.doc-foot{break-inside:avoid;page-break-inside:avoid}
+  .doc p{orphans:3;widows:3}
+}
+```
+(Adapt selectors per tool.) pdf-lib generators: the `need(h)` guard must be called with the FULL
+height of the unit about to be drawn (a heading + its first row together; an entire signature
+block; an entire checkbox group), so units never straddle pages. Headings must never be the last
+thing on a page. jsPDF (checklist): same rule — before each room header, check remaining space
+fits the header + at least one item row; keep each signature line block together.
 
 ## 6. Rating prompt (engagement-triggered) + working ratings
 
