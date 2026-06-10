@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex"><!-- tool is iframed; the Webflow page is the indexed URL -->
+<title>Late Rent Notice Generator | Advanced Collection Bureau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --acb-blue:#3D5AF1;--acb-blue-dark:#2D45C6;--acb-blue-light:#EEF1FE;--acb-blue-mid:#D5DBFC;
+  --acb-bg:#F4F5F9;--acb-card:#FFFFFF;--acb-text:#1A1A2E;--acb-text-mid:#4A4A68;--acb-text-light:#8889A0;
+  --acb-border:#E2E4EC;--acb-warn:#E8A83E;--acb-warn-bg:#FEF9EE;--acb-green:#16A34A;--acb-red:#DC2626;--acb-gold:#F5B301;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-text);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 48px}
+.tool-head{text-align:center;margin-bottom:22px}
+.tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
+.tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.modes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
+.mode-btn{padding:11px 22px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14.5px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s;min-height:44px}
+.mode-btn.on{background:var(--acb-blue-light);border-color:var(--acb-blue);color:var(--acb-blue);font-weight:600}
+.grid{display:grid;grid-template-columns:10fr 11fr;gap:22px;align-items:start}
+@media(max-width:960px){.grid{grid-template-columns:1fr}}
+.card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
+.card+.card{margin-top:22px}
+.sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
+.field{margin-bottom:16px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:14px;font-weight:600;color:var(--acb-text);margin-bottom:7px}
+.in-wrap{position:relative;display:flex;align-items:center}
+.in-wrap .pre{position:absolute;left:14px;color:var(--acb-text-light);font-size:15px;font-weight:500;pointer-events:none}
+input[type=text],input[type=email],input[type=tel],input[type=date],select,textarea{width:100%;padding:13px 16px;background:#fff;border:1.5px solid var(--acb-border);border-radius:10px;color:var(--acb-text);font-size:16px;font-family:inherit;outline:none;transition:border-color .25s,box-shadow .25s}
+textarea{resize:vertical;min-height:74px;line-height:1.5}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238889A0' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px;cursor:pointer}
+.in-wrap.has-pre input{padding-left:32px}
+input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(61,90,241,.09)}
+.hint{font-size:12.5px;color:var(--acb-text-light);margin-top:6px;line-height:1.5}
+.mini-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.mini-row{grid-template-columns:1fr}}
+.state-note{background:#FAFBFD;border:1px solid var(--acb-border);border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--acb-text-mid);line-height:1.55;margin-top:8px}
+.state-note em{color:var(--acb-text-light)}
+.dl-note{background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--acb-text-mid);line-height:1.55;margin-top:14px}
+.dl-note strong{color:var(--acb-text)}
+.dl-note.warn{background:var(--acb-warn-bg);border-color:#F0DCB2;color:#8A6213}
+/* tooltips */
+.acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--acb-text);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;padding:10px 12px;border-radius:10px;width:230px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;text-transform:none;letter-spacing:normal}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble{opacity:1}
+@media(max-width:720px){.acb-tip-bubble{left:auto;right:-10px;transform:none}}
+/* ledger */
+.led-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.led-row .led-desc{flex:1.55;min-width:0}
+.led-row .in-wrap{flex:1;min-width:0}
+.led-row input{padding:10px 12px;font-size:15px}
+.led-row .in-wrap.has-pre input{padding-left:34px}
+.led-row.pay .led-amt{color:var(--acb-green);font-weight:600}
+.led-row.pay .pre{color:var(--acb-green)}
+.led-x{flex-shrink:0;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-light);cursor:pointer;font-size:12px;font-family:inherit;transition:all .2s}
+.led-x:hover{color:var(--acb-red);border-color:#F2C4C4}
+.led-adds{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 16px}
+.led-add{padding:8px 14px;border-radius:50px;border:1.5px dashed var(--acb-blue-mid);background:var(--acb-blue-light);color:var(--acb-blue);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.led-add:hover{border-style:solid;border-color:var(--acb-blue)}
+.total-line{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-top:2px solid var(--acb-text);padding-top:12px}
+.total-line .tk{font-size:12.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--acb-text-mid)}
+.total-val{font-size:34px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.acb-mini{background:var(--acb-blue-light);border-left:4px solid var(--acb-blue);border-radius:6px 12px 12px 6px;padding:14px 16px;font-size:13px;color:var(--acb-text-mid);line-height:1.55;margin-top:16px}
+.acb-mini strong{color:var(--acb-text)}
+.acb-mini a{color:var(--acb-blue);font-weight:700;text-decoration:none;white-space:nowrap}
+.acb-mini[hidden]{display:none}
+/* service chips */
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:10px 16px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:13.5px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s;min-height:44px}
+.chip.on{background:var(--acb-blue-light);border-color:var(--acb-blue);color:var(--acb-blue);font-weight:600}
+.chip.on:before{content:'✓ '}
+/* document preview */
+.preview-shell{padding:18px}
+.doc{background:#fff;border:1px solid var(--acb-border);border-radius:8px;padding:36px 34px;font-size:13px;color:#15151f;line-height:1.6}
+@media(max-width:480px){.doc{padding:22px 16px}}
+.doc .ttl{text-align:center;font-size:18px;font-weight:800;letter-spacing:.12em}
+.doc .sub{text-align:center;font-size:11.5px;color:#3c3c4e;margin-top:3px;margin-bottom:16px}
+.doc .date-line{font-size:12.5px;margin-bottom:16px}
+.doc .meta{border:1.2px solid #8a8a96;padding:12px 14px;margin:14px 0;font-size:12px}
+.doc .meta .mr{display:flex;gap:10px;margin:3px 0}
+.doc .meta .mk{font-weight:700;min-width:118px;flex-shrink:0}
+.doc .para{font-size:12.3px;color:#1f1f2e;text-align:justify;margin:10px 0;line-height:1.62}
+.doc .para.pers{font-style:italic}
+.doc .h2{font-size:12.5px;font-weight:800;letter-spacing:.06em;margin:18px 0 8px;text-transform:uppercase}
+.doc .led-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:12px}
+.doc .led-table th,.doc .led-table td{border:1px solid #55556a;padding:7px 10px;text-align:left}
+.doc .led-table th{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;background:#f4f4f8}
+.doc .led-table .amt{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.doc .led-table td em{font-size:11px;color:#4c4c5e}
+.doc .led-table tr.tot td{font-weight:800;border-top:2px solid #15151f;font-size:12.5px}
+.doc ul.fl{margin:8px 0 8px 22px;font-size:12.3px}
+.doc ul.fl li{margin:3px 0}
+.doc .friendly-total{font-size:15.5px;font-weight:800;margin:12px 0}
+.doc .doc-row{display:flex;gap:18px;margin-top:24px}
+.doc .doc-f{display:flex;align-items:flex-end;gap:6px;min-width:0}
+.doc .doc-f .lbl{white-space:nowrap;font-size:11px;color:#26263a}
+.doc .doc-f .line{flex:1;border-bottom:1.2px solid #55556a;min-width:30px;height:16px}
+.doc .doc-f .line.filled{font-size:12px;color:#15151f;height:auto;padding-bottom:1px}
+.doc .cos{border:1.2px solid #8a8a96;padding:13px 15px;margin-top:22px}
+.doc .cos .cos-t{font-size:11.5px;font-weight:800;letter-spacing:.05em;margin-bottom:7px}
+.doc .cos-line{font-size:12px;margin:5px 0}
+.doc .statenote{background:#f7f7fa;border:1px solid #c9c9d4;padding:10px 12px;font-size:10.8px;line-height:1.55;margin-top:18px;color:#33333f}
+.doc .doc-legal{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:12px;border-top:1px solid #d8d8e0;padding-top:8px}
+/* actions */
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.btn-secondary{padding:11px 24px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:var(--acb-blue-mid);color:var(--acb-blue)}
+.acb-btn-primary{display:inline-block;padding:14px 36px;border-radius:50px;border:none;background:var(--acb-blue);color:#fff;font-size:15px;font-family:inherit;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(61,90,241,.27);transition:all .2s}
+.acb-btn-primary:hover{background:var(--acb-blue-dark);transform:translateY(-1px)}
+/* shared blocks */
+.acb-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:var(--acb-blue-light);border-left:4px solid var(--acb-blue);border-radius:6px 16px 16px 6px;padding:24px 28px;margin-top:34px}
+.acb-cta-title{font-size:19px;font-weight:700;color:var(--acb-text);margin-bottom:6px}
+.acb-cta p{font-size:14.5px;color:var(--acb-text-mid);line-height:1.55;margin:0;max-width:520px}
+.acb-cta-actions{display:flex;flex-direction:column;align-items:center;gap:8px}
+.acb-cta-tel{font-size:13px;color:var(--acb-blue);text-decoration:none;font-weight:600;white-space:nowrap}
+.acb-rating{display:flex;flex-direction:column;align-items:center;gap:6px;margin:34px auto 0;text-align:center}
+.acb-star{background:none;border:none;font-size:30px;line-height:1;color:#D0D3DC;cursor:pointer;padding:2px 3px;transition:color .15s,transform .15s;font-family:inherit}
+.acb-star.on{color:var(--acb-gold)}
+.acb-star:hover{transform:scale(1.15)}
+.acb-rating-meta{font-size:13px;color:var(--acb-text-light)}
+.disclaimer{font-size:12px;color:var(--acb-text-light);text-align:center;line-height:1.6;margin-top:26px;max-width:640px;margin-left:auto;margin-right:auto}
+.fade{animation:fadeIn .35s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media print{
+  @page{margin:.7in}
+  body{background:#fff}
+  .no-print{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .grid{display:block}
+  #previewCard{border:none;box-shadow:none;padding:0;border-radius:0;margin:0}
+  .doc{border:none;border-radius:0;padding:0;font-size:12.5px}
+  .doc .meta,.doc .led-table,.doc .cos,.doc .doc-row,.doc .statenote{page-break-inside:avoid;break-inside:avoid}
+  .doc .h2{page-break-after:avoid;break-after:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tool-head no-print">
+    <h1>Late Rent Notice Generator</h1>
+    <p>Send the right notice, the right way — a warm payment reminder or a formal, state-aware Notice to Pay or Quit with the deadline computed for you. Print it, save it as a PDF, or copy the text.</p>
+    <div class="badges"><span class="badge">100% Free</span><span class="badge">No Signup</span><span class="badge">No Email Required</span></div>
+  </div>
+
+  <div class="modes no-print" role="tablist" aria-label="Notice type">
+    <button type="button" class="mode-btn" data-mode="friendly" role="tab" aria-selected="false">Friendly reminder</button>
+    <button type="button" class="mode-btn on" data-mode="formal" role="tab" aria-selected="true">Formal Notice to Pay or Quit</button>
+  </div>
+
+  <div class="grid">
+    <!-- ============ BUILDER COLUMN ============ -->
+    <div class="no-print">
+      <div class="card">
+        <div class="sec-label">1 · Property state</div>
+        <div class="field">
+          <label for="inState">State the property is in
+            <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">The "cure period" is how long state law gives a tenant to pay (or move out) after a pay-or-quit notice is served. It ranges from 3 to 30 days depending on the state.</span></span>
+          </label>
+          <select id="inState" aria-describedby="curePanel"></select>
+          <div class="state-note" id="curePanel" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">2 · Parties &amp; property</div>
+        <div class="field">
+          <label for="inLandlord">Landlord / property manager name</label>
+          <input type="text" id="inLandlord" placeholder="e.g. Maple Court Properties LLC" autocomplete="organization">
+        </div>
+        <div class="field">
+          <label for="inTenants">Tenant name(s)</label>
+          <input type="text" id="inTenants" placeholder="e.g. Jordan Smith and Casey Smith">
+          <div class="hint">List every adult tenant on the lease, separated by "and".</div>
+        </div>
+        <div class="field">
+          <label for="inStreet">Property street address</label>
+          <input type="text" id="inStreet" placeholder="e.g. 123 Main St, Unit 4">
+        </div>
+        <div class="field">
+          <label>City &amp; ZIP</label>
+          <div class="mini-row">
+            <input type="text" id="inCity" placeholder="City" aria-label="Property city">
+            <input type="text" id="inZip" placeholder="ZIP" inputmode="numeric" aria-label="Property ZIP code">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">3 · Amount due</div>
+        <div id="ledger"></div>
+        <div class="led-adds">
+          <button type="button" class="led-add" id="addRent">+ Rent</button>
+          <button type="button" class="led-add" id="addLate">+ Late fee</button>
+          <button type="button" class="led-add" id="addRet">+ Returned payment fee</button>
+          <button type="button" class="led-add" id="addOther">+ Other</button>
+          <button type="button" class="led-add" id="addPay">+ Payment received</button>
+        </div>
+        <div class="total-line"><span class="tk">Total amount due</span><span class="total-val" id="totalDue" aria-live="polite">$0.00</span></div>
+        <div class="hint">"Payment received" rows are subtracted as credits. Only include late or returned-payment fees your lease actually allows.</div>
+        <div class="acb-mini" id="ctaMini" hidden>
+          <strong>If this notice doesn't get the rent paid</strong> and the tenant leaves owing money, Advanced Collection Bureau recovers unpaid rent, fees, and damages for landlords — no recovery, no fee. <a href="https://www.advancedcb.com/" target="_top">Get started →</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">4 · Dates &amp; service</div>
+        <div class="field">
+          <label>Key dates</label>
+          <div class="mini-row">
+            <div>
+              <input type="date" id="inDue" aria-label="Date rent was due">
+              <div class="hint">Date rent was due</div>
+            </div>
+            <div>
+              <input type="date" id="inServed" aria-label="Date the notice is served">
+              <div class="hint">Date notice is served</div>
+            </div>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>How will the notice be delivered?
+            <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Most states only accept specific service methods (personal delivery, post-and-mail, certified mail). Using the wrong one can restart the clock — check your state's rules and your lease.</span></span>
+          </label>
+          <div class="chips" role="radiogroup" aria-label="Service method">
+            <button type="button" class="chip" data-m="hand" role="radio" aria-checked="false">Hand delivery</button>
+            <button type="button" class="chip" data-m="post" role="radio" aria-checked="false">Posted on door + mailed</button>
+            <button type="button" class="chip" data-m="cert" role="radio" aria-checked="false">Certified mail</button>
+            <button type="button" class="chip" data-m="lease" role="radio" aria-checked="false">Per lease</button>
+          </div>
+        </div>
+        <div id="dlWrap">
+          <div class="dl-note" id="dlNote" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-label">5 · Payment instructions</div>
+        <div class="field">
+          <label for="inPayTo">How / where to pay</label>
+          <input type="text" id="inPayTo" placeholder="e.g. Certified check to Maple Court Properties, 500 Oak Ave, Orlando, FL — or the resident portal">
+        </div>
+        <div class="field">
+          <label>Contact for questions</label>
+          <div class="mini-row">
+            <input type="tel" id="inPhone" placeholder="Phone" aria-label="Contact phone">
+            <input type="email" id="inEmail" placeholder="Email" aria-label="Contact email">
+          </div>
+        </div>
+      </div>
+
+      <div class="card" id="cardPersonal">
+        <div class="sec-label">6 · Personal note (optional)</div>
+        <div class="field">
+          <label for="inPersonal">Add a personal line to the letter</label>
+          <textarea id="inPersonal" placeholder="e.g. I know things have been busy since the move — just want to make sure this didn't slip through the cracks."></textarea>
+          <div class="hint">A human sentence keeps a good tenant relationship intact. Skip it if it doesn't fit.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PREVIEW COLUMN ============ -->
+    <div>
+      <div class="card preview-shell" id="previewCard">
+        <div class="sec-label no-print" style="margin-bottom:12px">Live preview — updates as you type</div>
+        <div class="doc" id="docPreview" aria-live="polite"></div>
+      </div>
+      <div class="actions no-print">
+        <button type="button" class="acb-btn-primary" id="printBtn">Print / Save as PDF</button>
+        <button type="button" class="btn-secondary" id="copyBtn">Copy text</button>
+      </div>
+      <p class="hint no-print" style="text-align:center;margin-top:10px">"Print / Save as PDF" prints only the notice. Nothing you type leaves this page — there's no upload and no account.</p>
+    </div>
+  </div>
+
+  <div class="acb-rating no-print" id="acbRating" aria-label="Rate this tool">
+    <div class="acb-rating-stars" id="acbStars" role="radiogroup"></div>
+    <div class="acb-rating-meta" id="acbRatingMeta"></div>
+  </div>
+
+  <div class="acb-cta no-print">
+    <div class="acb-cta-text">
+      <div class="acb-cta-title">Notice didn't work?</div>
+      <p>When tenants leave owing rent, Advanced Collection Bureau recovers it — no recovery, no fee. Over <strong>$85&nbsp;million</strong> recovered in unpaid rent, fees, and damages for landlords and property managers.</p>
+    </div>
+    <div class="acb-cta-actions">
+      <a class="acb-btn-primary" href="https://www.advancedcb.com/" target="_top">Get Started</a>
+      <a class="acb-cta-tel" href="tel:3216334999">or call (321) 633-4999</a>
+    </div>
+  </div>
+
+  <p class="disclaimer no-print">This generator produces a general-purpose template for informational purposes only — it is not legal advice and no attorney-client relationship is created. Cure periods, service rules, and notice requirements change frequently and vary by state, county, and city; some cities require additional or longer notices, and any grace period in your lease still applies. Verify current law and review the notice with a local attorney before serving it. © Advanced Collection Bureau, Inc.</p>
+</div>
+
+<script>
+/* ============ Pure data + document model (no DOM access in this block) ============ */
+"use strict";
+var fmtUSD=function(n,c){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:c?2:0,maximumFractionDigits:c?2:0}).format(isFinite(n)?n:0);};
+var escHtml=function(s){return String(s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];});};
+
+/* State cure periods for a nonpayment notice to pay or quit.
+   d = display text; biz = the state counts business/court/judicial days.
+   ALWAYS shown with a "verify current law" hedge — these change. */
+var CURE={
+  AL:{n:'Alabama',d:'7 days'},
+  AK:{n:'Alaska',d:'7 days'},
+  AZ:{n:'Arizona',d:'5 days'},
+  AR:{n:'Arkansas',d:'3 days (procedures unusual — strongly verify)'},
+  CA:{n:'California',d:'3 days (excludes weekends & judicial holidays)',biz:true},
+  CO:{n:'Colorado',d:'10 days'},
+  CT:{n:'Connecticut',d:'3 days (after the statutory 9-day grace)'},
+  DE:{n:'Delaware',d:'5 days'},
+  DC:{n:'District of Columbia',d:'30 days'},
+  FL:{n:'Florida',d:'3 days (excludes weekends & legal holidays)',biz:true},
+  GA:{n:'Georgia',d:'Demand for possession — no fixed statutory period (3–5 days customary)'},
+  HI:{n:'Hawaii',d:'5 business days',biz:true},
+  ID:{n:'Idaho',d:'3 days'},
+  IL:{n:'Illinois',d:'5 days'},
+  IN:{n:'Indiana',d:'10 days'},
+  IA:{n:'Iowa',d:'3 days'},
+  KS:{n:'Kansas',d:'3 days'},
+  KY:{n:'Kentucky',d:'7 days'},
+  LA:{n:'Louisiana',d:'5 days (unless the lease waives notice)'},
+  ME:{n:'Maine',d:'7 days'},
+  MD:{n:'Maryland',d:'10 days'},
+  MA:{n:'Massachusetts',d:'14 days'},
+  MI:{n:'Michigan',d:'7 days'},
+  MN:{n:'Minnesota',d:'14 days'},
+  MS:{n:'Mississippi',d:'3 days'},
+  MO:{n:'Missouri',d:'No fixed statutory cure period — written demand recommended'},
+  MT:{n:'Montana',d:'3 business days',biz:true},
+  NE:{n:'Nebraska',d:'7 days'},
+  NV:{n:'Nevada',d:'7 judicial days',biz:true},
+  NH:{n:'New Hampshire',d:'7 days'},
+  NJ:{n:'New Jersey',d:'No cure notice generally required for nonpayment before filing (grace rules protect some tenants — verify)'},
+  NM:{n:'New Mexico',d:'3 days'},
+  NY:{n:'New York',d:'14 days'},
+  NC:{n:'North Carolina',d:'10 days'},
+  ND:{n:'North Dakota',d:'3 days'},
+  OH:{n:'Ohio',d:'3 days'},
+  OK:{n:'Oklahoma',d:'5 days'},
+  OR:{n:'Oregon',d:'72 hours (may be given after rent is 7 days late; a 144-hour notice may be given after 4 days)'},
+  PA:{n:'Pennsylvania',d:'10 days'},
+  RI:{n:'Rhode Island',d:'5 days'},
+  SC:{n:'South Carolina',d:'5 days'},
+  SD:{n:'South Dakota',d:'3 days'},
+  TN:{n:'Tennessee',d:'14 days'},
+  TX:{n:'Texas',d:'3 days (a lease may set a different period)'},
+  UT:{n:'Utah',d:'3 business days',biz:true},
+  VT:{n:'Vermont',d:'14 days'},
+  VA:{n:'Virginia',d:'5 days'},
+  WA:{n:'Washington',d:'14 days'},
+  WV:{n:'West Virginia',d:'No statutory cure notice — landlord may proceed under WV procedures (verify)'},
+  WI:{n:'Wisconsin',d:'5 days (month-to-month and most first-year leases, with right to cure)'},
+  WY:{n:'Wyoming',d:'3 days'}
+};
+var VERIFY_LINE='Verify current law — cure periods change, some cities require additional or longer notices, and any grace period in your lease still applies.';
+
+var METHODS={
+  hand:'Hand delivery to the tenant',
+  post:'Posting a copy on the door and mailing a copy',
+  cert:'Certified mail, return receipt requested',
+  lease:'The method required by the lease'
+};
+
+function parseAmt(v){var n=parseFloat(String(v==null?'':v).replace(/[^0-9.]/g,''));return isFinite(n)?n:0;}
+function parseDate(s){
+  if(!s)return null;
+  var p=String(s).split('-');
+  if(p.length!==3)return null;
+  var d=new Date(parseInt(p[0],10),parseInt(p[1],10)-1,parseInt(p[2],10));
+  return isNaN(d.getTime())?null:d;
+}
+function addDays(d,n){var r=new Date(d.getTime());r.setDate(r.getDate()+n);return r;}
+function addBizDays(d,n){
+  var r=new Date(d.getTime()),c=0;
+  while(c<n){r.setDate(r.getDate()+1);var w=r.getDay();if(w!==0&&w!==6)c++;}
+  return r;
+}
+function fmtDateLong(d){return d?d.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}):'';}
+function fmtDateMid(d){return d?d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):'';}
+
+/* Extract the countable span from a cure-period display string.
+   Returns {days, hours} or null when the state has no fixed statutory period. */
+function cureSpan(c){
+  var m=/^(\d+)\s*hour/i.exec(c.d);
+  if(m){var h=parseInt(m[1],10);return {days:Math.ceil(h/24),hours:h};}
+  m=/^(\d+)/.exec(c.d);
+  return m?{days:parseInt(m[1],10),hours:0}:null;
+}
+/* The short period phrase for the demand paragraph, e.g. "3 days", "5 business days", "72 hours". */
+function curePhrase(c){
+  var m=/^(\d+\s*(?:business\s+|judicial\s+)?(?:days?|hours?))/i.exec(c.d);
+  return m?m[1]:null;
+}
+
+function computeModel(S){
+  var c=CURE[S.st]||CURE.FL;
+  var rows=[],charges=0,credits=0;
+  (S.rows||[]).forEach(function(r){
+    var a=parseAmt(r.amt);
+    rows.push({desc:r.desc,amt:a,pay:!!r.pay});
+    if(r.pay)credits+=a;else charges+=a;
+  });
+  var served=parseDate(S.served),due=parseDate(S.dueDate);
+  var span=cureSpan(c),deadline=null;
+  if(span&&served){
+    deadline={date:c.biz?addBizDays(served,span.days):addDays(served,span.days),biz:!!c.biz,days:span.days,hours:span.hours};
+  }
+  return {S:S,c:c,stName:c.n,rows:rows,charges:charges,credits:credits,total:charges-credits,
+          served:served,due:due,span:span,deadline:deadline,phrase:curePhrase(c),
+          method:METHODS[S.method]||METHODS.hand};
+}
+
+/* ---------- shared text fragments ---------- */
+function addrText(M){
+  var S=M.S;
+  return (S.street||'[Street address]')+', '+(S.city||'[City]')+', '+M.stName+' '+(S.zip||'[ZIP]');
+}
+function payText(M){
+  var S=M.S,t='Payment should be made as follows: '+(S.payTo||'[How / where to pay]')+'.';
+  var ct=[];
+  if(S.phone)ct.push(S.phone);
+  if(S.email)ct.push(S.email);
+  if(ct.length)t+=' Questions about this notice or your balance: '+ct.join(' · ')+'.';
+  return t;
+}
+function demandText(M){
+  var t='YOU ARE HEREBY REQUIRED to pay the total amount due of '+fmtUSD(M.total,true)+' in full ';
+  if(M.span){
+    t+='within '+M.phrase+' after service of this notice';
+    if(M.deadline){
+      t+=' — on or before '+(M.deadline.biz?'approximately ':'')+fmtDateLong(M.deadline.date);
+      if(M.deadline.hours)t+=' ('+M.deadline.hours+' hours counted here as '+M.deadline.days+' calendar days)';
+      if(M.deadline.biz)t+=' ('+M.stName+' counts business/court days: weekends are excluded and court holidays may extend the deadline — verify current law)';
+    }
+  }else{
+    t+='within the period required or customary under '+M.stName+' law (see the state note below)';
+  }
+  t+=', OR to vacate and surrender possession of the premises to the landlord.';
+  return t;
+}
+var FAIL_TEXT='If you fail to pay the total amount due or to surrender possession of the premises within the period stated above, legal proceedings to recover possession (eviction), unpaid rent, late fees, damages, court costs, and any other relief permitted by law may be initiated against you.';
+var RESERVE_TEXT='RESERVATION OF RIGHTS — This notice is given without waiver of any right or remedy available to the landlord. Acceptance of a partial payment does not waive the landlord’s right to demand the remaining balance or to pursue possession, except where applicable law provides otherwise. All rights and remedies under the lease and applicable law are expressly reserved.';
+var LEGAL_TEXT='Generated with a free tool from Advanced Collection Bureau (advancedcb.com). This is a general template for informational purposes only — not legal advice, and no attorney-client relationship is created. Cure periods and notice and service requirements change frequently and vary by state, county, and city; some cities require additional or different notices, and any grace period in the lease still applies. Verify current law and review this notice with a local attorney before serving it.';
+
+/* ---------- HTML preview ---------- */
+function ledgerTableHtml(M){
+  var o='<table class="led-table"><thead><tr><th>Description</th><th class="amt">Amount</th></tr></thead><tbody>';
+  if(!M.rows.length)o+='<tr><td>[No charges entered]</td><td class="amt">'+fmtUSD(0,true)+'</td></tr>';
+  M.rows.forEach(function(r){
+    o+='<tr><td>'+(r.desc?escHtml(r.desc):'[Description]')+(r.pay?' <em>(payment received — credit)</em>':'')+'</td>'+
+       '<td class="amt">'+(r.pay?'−':'')+fmtUSD(r.amt,true)+'</td></tr>';
+  });
+  o+='<tr class="tot"><td>TOTAL AMOUNT DUE</td><td class="amt">'+fmtUSD(M.total,true)+'</td></tr></tbody></table>';
+  return o;
+}
+function cosHtml(M){
+  var o='<div class="cos"><div class="cos-t">CERTIFICATE OF SERVICE</div>';
+  o+='<p class="para">I, _______________________________, certify that on ________________ I served a copy of this notice on the tenant(s) named above by the method checked below:</p>';
+  ['hand','post','cert','lease'].forEach(function(k){
+    o+='<div class="cos-line">'+(M.S.method===k?'☒':'☐')+' '+escHtml(METHODS[k])+'</div>';
+  });
+  o+='<div class="doc-row"><span class="doc-f" style="flex:2"><span class="lbl">Server’s signature</span><span class="line"></span></span><span class="doc-f" style="flex:.8"><span class="lbl">Date</span><span class="line"></span></span></div>';
+  o+='</div>';
+  return o;
+}
+function docHtmlFormal(M){
+  var S=M.S,o='';
+  var tn=S.tenants?escHtml(S.tenants):'[Tenant name(s)]';
+  var ll=S.landlord?escHtml(S.landlord):'[Landlord / manager name]';
+  o+='<div class="ttl">NOTICE TO PAY RENT OR QUIT</div>';
+  o+='<div class="sub">Demand for payment of rent or surrender of possession</div>';
+  o+='<div class="meta">';
+  o+='<div class="mr"><span class="mk">TO:</span><span>'+tn+', and all other tenants and occupants in possession of the premises</span></div>';
+  o+='<div class="mr"><span class="mk">PREMISES:</span><span>'+escHtml(addrText(M))+'</span></div>';
+  o+='<div class="mr"><span class="mk">DATE OF NOTICE:</span><span>'+(M.served?escHtml(fmtDateMid(M.served)):'[Date served]')+'</span></div>';
+  o+='<div class="mr"><span class="mk">SERVED BY:</span><span>'+escHtml(M.method)+'</span></div>';
+  o+='</div>';
+  o+='<p class="para">YOU ARE HEREBY NOTIFIED that rent and other charges for the premises described above are due and unpaid'+(M.due?', rent having been due on '+escHtml(fmtDateMid(M.due)):'')+'. The following amounts are owed as of the date of this notice:</p>';
+  o+=ledgerTableHtml(M);
+  o+='<p class="para">'+escHtml(demandText(M))+'</p>';
+  o+='<p class="para">'+escHtml(FAIL_TEXT)+'</p>';
+  o+='<p class="para">'+escHtml(payText(M))+'</p>';
+  o+='<p class="para">'+escHtml(RESERVE_TEXT)+'</p>';
+  o+='<div class="doc-row"><span class="doc-f" style="flex:2"><span class="lbl">Landlord / agent signature</span><span class="line"></span></span><span class="doc-f" style="flex:.8"><span class="lbl">Date</span><span class="line"></span></span></div>';
+  o+='<div class="doc-row" style="margin-top:14px"><span class="doc-f" style="flex:1"><span class="lbl">Printed name:</span><span class="line filled">'+ll+'</span></span></div>';
+  o+=cosHtml(M);
+  o+='<div class="statenote"><strong>State note — '+escHtml(M.stName)+':</strong> Pay-or-quit cure period: '+escHtml(M.c.d)+'. '+escHtml(VERIFY_LINE)+'</div>';
+  o+='<p class="doc-legal">'+escHtml(LEGAL_TEXT)+'</p>';
+  return o;
+}
+function docHtmlFriendly(M){
+  var S=M.S,o='';
+  var tn=S.tenants?escHtml(S.tenants):'[Tenant name(s)]';
+  var ll=S.landlord?escHtml(S.landlord):'[Landlord / manager name]';
+  o+='<div class="date-line">'+(M.served?escHtml(fmtDateMid(M.served)):'[Date]')+'</div>';
+  o+='<p class="para">Dear '+tn+',</p>';
+  o+='<p class="para">This is a friendly reminder that we haven’t yet received the rent payment for <strong>'+escHtml(addrText(M))+'</strong>. Rent was due on <strong>'+(M.due?escHtml(fmtDateMid(M.due)):'[due date]')+'</strong>, and our records currently show the following balance:</p>';
+  o+='<ul class="fl">';
+  if(!M.rows.length)o+='<li>[No charges entered]</li>';
+  M.rows.forEach(function(r){
+    o+='<li>'+(r.desc?escHtml(r.desc):'[Description]')+' — '+(r.pay?'less ':'')+fmtUSD(r.amt,true)+(r.pay?' (payment received)':'')+'</li>';
+  });
+  o+='</ul>';
+  o+='<div class="friendly-total">Total due: '+fmtUSD(M.total,true)+'</div>';
+  o+='<p class="para">'+escHtml(payText(M))+'</p>';
+  if(S.personal)o+='<p class="para pers">'+escHtml(S.personal)+'</p>';
+  o+='<p class="para">If something has come up, please reach out — we’d much rather work something out early than let a balance grow.</p>';
+  o+='<p class="para">If you’ve already sent payment, please disregard this letter — and thank you!</p>';
+  o+='<p class="para" style="margin-top:22px">Sincerely,<br><br>'+ll+'</p>';
+  o+='<p class="doc-legal">'+escHtml(LEGAL_TEXT)+'</p>';
+  return o;
+}
+function docHtml(M){return M.S.mode==='friendly'?docHtmlFriendly(M):docHtmlFormal(M);}
+
+/* ---------- plain text ---------- */
+function ledgerLinesText(M){
+  var L=[];
+  if(!M.rows.length)L.push('  [No charges entered] ............ '+fmtUSD(0,true));
+  M.rows.forEach(function(r){
+    L.push('  '+(r.desc||'[Description]')+(r.pay?' (payment received — credit)':'')+' ........ '+(r.pay?'-':'')+fmtUSD(r.amt,true));
+  });
+  L.push('  TOTAL AMOUNT DUE ................ '+fmtUSD(M.total,true));
+  return L;
+}
+function docTextFormal(M){
+  var S=M.S,L=[];
+  var tn=S.tenants||'[Tenant name(s)]';
+  L.push('NOTICE TO PAY RENT OR QUIT');
+  L.push('(Demand for payment of rent or surrender of possession)');
+  L.push('');
+  L.push('TO: '+tn+', and all other tenants and occupants in possession of the premises');
+  L.push('PREMISES: '+addrText(M));
+  L.push('DATE OF NOTICE: '+(M.served?fmtDateMid(M.served):'[Date served]'));
+  L.push('SERVED BY: '+M.method);
+  L.push('');
+  L.push('YOU ARE HEREBY NOTIFIED that rent and other charges for the premises described above are due and unpaid'+(M.due?', rent having been due on '+fmtDateMid(M.due):'')+'. The following amounts are owed as of the date of this notice:');
+  L.push('');
+  L=L.concat(ledgerLinesText(M));
+  L.push('');
+  L.push(demandText(M));
+  L.push('');
+  L.push(FAIL_TEXT);
+  L.push('');
+  L.push(payText(M));
+  L.push('');
+  L.push(RESERVE_TEXT);
+  L.push('');
+  L.push('Landlord / agent signature: _______________________________   Date: ____________');
+  L.push('Printed name: '+(S.landlord||'[Landlord / manager name]'));
+  L.push('');
+  L.push('CERTIFICATE OF SERVICE');
+  L.push('I, _______________________________, certify that on ________________ I served a copy of this notice on the tenant(s) named above by the method checked below:');
+  ['hand','post','cert','lease'].forEach(function(k){
+    L.push('  ['+(S.method===k?'X':' ')+'] '+METHODS[k]);
+  });
+  L.push('Server’s signature: _______________________________   Date: ____________');
+  L.push('');
+  L.push('STATE NOTE — '+M.stName+': Pay-or-quit cure period: '+M.c.d+'. '+VERIFY_LINE);
+  L.push('');
+  L.push(LEGAL_TEXT);
+  return L.join('\n');
+}
+function docTextFriendly(M){
+  var S=M.S,L=[];
+  L.push(M.served?fmtDateMid(M.served):'[Date]');
+  L.push('');
+  L.push('Dear '+(S.tenants||'[Tenant name(s)]')+',');
+  L.push('');
+  L.push('This is a friendly reminder that we haven’t yet received the rent payment for '+addrText(M)+'. Rent was due on '+(M.due?fmtDateMid(M.due):'[due date]')+', and our records currently show the following balance:');
+  L.push('');
+  L=L.concat(ledgerLinesText(M));
+  L.push('');
+  L.push(payText(M));
+  if(S.personal){L.push('');L.push(S.personal);}
+  L.push('');
+  L.push('If something has come up, please reach out — we’d much rather work something out early than let a balance grow.');
+  L.push('');
+  L.push('If you’ve already sent payment, please disregard this letter — and thank you!');
+  L.push('');
+  L.push('Sincerely,');
+  L.push('');
+  L.push(S.landlord||'[Landlord / manager name]');
+  L.push('');
+  L.push(LEGAL_TEXT);
+  return L.join('\n');
+}
+function docText(M){return M.S.mode==='friendly'?docTextFriendly(M):docTextFormal(M);}
+</script>
+
+<script>
+/* ============ Builder UI, persistence, preview ============ */
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id);};
+var LSKEY='acb:late-rent-notice-generator:state';
+
+function todayISO(){
+  var d=new Date();
+  return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+}
+function monthLabel(iso){
+  var d=parseDate(iso)||new Date();
+  return d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+}
+
+var DEF={mode:'formal',st:'FL',landlord:'',tenants:'',street:'',city:'',zip:'',
+  dueDate:'',served:todayISO(),method:'hand',payTo:'',phone:'',email:'',personal:''};
+
+function sanitize(s){
+  var o={},k;
+  for(k in DEF){o[k]=(s&&typeof s[k]===typeof DEF[k])?s[k]:DEF[k];}
+  o.rows=[];
+  if(s&&Object.prototype.toString.call(s.rows)==='[object Array]'){
+    s.rows.forEach(function(r){
+      if(r&&typeof r==='object')o.rows.push({desc:String(r.desc||''),amt:String(r.amt||''),pay:!!r.pay});
+    });
+  }
+  if(!o.rows.length)o.rows=[{desc:'Rent due '+monthLabel(o.dueDate),amt:'',pay:false}];
+  if(!o.served)o.served=todayISO();
+  if(o.mode!=='friendly'&&o.mode!=='formal')o.mode='formal';
+  if(!CURE[o.st])o.st='FL';
+  if(!METHODS[o.method])o.method='hand';
+  return o;
+}
+var S;
+try{S=sanitize(JSON.parse(localStorage.getItem(LSKEY)||'null'));}catch(e){S=sanitize(null);}
+function persist(){try{localStorage.setItem(LSKEY,JSON.stringify(S));}catch(e){}}
+
+/* state select (alphabetical by name) */
+var stSel=$('inState');
+Object.keys(CURE).map(function(k){return [k,CURE[k].n];})
+  .sort(function(a,b){return a[1]<b[1]?-1:1;})
+  .forEach(function(p){
+    var op=document.createElement('option');op.value=p[0];op.textContent=p[1];stSel.appendChild(op);
+  });
+stSel.value=S.st;
+stSel.addEventListener('change',function(){S.st=stSel.value;update();});
+
+/* ---- ledger ---- */
+function renderRows(){
+  var box=$('ledger');box.innerHTML='';
+  S.rows.forEach(function(r,i){
+    var row=document.createElement('div');row.className='led-row'+(r.pay?' pay':'');
+    var d=document.createElement('input');
+    d.type='text';d.className='led-desc';d.value=r.desc;
+    d.placeholder=r.pay?'Payment received':'Description';
+    d.setAttribute('aria-label',(r.pay?'Payment':'Charge')+' description');
+    d.addEventListener('input',function(){r.desc=d.value;update();});
+    var wrap=document.createElement('div');wrap.className='in-wrap has-pre';
+    var pre=document.createElement('span');pre.className='pre';pre.textContent=r.pay?'−$':'$';
+    var a=document.createElement('input');
+    a.type='text';a.className='led-amt';a.inputMode='decimal';a.value=r.amt;a.placeholder='0.00';
+    a.setAttribute('aria-label',(r.pay?'Payment':'Charge')+' amount in dollars');
+    a.addEventListener('input',function(){r.amt=a.value;update();});
+    wrap.appendChild(pre);wrap.appendChild(a);
+    var x=document.createElement('button');
+    x.type='button';x.className='led-x';x.textContent='✕';
+    x.setAttribute('aria-label','Remove this row');
+    x.addEventListener('click',function(){S.rows.splice(i,1);renderRows();update();});
+    row.appendChild(d);row.appendChild(wrap);row.appendChild(x);
+    box.appendChild(row);
+  });
+}
+function addRow(desc,pay){
+  S.rows.push({desc:desc,amt:'',pay:!!pay});
+  renderRows();update();
+  var amts=document.querySelectorAll('#ledger .led-amt');
+  if(amts.length)amts[amts.length-1].focus();
+}
+$('addRent').addEventListener('click',function(){addRow('Rent due '+monthLabel(S.dueDate),false);});
+$('addLate').addEventListener('click',function(){addRow('Late fee',false);});
+$('addRet').addEventListener('click',function(){addRow('Returned payment fee',false);});
+$('addOther').addEventListener('click',function(){addRow('',false);});
+$('addPay').addEventListener('click',function(){addRow('Payment received',true);});
+
+/* ---- text inputs ---- */
+[['inLandlord','landlord'],['inTenants','tenants'],['inStreet','street'],['inCity','city'],
+ ['inZip','zip'],['inPayTo','payTo'],['inPhone','phone'],['inEmail','email'],['inPersonal','personal']
+].forEach(function(b){
+  var el=$(b[0]);el.value=S[b[1]];
+  el.addEventListener('input',function(){S[b[1]]=el.value;update();});
+});
+
+/* ---- dates ---- */
+[['inDue','dueDate'],['inServed','served']].forEach(function(b){
+  var el=$(b[0]);el.value=S[b[1]];
+  ['input','change'].forEach(function(ev){
+    el.addEventListener(ev,function(){S[b[1]]=el.value;update();});
+  });
+});
+
+/* ---- service chips ---- */
+var chips=document.querySelectorAll('.chip');
+function renderChips(){
+  Array.prototype.forEach.call(chips,function(c){
+    var on=c.dataset.m===S.method;
+    c.classList.toggle('on',on);
+    c.setAttribute('aria-checked',on?'true':'false');
+  });
+}
+Array.prototype.forEach.call(chips,function(c){
+  c.addEventListener('click',function(){S.method=c.dataset.m;renderChips();update();});
+});
+
+/* ---- notice type ---- */
+var modeBtns=document.querySelectorAll('.mode-btn');
+function setMode(m){
+  S.mode=m;
+  Array.prototype.forEach.call(modeBtns,function(b){
+    var on=b.dataset.mode===m;
+    b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false');
+  });
+  $('cardPersonal').style.display=(m==='friendly')?'':'none';
+  $('dlWrap').style.display=(m==='formal')?'':'none';
+  update();
+}
+Array.prototype.forEach.call(modeBtns,function(b){
+  b.addEventListener('click',function(){setMode(b.dataset.mode);});
+});
+
+/* ---- panels ---- */
+function renderCurePanel(M){
+  var html='<strong>'+escHtml(M.stName)+' cure period (pay-or-quit):</strong> '+escHtml(M.c.d)+'.';
+  if(M.c.biz)html+=' Counted in business/court days — weekends don’t count and court holidays may extend it.';
+  if(!M.span)html+=' With no fixed statutory period, state a clear, reasonable deadline in your written demand.';
+  html+='<br><em>'+escHtml(VERIFY_LINE)+'</em>';
+  $('curePanel').innerHTML=html;
+}
+function renderDeadline(M){
+  var el=$('dlNote');
+  el.classList.remove('warn');
+  if(!M.span){
+    el.classList.add('warn');
+    el.innerHTML='<strong>No fixed statutory cure period in '+escHtml(M.stName)+'.</strong> '+escHtml(M.c.d)+'. State a clear, reasonable deadline in your demand — and verify current law before serving.';
+    return;
+  }
+  if(!M.deadline){
+    el.innerHTML='Enter the date the notice is served to compute the earliest <strong>pay-or-quit deadline</strong>.';
+    return;
+  }
+  if(M.deadline.biz){
+    el.innerHTML='Earliest deadline: <strong>approximately '+escHtml(fmtDateLong(M.deadline.date))+'</strong> — '+escHtml(M.stName)+' counts business/court days, so this estimate excludes weekends, but court holidays may extend it. Verify current law.';
+  }else{
+    el.innerHTML='Earliest deadline: <strong>'+escHtml(fmtDateLong(M.deadline.date))+'</strong> ('+escHtml(M.phrase)+(M.deadline.hours?', counted here as '+M.deadline.days+' calendar days':' — calendar days')+' after service). Verify current law.';
+  }
+}
+
+function update(){
+  persist();
+  var M=computeModel(S);
+  renderCurePanel(M);
+  renderDeadline(M);
+  $('totalDue').textContent=fmtUSD(M.total,true);
+  $('ctaMini').hidden=!(M.total>0);
+  $('docPreview').innerHTML=docHtml(M);
+}
+
+/* ---- actions ---- */
+$('printBtn').addEventListener('click',function(){window.print();});
+$('copyBtn').addEventListener('click',function(){
+  var b=this,txt=docText(computeModel(S));
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){
+    b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy text';},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');b.textContent='Copied ✓';setTimeout(function(){b.textContent='Copy text';},1600);}catch(e){}
+    document.body.removeChild(ta);
+  });
+});
+
+renderRows();
+renderChips();
+setMode(S.mode);
+})();
+</script>
+
+<script>
+(function(){
+  var SEED={value:4.9,count:391};              /* keep in sync with page JSON-LD */
+  var KEY='acb:late-rent-notice-generator:rating';
+  var box=document.getElementById('acbStars'),meta=document.getElementById('acbRatingMeta');
+  var mine=parseInt(localStorage.getItem(KEY)||'0',10);
+  function agg(){var c=SEED.count+(mine?1:0);
+    var v=mine?((SEED.value*SEED.count+mine)/c):SEED.value;
+    return {v:Math.round(v*10)/10,c:c};}
+  function render(hover){
+    var a=agg();box.innerHTML='';
+    for(var i=1;i<=5;i++){(function(i){
+      var b=document.createElement('button');
+      b.type='button';b.className='acb-star'+((hover||mine||Math.round(a.v))>=i?' on':'');
+      b.setAttribute('aria-label',i+' star'+(i>1?'s':''));b.textContent='★';
+      b.onmouseenter=function(){render(i)};b.onmouseleave=function(){render(0)};
+      b.onclick=function(){mine=i;localStorage.setItem(KEY,String(i));render(0);
+        try{fetch('https://formsubmit.co/ajax/RATINGS_EMAIL',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({tool:'late-rent-notice-generator',rating:i,_subject:'Tool rating: late-rent-notice-generator'})
+        }).catch(function(){});}catch(e){}};
+      box.appendChild(b);})(i);}
+    meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
+  }
+  render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var last=0;
+  function send(){
+    var h=document.documentElement.scrollHeight;
+    if(Math.abs(h-last)>2){last=h;parent.postMessage({acbTool:'late-rent-notice-generator',height:h},'*');}
+  }
+  if(window.ResizeObserver){new ResizeObserver(send).observe(document.body);}
+  window.addEventListener('load',send);
+  setInterval(send,800);
+})();
+</script>
+</body>
+</html>
