@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <style>
 :root{
   --acb-blue:#3D5AF1;--acb-blue-dark:#2D45C6;--acb-blue-light:#EEF1FE;--acb-blue-mid:#D5DBFC;
@@ -22,7 +23,47 @@ body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-te
 .tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
 .tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
 .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.badge{font-size:12px;font-weight:500;color:#7E88B8;background:rgba(61,90,241,.045);border:1px solid rgba(61,90,241,.10);border-radius:50px;padding:4px 12px;letter-spacing:.01em}
+/* tooltips v2 */
+.acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
+.acb-tip:hover,.acb-tip:focus,.acb-tip.open{color:var(--acb-blue)}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 10px 30px rgba(26,26,46,.14);font-size:12.5px;font-weight:400;line-height:1.6;padding:12px 14px;border-radius:12px;width:270px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;text-transform:none;letter-spacing:normal;text-align:left}
+.acb-tip-bubble::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#fff;filter:drop-shadow(0 1.5px 0 var(--acb-border))}
+.acb-tip-bubble b{display:block;font-size:12px;font-weight:700;color:var(--acb-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.acb-tip-bubble i{font-style:normal;display:block}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:720px){.acb-tip-bubble{left:auto;right:-12px;transform:none}.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{transform:none}.acb-tip-bubble::after{left:auto;right:14px;transform:none}}
+/* calendar date picker */
+.acb-cal{position:absolute;z-index:120;background:#fff;border:1px solid var(--acb-border);border-radius:14px;box-shadow:0 12px 32px rgba(26,26,46,.14);padding:14px;width:264px;font-family:inherit}
+.acb-cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.acb-cal-title{font-weight:700;font-size:14px}
+.acb-cal-nav{width:30px;height:30px;border:1px solid var(--acb-border);background:#fff;border-radius:8px;cursor:pointer;color:var(--acb-text-mid);font-size:14px}
+.acb-cal-nav:hover{border-color:var(--acb-blue);color:var(--acb-blue)}
+.acb-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.acb-cal-dow{font-size:10.5px;font-weight:700;color:var(--acb-text-light);padding:4px 0;text-transform:uppercase}
+.acb-cal-d{border:none;background:none;border-radius:8px;padding:7px 0;font-size:13px;font-family:inherit;cursor:pointer;color:var(--acb-text)}
+.acb-cal-d:hover{background:var(--acb-blue-light)}
+.acb-cal-d.out{color:#C9CDDC}
+.acb-cal-d.today{box-shadow:inset 0 0 0 1.5px var(--acb-blue-mid)}
+.acb-cal-d.sel{background:var(--acb-blue);color:#fff;font-weight:700}
+.acb-cal-foot{display:flex;justify-content:space-between;margin-top:8px}
+.acb-cal-foot button{border:none;background:none;color:var(--acb-blue);font-weight:600;font-size:12.5px;cursor:pointer;font-family:inherit;padding:4px 6px}
+/* first-run coach */
+.acb-coach-ring{position:relative;z-index:91}
+.acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:12px 15px;font-size:13px;line-height:1.5;width:230px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach.side-r::before{content:"";position:absolute;right:100%;top:18px;border:8px solid transparent;border-right-color:var(--acb-text)}
+.acb-coach.side-l::before{content:"";position:absolute;left:100%;top:18px;border:8px solid transparent;border-left-color:var(--acb-text)}
+.acb-coach b{display:block;margin-bottom:3px}
+.acb-coach .step-dots{font-size:11px;opacity:.7;margin-top:7px}
+.acb-coach .skip{background:none;border:none;color:#fff;opacity:.75;font-size:11.5px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0;margin-top:7px;display:block}
+/* rating prompt */
+.acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
+.acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
+.acb-rate-card p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:12px}
+.acb-rate-card .skip{margin-top:10px;background:none;border:none;color:var(--acb-text-light);font-size:12.5px;cursor:pointer;font-family:inherit;text-decoration:underline}
 .grid{display:grid;grid-template-columns:10fr 11fr;gap:22px;align-items:start}
 @media(max-width:960px){.grid{grid-template-columns:1fr}}
 .card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
@@ -120,7 +161,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
 .doc .ltr-sig{margin-top:26px}
 .doc .ltr-sig .sigline{border-bottom:1.2px solid #15151f;width:240px;height:26px;margin-bottom:5px}
 .doc .ltr-sig .signame{font-size:12.5px}
-.doc-legal{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:18px;border-top:1px solid #d8d8e0;padding-top:8px;text-align:left}
+.doc .doc-foot{margin-top:18px;border-top:1px solid #d8d8e0;padding-top:8px;text-align:left}
+.doc .doc-foot .df1{font-size:12px;color:#26263a;line-height:1.5}
+.doc .doc-foot .df2{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:4px}
 /* actions */
 .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 .btn-secondary{padding:11px 24px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
@@ -145,15 +188,16 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 [hidden]{display:none!important}
 @media print{
-  @page{margin:.7in}
+  @page{margin:.75in}
   body{background:#fff}
   .no-print{display:none!important}
   .wrap{max-width:none;padding:0}
   .grid{display:block}
   #previewCard{border:none;box-shadow:none;padding:0;border-radius:0;margin:0}
   .doc{border:none;border-radius:0;padding:0;font-size:13px}
-  .doc .acct{page-break-inside:avoid;break-inside:avoid}
-  .doc .ltr-sig{page-break-inside:avoid;break-inside:avoid}
+  .doc .ltr-re,.doc .acct-h{break-after:avoid;page-break-after:avoid}
+  .doc .acct,.doc .acct-row,.doc .ltr-sig,.doc .doc-foot{break-inside:avoid;page-break-inside:avoid}
+  .doc p{orphans:3;widows:3}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -218,12 +262,16 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
             <input type="date" id="inMoveIn">
           </div>
           <div class="field">
-            <label for="inMoveOut">Move-out date</label>
+            <label for="inMoveOut">Move-out date
+              <span class="acb-tip" tabindex="0" data-t="Move-out date"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip"><b></b><i>Your state's return deadline counts from this date — enter it and the "Send by" date in the deadline panel updates automatically.</i></span></span>
+            </label>
             <input type="date" id="inMoveOut">
           </div>
         </div>
         <div class="field">
-          <label for="inDeposit">Security deposit held</label>
+          <label for="inDeposit">Security deposit held
+            <span class="acb-tip" tabindex="0" data-t="Deposit held"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip"><b></b><i>Enter the base security deposit you collected. Pet deposit and accrued interest have their own fields so the letter can itemize the total held.</i></span></span>
+          </label>
           <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="inDeposit" inputmode="decimal" placeholder="0"></div>
         </div>
         <div class="mini-row">
@@ -313,10 +361,11 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
         <div class="doc" id="docPreview" aria-live="polite"></div>
       </div>
       <div class="actions no-print">
-        <button type="button" class="acb-btn-primary" id="printBtn">Print / Save as PDF</button>
+        <button type="button" class="acb-btn-primary" id="pdfBtn">Download PDF</button>
+        <button type="button" class="btn-secondary" id="printBtn">Print</button>
         <button type="button" class="btn-secondary" id="copyBtn">Copy letter text</button>
       </div>
-      <p class="hint no-print" style="text-align:center;margin-top:10px">"Print / Save as PDF" prints only the letter. Everything stays in your browser — nothing is uploaded or shared.</p>
+      <p class="hint no-print" id="pdfStatus" aria-live="polite" style="text-align:center;margin-top:10px">"Download PDF" builds a fillable PDF of this letter with your answers pre-filled; "Print" prints only the letter. Everything stays in your browser — nothing is uploaded or shared.</p>
     </div>
   </div>
 
@@ -339,6 +388,133 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
   <p class="disclaimer no-print">This generator produces a general-purpose template and is provided for informational purposes only — it is not legal advice. Security deposit deadlines, interest rules, and delivery requirements change frequently and vary by state, county, and city; some states require receipts attached or specific delivery methods. Review the letter with a local attorney and verify current requirements before sending. © Advanced Collection Bureau, Inc.</p>
 </div>
 
+<script>
+/* ===== shared UI v3 helpers (see docs/ui-v3-spec.md) ===== */
+var ACB_REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tweenText(el,fmt,to,ms){
+  if(!el)return;
+  if(ACB_REDUCED||!isFinite(to)){el.textContent=fmt(isFinite(to)?to:0);el.__tv=isFinite(to)?to:0;return;}
+  var from=isFinite(el.__tv)?el.__tv:0;
+  el.__tv=to;
+  if(from===to){el.textContent=fmt(to);return;}
+  var t0=performance.now();ms=ms||480;
+  (function step(){
+    var p=Math.min(1,(performance.now()-t0)/ms);p=1-Math.pow(1-p,3);
+    el.textContent=fmt(from+(to-from)*p);
+    if(p<1)requestAnimationFrame(step);
+  })();
+}
+function smoothResize(el,mutate){
+  if(ACB_REDUCED||!el){if(mutate)mutate();return;}
+  var h0=el.offsetHeight;if(mutate)mutate();var h1=el.offsetHeight;
+  if(Math.abs(h0-h1)<3)return;
+  el.style.height=h0+'px';el.style.overflow='hidden';el.style.transition='height .3s ease';
+  void el.offsetHeight;
+  el.style.height=h1+'px';
+  setTimeout(function(){el.style.height='';el.style.overflow='';el.style.transition='';},320);
+}
+function acbTipUpgrade(root){
+  (root||document).querySelectorAll('.acb-tip').forEach(function(t){
+    if(t.__up)return;t.__up=true;
+    var bub=t.querySelector('.acb-tip-bubble');
+    if(bub&&!bub.querySelector('b')){
+      var body=bub.innerHTML;
+      var title=t.dataset.t||'';
+      if(!title){
+        var host=t.closest('label')||t.parentNode;
+        if(host){var c=host.cloneNode(true);var tip=c.querySelector('.acb-tip');if(tip)tip.remove();title=c.textContent.replace(/\s+/g,' ').trim();}
+      }
+      bub.innerHTML='<i>'+body+'</i>';
+      var b=document.createElement('b');b.textContent=(title||'About this field').slice(0,42);
+      bub.insertBefore(b,bub.firstChild);
+    }else if(bub){
+      var bb=bub.querySelector('b');
+      if(bb&&!bb.textContent)bb.textContent=(t.dataset.t||'About this field').slice(0,42);
+    }
+    t.addEventListener('click',function(e){e.stopPropagation();t.classList.toggle('open');});
+  });
+}
+document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
+function acbCoachSeq(slug,steps){
+  try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
+  var i=-1,el=null,tip=null;
+  function markDone(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}}
+  function clear(){if(el)el.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;tip=null;}
+  function stop(){markDone();clear();}
+  function show(n){
+    clear();i=n;
+    if(i>=steps.length){stop();return;}
+    var st=steps[i];
+    el=typeof st.target==='string'?document.querySelector(st.target):st.target;
+    if(!el){show(i+1);return;}
+    el.classList.add('acb-coach-ring');
+    try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
+    var wrap=el.closest('.field')||el.parentNode;
+    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+    tip=document.createElement('div');tip.className='acb-coach';
+    tip.innerHTML='<b>'+st.title+'</b>'+st.body
+      +'<div class="step-dots">Step '+(i+1)+' of '+steps.length+'</div>'
+      +'<button type="button" class="skip">Skip tour</button>';
+    wrap.appendChild(tip);
+    var spaceR=wrap.clientWidth-(el.offsetLeft+el.offsetWidth);
+    if(spaceR>250){tip.classList.add('side-r');tip.style.left=(el.offsetLeft+el.offsetWidth+14)+'px';tip.style.top=el.offsetTop+'px';}
+    else if(el.offsetLeft>250){tip.classList.add('side-l');tip.style.left=(el.offsetLeft-244)+'px';tip.style.top=el.offsetTop+'px';}
+    else{tip.style.left=Math.max(0,Math.min(el.offsetLeft+20,wrap.clientWidth-240))+'px';tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';}
+    tip.querySelector('.skip').addEventListener('click',stop);
+    var adv=function(){el.removeEventListener('input',adv);el.removeEventListener('change',adv);el.removeEventListener('click',adv);setTimeout(function(){show(i+1);},350);};
+    if(/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName)){el.addEventListener('input',adv);el.addEventListener('change',adv);}
+    else{el.addEventListener('click',adv);}
+  }
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){stop();document.removeEventListener('keydown',esc);}});
+  show(0);
+}
+function acbDate(input){
+  var pop=null,view;
+  function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  function close(){if(pop){pop.remove();pop=null;document.removeEventListener('mousedown',onDoc);}}
+  function onDoc(e){if(pop&&!pop.contains(e.target)&&e.target!==input)close();}
+  function set(d){input.value=iso(d);input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));close();}
+  function render(){
+    var sel=input.value?new Date(input.value+'T00:00:00'):null;
+    var today=new Date();today.setHours(0,0,0,0);
+    var y=view.getFullYear(),m=view.getMonth();
+    var first=new Date(y,m,1),startDow=first.getDay(),dim=new Date(y,m+1,0).getDate();
+    var h='<div class="acb-cal-head"><button type="button" class="acb-cal-nav" data-n="-1" aria-label="Previous month">‹</button><span class="acb-cal-title">'+view.toLocaleDateString('en-US',{month:'long',year:'numeric'})+'</span><button type="button" class="acb-cal-nav" data-n="1" aria-label="Next month">›</button></div><div class="acb-cal-grid">';
+    ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(function(d){h+='<span class="acb-cal-dow">'+d+'</span>';});
+    var prev=new Date(y,m,0).getDate();
+    for(var i=0;i<startDow;i++)h+='<button type="button" class="acb-cal-d out" data-d="'+iso(new Date(y,m-1,prev-startDow+1+i))+'">'+(prev-startDow+1+i)+'</button>';
+    for(var d=1;d<=dim;d++){
+      var cur=new Date(y,m,d),cls='acb-cal-d';
+      if(sel&&cur.getTime()===sel.getTime())cls+=' sel';
+      if(cur.getTime()===today.getTime())cls+=' today';
+      h+='<button type="button" class="'+cls+'" data-d="'+iso(cur)+'">'+d+'</button>';
+    }
+    var cells=startDow+dim,next=1;
+    for(var j=cells;j%7!==0;j++)h+='<button type="button" class="acb-cal-d out" data-d="'+iso(new Date(y,m+1,next))+'">'+(next++)+'</button>';
+    h+='</div><div class="acb-cal-foot"><button type="button" data-t="1">Today</button><button type="button" data-c="1">Close</button></div>';
+    pop.innerHTML=h;
+    pop.querySelectorAll('[data-n]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();view.setMonth(view.getMonth()+(+b.dataset.n));render();});});
+    pop.querySelectorAll('[data-d]').forEach(function(b){b.addEventListener('click',function(){set(new Date(b.dataset.d+'T00:00:00'));});});
+    pop.querySelector('[data-t]').addEventListener('click',function(){set(new Date());});
+    pop.querySelector('[data-c]').addEventListener('click',close);
+  }
+  function open(){
+    if(pop)return;
+    view=input.value?new Date(input.value+'T00:00:00'):new Date();view.setDate(1);
+    pop=document.createElement('div');pop.className='acb-cal';
+    var r=input.getBoundingClientRect();
+    var wrap=input.closest('.field')||input.parentNode;
+    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+    wrap.appendChild(pop);
+    pop.style.top=(input.offsetTop+input.offsetHeight+6)+'px';
+    pop.style.left=Math.max(0,Math.min(input.offsetLeft,wrap.clientWidth-270))+'px';
+    render();
+    setTimeout(function(){document.addEventListener('mousedown',onDoc);},0);
+  }
+  input.addEventListener('click',function(e){e.preventDefault();open();});
+  input.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}if(e.key==='Escape')close();});
+}
+</script>
 <script>
 /* ============ State data — deadlines copied verbatim from ACB's lease generator dataset ============ */
 "use strict";
@@ -407,6 +583,9 @@ function parseISO(s){
   return isFinite(d.getTime())?d:null;
 }
 function fmtDate(d){return d?d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}):'';}
+var FOOT_LINE1='This Security Deposit Return Letter was created with Advanced Collection Bureau, Inc. (advancedcb.com)';
+var FOOT_LEGAL='This resource from Advanced Collection Bureau, Inc. is for general informational purposes. It is not legal advice. Deposit deadlines and deduction rules vary by state, county, and city, and laws change; verify current requirements with a local attorney before sending.';
+function docFootHtml(){return '<div class="doc-foot"><div class="df1">'+esc(FOOT_LINE1)+'</div><div class="df2">'+esc(FOOT_LEGAL)+'</div></div>';}
 function firstNum(t){var m=String(t).match(/\d+/);return m?parseInt(m[0],10):null;}
 /* Compute the deadline due date: move-out + first number in the state's rule text. */
 function computeDue(st,moveOutISO){
@@ -459,7 +638,10 @@ Object.keys(DEP).sort(function(a,b){return DEP[a].n<DEP[b].n?-1:1;}).forEach(fun
   var o=document.createElement('option');o.value=ab;o.textContent=DEP[ab].n;stSel.appendChild(o);
 });
 stSel.value=S.st;
-stSel.addEventListener('change',function(){S.st=stSel.value;update();});
+stSel.addEventListener('change',function(){
+  S.st=stSel.value;
+  smoothResize($('deadlinePanel'),function(){smoothResize($('previewCard'),update);});
+});
 
 /* ---- outcome segmented control ---- */
 var OUTCOME_HINTS={
@@ -470,7 +652,10 @@ var OUTCOME_HINTS={
 };
 var segBtns=Array.prototype.slice.call($('outcomeSeg').querySelectorAll('button'));
 segBtns.forEach(function(b){
-  b.addEventListener('click',function(){S.outcome=b.dataset.outcome;update();});
+  b.addEventListener('click',function(){
+    S.outcome=b.dataset.outcome;
+    smoothResize($('outcomeSeg').closest('.card'),function(){smoothResize($('previewCard'),update);});
+  });
 });
 
 /* ---- simple text/date inputs ---- */
@@ -560,6 +745,7 @@ function renderDeadline(){
 }
 
 /* ---- builder visibility + math panel ---- */
+var prevMath={held:0,ded:0,net:0};
 function renderBuilder(){
   segBtns.forEach(function(b){
     var on=b.dataset.outcome===S.outcome;
@@ -574,14 +760,19 @@ function renderBuilder(){
   $('payLabel').textContent=S.outcome==='owes'?'5 · Delivery & payment of the balance':'5 · Refund & delivery details';
 
   var t=totals();
-  var mh='<div class="m-row"><span>Total held (deposit'+(t.pet>0?' + pet deposit':'')+(t.intr>0?' + interest':'')+')</span><span class="amt">'+fmtUSD(t.held,true)+'</span></div>'
-    +'<div class="m-row"><span>Total deductions</span><span class="amt">&minus;&nbsp;'+fmtUSD(t.ded,true)+'</span></div>';
+  var mh='<div class="m-row"><span>Total held (deposit'+(t.pet>0?' + pet deposit':'')+(t.intr>0?' + interest':'')+')</span><span class="amt" id="mHeld"></span></div>'
+    +'<div class="m-row"><span>Total deductions</span><span class="amt" id="mDed"></span></div>';
   if(t.net>=0){
-    mh+='<div class="m-final"><span class="lbl pos">Refund due</span><span class="amt pos">'+fmtUSD(t.net,true)+'</span></div>';
+    mh+='<div class="m-final"><span class="lbl pos">Refund due</span><span class="amt pos" id="mNet"></span></div>';
   }else{
-    mh+='<div class="m-final"><span class="lbl neg">Balance tenant owes</span><span class="amt neg">'+fmtUSD(-t.net,true)+'</span></div>';
+    mh+='<div class="m-final"><span class="lbl neg">Balance tenant owes</span><span class="amt neg" id="mNet"></span></div>';
   }
   $('mathPanel').innerHTML=mh;
+  /* rolling numbers — innerHTML rebuild loses tween state, so restore it before tweening */
+  $('mHeld').__tv=prevMath.held;tweenText($('mHeld'),function(v){return fmtUSD(v,true);},t.held);prevMath.held=t.held;
+  $('mDed').__tv=prevMath.ded;tweenText($('mDed'),function(v){return '− '+fmtUSD(v,true);},t.ded);prevMath.ded=t.ded;
+  var netShown=Math.abs(t.net);
+  $('mNet').__tv=prevMath.net;tweenText($('mNet'),function(v){return fmtUSD(v,true);},netShown);prevMath.net=netShown;
 
   var w='';
   if(S.outcome==='partial'&&t.ded>0&&t.net<=0)w='Your deductions consume the whole deposit'+(t.net<0?' and then some':'')+' — switch the outcome to "'+(t.net<0?'Tenant owes more':'No refund')+'" so the letter reads correctly.';
@@ -636,7 +827,7 @@ function letterModel(){
       rows.push({l:(i+1)+'. '+d.cat+(String(d.desc).trim()?' — '+String(d.desc).trim():''),r:'− '+fmtUSD(money(d.amt),true)});
     });
   }else{
-    rows.push({l:'Deductions (itemize in the builder)',r:'− '+fmtUSD(0,true)});
+    rows.push({l:'Deductions',r:'− '+fmtUSD(0,true)});
   }
   rows.push({l:'Total deductions',r:'− '+fmtUSD(t.ded,true),cls:'sub'});
   if(S.outcome==='owes'){
@@ -681,11 +872,11 @@ function renderLetter(){
   h+='<p>Sincerely,</p>';
   h+='<div class="ltr-sig"><div class="sigline"></div><div class="signame">'+esc(m.llName)+'<br>'+esc(m.llAddr)+'</div></div>';
   var enc=[];
-  if(S.outcome!=='full')enc.push('Itemized receipts/invoices for deductions (recommended — some states require them)');
+  if(S.outcome!=='full')enc.push('Itemized receipts/invoices for deductions');
   if((S.outcome==='full'||S.outcome==='partial')&&S.refMethod==='enclosed')enc.push('Refund check');
   if(enc.length)h+='<div class="ltr-enc">Enclosures: '+esc(enc.join('; '))+'</div>';
   if(S.certMail)h+='<div class="ltr-enc">Sent via USPS Certificate of Mailing on '+esc(m.today)+'.</div>';
-  h+='<p class="doc-legal">This letter was created with a free generator provided by Advanced Collection Bureau (advancedcb.com) for general informational purposes. It is not legal advice. Deposit deadlines, interest, and delivery rules vary by state, county, and city — verify current requirements.</p>';
+  h+=docFootHtml();
   $('docPreview').innerHTML=h;
 }
 
@@ -709,7 +900,8 @@ function plainText(){
   if(S.outcome!=='full')out.push('Enclosures: itemized receipts/invoices for deductions');
   if(S.certMail)out.push('Sent via USPS Certificate of Mailing on '+m.today+'.');
   out.push('');
-  out.push('Created with the free Security Deposit Return Letter Generator from Advanced Collection Bureau (advancedcb.com). Not legal advice — verify current state and local requirements.');
+  out.push(FOOT_LINE1);
+  out.push(FOOT_LEGAL);
   return out.join('\n');
 }
 
@@ -733,6 +925,140 @@ $('copyBtn').addEventListener('click',function(){
     document.body.removeChild(ta);
   });
 });
+
+/* ---------- Download PDF: pre-filled fillable AcroForm (pdf-lib) ---------- */
+var REF_LABELS={enclosed:'Check enclosed with this letter',mailed:'Check mailed separately',electronic:'Electronic transfer'};
+function buildNoticePdf(){
+  var m=letterModel(),t=m.t,info=m.info,P=PDFLib,W=612,H=792,MG=54,fc=0;
+  return P.PDFDocument.create().then(function(doc){
+    return Promise.all([doc.embedFont(P.StandardFonts.Helvetica),doc.embedFont(P.StandardFonts.HelveticaBold),doc.embedFont(P.StandardFonts.HelveticaOblique)]).then(function(fonts){
+      var font=fonts[0],bold=fonts[1],ital=fonts[2];
+      var form=doc.getForm();
+      var page=doc.addPage([W,H]),y=H-MG;
+      var INK=P.rgb(0.1,0.1,0.18),GRAY=P.rgb(0.45,0.45,0.55),LINE=P.rgb(0.7,0.72,0.8),BG=P.rgb(0.975,0.98,0.995);
+      function need(h){if(y-h<MG+30){page=doc.addPage([W,H]);y=H-MG;}}
+      function wrapTxt(text,size,f,maxW){
+        var words=String(text).split(' '),lines=[],line='';
+        words.forEach(function(wd){var tl=line?line+' '+wd:wd;
+          if(f.widthOfTextAtSize(tl,size)>maxW){lines.push(line);line=wd;}else line=tl;});
+        if(line)lines.push(line);return lines;
+      }
+      function para(text,size,f,color){
+        size=size||9.5;f=f||font;
+        wrapTxt(text,size,f,W-2*MG).forEach(function(l){need(size+4);page.drawText(l,{x:MG,y:y-size,size:size,font:f,color:color||INK});y-=size+3.5;});
+        y-=4;
+      }
+      function tf(label,val,wd,h,multi){
+        h=h||16;need(h+20);
+        if(label)page.drawText(label,{x:MG,y:y-8,size:8,font:bold,color:GRAY});
+        var f=form.createTextField('f'+(fc++));
+        if(multi)f.enableMultiline();
+        f.addToPage(page,{x:MG,y:y-12-h,width:wd||(W-2*MG),height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:BG});
+        f.setFontSize(9);
+        if(val)f.setText(String(val));
+        y-=h+22;return f;
+      }
+      function row2(items){
+        var gap=14,x=MG,tw=W-2*MG-gap*(items.length-1),h=16;
+        need(h+20);
+        items.forEach(function(it){
+          var wd=tw*it.w;
+          if(it.l)page.drawText(it.l,{x:x,y:y-8,size:8,font:bold,color:GRAY});
+          var f=form.createTextField('f'+(fc++));
+          f.addToPage(page,{x:x,y:y-12-h,width:wd,height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:BG});
+          f.setFontSize(9);
+          if(it.v)f.setText(String(it.v));
+          x+=wd+gap;
+        });
+        y-=h+24;
+      }
+      /* keep = extra height that must fit on the same page as the heading
+         (its first row), so a heading never strands at a page bottom */
+      function heading(tt,keep){
+        need(30+(keep||0));
+        page.drawText(tt,{x:MG,y:y-12,size:10.5,font:bold,color:INK});
+        page.drawLine({start:{x:MG,y:y-17},end:{x:W-MG,y:y-17},thickness:0.6,color:LINE});
+        y-=28;
+      }
+      page.drawText('SECURITY DEPOSIT RETURN LETTER',{x:MG,y:y-16,size:15,font:bold,color:INK});
+      page.drawText('State of '+info.n,{x:MG,y:y-32,size:9,font:ital,color:GRAY});
+      y-=48;
+      row2([{l:'From (landlord / company)',w:.62,v:S.llName},{l:'Letter date',w:.38,v:m.today}]);
+      tf('Landlord mailing address',S.llAddr);
+      tf('To (tenant name(s))',S.tnName);
+      tf('Tenant forwarding / mailing address',S.fwdAddr);
+      tf('Rental property address',S.propAddr);
+      row2([{l:'Move-in date',w:.5,v:fmtDate(parseISO(S.moveIn))},{l:'Move-out date',w:.5,v:fmtDate(parseISO(S.moveOut))}]);
+      para(m.open,9.5,font);
+      heading('SECURITY DEPOSIT ACCOUNTING',36); /* heading + its first row stay together */
+      row2([{l:'Security deposit held',w:.34,v:fmtUSD(t.dep,true)},{l:'Pet deposit',w:.33,v:t.pet>0?fmtUSD(t.pet,true):''},{l:'Interest accrued',w:.33,v:t.intr>0?fmtUSD(t.intr,true):''}]);
+      row2([{l:'TOTAL HELD',w:.68,v:''},{l:'',w:.32,v:fmtUSD(t.held,true)}]);
+      heading('ITEMIZED DEDUCTIONS',36); /* heading + its first row stay together */
+      var lim=Math.min(t.deds.length,8);
+      for(var i=0;i<lim;i++){
+        var d=t.deds[i];
+        row2([{l:i===0?'Description':'',w:.68,v:d.cat+(String(d.desc).trim()?' — '+String(d.desc).trim():'')},{l:i===0?'Amount':'',w:.32,v:fmtUSD(money(d.amt),true)}]);
+      }
+      row2([{l:lim===0?'Description':'',w:.68,v:''},{l:lim===0?'Amount':'',w:.32,v:''}]);
+      row2([{l:'TOTAL DEDUCTIONS',w:.68,v:''},{l:'',w:.32,v:'- '+fmtUSD(t.ded,true)}]); /* ASCII minus: U+2212 is not WinAnsi-encodable */
+      if(S.outcome==='owes'){
+        row2([{l:'BALANCE DUE FROM TENANT',w:.68,v:''},{l:'',w:.32,v:fmtUSD(m.balance,true)}]);
+      }else{
+        row2([{l:'REFUND DUE TO TENANT',w:.68,v:''},{l:'',w:.32,v:fmtUSD(m.refund,true)}]);
+      }
+      para('This statement is provided within the '+info.ret+' required by '+info.n+' law.',9.5,font);
+      if(S.outcome==='full'||S.outcome==='partial'){
+        tf('Refund method',REF_LABELS[S.refMethod]||REF_LABELS.enclosed,300);
+      }
+      if(S.outcome==='owes'){
+        para('Demand for payment: the deductions itemized above exceed the total deposit held by '+fmtUSD(m.balance,true)+'. If the balance is not paid by the date below, the account may be referred to a licensed collection agency, which may affect your credit.',9.5,font);
+        row2([{l:'Pay balance by',w:.4,v:fmtDate(parseISO(S.payBy))},{l:'Amount due',w:.6,v:fmtUSD(m.balance,true)}]);
+        tf('Payment instructions',String(S.payInstr).trim());
+      }
+      if(S.outcome!=='full'){
+        para('Copies of receipts, invoices, or estimates supporting the deductions above are enclosed or available on request. If you dispute any deduction, please respond in writing to the address above.',9.5,font);
+      }
+      if(S.certMail)para('Sent via USPS Certificate of Mailing on '+m.today+'.',9.5,ital,GRAY);
+      y-=4;
+      row2([{l:'Landlord / agent (print + sign)',w:.68,v:S.llName},{l:'Date',w:.32,v:m.today}]);
+      /* two-line ACB footer, anchored to the bottom of the final page (lowest line at y=20,
+         well below the need() floor of MG+30, so body content can never overlap it) */
+      var footLines=wrapTxt(FOOT_LEGAL,6.5,ital,W-2*MG);
+      page.drawText(FOOT_LINE1,{x:MG,y:24+footLines.length*8,size:8,font:font,color:GRAY});
+      footLines.forEach(function(l,idx){
+        page.drawText(l,{x:MG,y:20+(footLines.length-1-idx)*8,size:6.5,font:ital,color:GRAY});
+      });
+      form.updateFieldAppearances(font);
+      return doc.save();
+    });
+  });
+}
+$('pdfBtn').addEventListener('click',function(){
+  var b=this;
+  if(typeof PDFLib==='undefined'){$('pdfStatus').textContent='PDF library failed to load — check your connection and refresh.';return;}
+  b.disabled=true;b.textContent='Building PDF…';
+  buildNoticePdf().then(function(bytes){
+    var blob=new Blob([bytes],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='Deposit-Return-Letter-'+(S.st||'XX')+'.pdf';
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);
+    b.disabled=false;b.textContent='Download PDF';
+  }).catch(function(){
+    b.disabled=false;b.textContent='Download PDF';
+    $('pdfStatus').textContent='Sorry, something went wrong building the PDF.';
+  });
+});
+
+/* ---- UI v3 init ---- */
+document.querySelectorAll('input[type=date]').forEach(acbDate);
+acbTipUpgrade(document);
+acbCoachSeq('security-deposit-return-letter-generator',[
+  {target:'#inState',title:'1. Your state',body:'Pick your state — we show the return deadline and compute your send-by date.'},
+  {target:'#inDeposit',title:'2. Deposit held',body:'Enter the security deposit you collected — e.g. 2,000.'},
+  {target:'#outcomeSeg',title:'3. Outcome',body:'Choose what happens: full refund, deductions, or a balance the tenant still owes.'}
+]);
 })();
 </script>
 

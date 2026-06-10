@@ -78,10 +78,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
 .acb-coach-ring{position:relative;z-index:91}
 .acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
 @keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
-.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.55;width:250px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
-.acb-coach::before{content:"";position:absolute;bottom:100%;left:24px;border:8px solid transparent;border-bottom-color:var(--acb-text)}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:12px 15px;font-size:13px;line-height:1.5;width:230px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach.side-r::before{content:"";position:absolute;right:100%;top:18px;border:8px solid transparent;border-right-color:var(--acb-text)}
+.acb-coach.side-l::before{content:"";position:absolute;left:100%;top:18px;border:8px solid transparent;border-left-color:var(--acb-text)}
 .acb-coach b{display:block;margin-bottom:3px}
-.acb-coach button{margin-top:9px;background:#fff;color:var(--acb-text);border:none;border-radius:50px;padding:6px 16px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+.acb-coach .step-dots{font-size:11px;opacity:.7;margin-top:7px}
+.acb-coach .skip{background:none;border:none;color:#fff;opacity:.75;font-size:11.5px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0;margin-top:7px;display:block}
 /* rating prompt */
 .acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
 .acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
@@ -143,7 +145,6 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
 .doc .cos{border:1.2px solid #8a8a96;padding:13px 15px;margin-top:22px}
 .doc .cos .cos-t{font-size:11.5px;font-weight:800;letter-spacing:.05em;margin-bottom:7px}
 .doc .cos-line{font-size:12px;margin:5px 0}
-.doc .statenote{background:#f7f7fa;border:1px solid #c9c9d4;padding:10px 12px;font-size:10.8px;line-height:1.55;margin-top:18px;color:#33333f}
 .doc .doc-foot{margin-top:16px;border-top:1px solid #d8d8e0;padding-top:8px}
 .doc .doc-foot .df1{font-size:12px;color:#26263a;line-height:1.5}
 .doc .doc-foot .df2{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:4px}
@@ -168,15 +169,16 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
 .fade{animation:fadeIn .35s ease both}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media print{
-  @page{margin:.7in}
+  @page{margin:.75in}
   body{background:#fff}
   .no-print{display:none!important}
   .wrap{max-width:none;padding:0}
   .grid{display:block}
   #previewCard{border:none;box-shadow:none;padding:0;border-radius:0;margin:0}
   .doc{border:none;border-radius:0;padding:0;font-size:12.5px}
-  .doc .meta,.doc .led-table,.doc .cos,.doc .doc-row,.doc .statenote{page-break-inside:avoid;break-inside:avoid}
-  .doc .h2{page-break-after:avoid;break-after:avoid}
+  .doc .ttl,.doc .sub,.doc .h2,.doc .cos-t{break-after:avoid;page-break-after:avoid}
+  .doc .meta,.doc .led-table,.doc .led-table tr,.doc .cos,.doc .doc-row,.doc .doc-foot{break-inside:avoid;page-break-inside:avoid}
+  .doc .para,.doc p,.doc ul.fl li{orphans:3;widows:3}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -383,25 +385,38 @@ function acbTipUpgrade(root){
   });
 }
 document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
-function acbCoach(slug,target,title,body){
+function acbCoachSeq(slug,steps){
   try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
-  var el=typeof target==='string'?document.querySelector(target):target;
-  if(!el)return;
-  var tip=null;
-  function done(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}
-    el.classList.remove('acb-coach-ring');if(tip)tip.remove();
-    document.removeEventListener('input',done,true);}
-  el.classList.add('acb-coach-ring');
-  var wrap=el.closest('.field')||el.parentNode;
-  if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
-  tip=document.createElement('div');tip.className='acb-coach';
-  tip.innerHTML='<b>'+title+'</b>'+body+'<br><button type="button">Got it</button>';
-  wrap.appendChild(tip);
-  tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';
-  tip.style.left=Math.max(0,Math.min(el.offsetLeft,wrap.clientWidth-260))+'px';
-  tip.querySelector('button').addEventListener('click',done);
-  document.addEventListener('input',done,true);
-  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){done();document.removeEventListener('keydown',esc);}});
+  var i=-1,el=null,tip=null;
+  function markDone(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}}
+  function clear(){if(el)el.classList.remove('acb-coach-ring');if(tip)tip.remove();el=null;tip=null;}
+  function stop(){markDone();clear();}
+  function show(n){
+    clear();i=n;
+    if(i>=steps.length){stop();return;}
+    var st=steps[i];
+    el=typeof st.target==='string'?document.querySelector(st.target):st.target;
+    if(!el){show(i+1);return;}
+    el.classList.add('acb-coach-ring');
+    try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
+    var wrap=el.closest('.field')||el.parentNode;
+    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+    tip=document.createElement('div');tip.className='acb-coach';
+    tip.innerHTML='<b>'+st.title+'</b>'+st.body
+      +'<div class="step-dots">Step '+(i+1)+' of '+steps.length+'</div>'
+      +'<button type="button" class="skip">Skip tour</button>';
+    wrap.appendChild(tip);
+    var spaceR=wrap.clientWidth-(el.offsetLeft+el.offsetWidth);
+    if(spaceR>250){tip.classList.add('side-r');tip.style.left=(el.offsetLeft+el.offsetWidth+14)+'px';tip.style.top=el.offsetTop+'px';}
+    else if(el.offsetLeft>250){tip.classList.add('side-l');tip.style.left=(el.offsetLeft-244)+'px';tip.style.top=el.offsetTop+'px';}
+    else{tip.style.left=Math.max(0,Math.min(el.offsetLeft+20,wrap.clientWidth-240))+'px';tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';}
+    tip.querySelector('.skip').addEventListener('click',stop);
+    var adv=function(){el.removeEventListener('input',adv);el.removeEventListener('change',adv);el.removeEventListener('click',adv);setTimeout(function(){show(i+1);},350);};
+    if(/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName)){el.addEventListener('input',adv);el.addEventListener('change',adv);}
+    else{el.addEventListener('click',adv);}
+  }
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){stop();document.removeEventListener('keydown',esc);}});
+  show(0);
 }
 function acbDate(input){
   var pop=null,view;
@@ -590,10 +605,10 @@ function demandText(M){
     if(M.deadline){
       t+=' — on or before '+(M.deadline.biz?'approximately ':'')+fmtDateLong(M.deadline.date);
       if(M.deadline.hours)t+=' ('+M.deadline.hours+' hours counted here as '+M.deadline.days+' calendar days)';
-      if(M.deadline.biz)t+=' ('+M.stName+' counts business/court days: weekends are excluded and court holidays may extend the deadline — verify current law)';
+      if(M.deadline.biz)t+=' ('+M.stName+' counts business/court days: weekends are excluded and court holidays may extend the deadline)';
     }
   }else{
-    t+='within the period required or customary under '+M.stName+' law (see the state note below)';
+    t+='within the period required or customary under '+M.stName+' law';
   }
   t+=', OR to vacate and surrender possession of the premises to the landlord.';
   return t;
@@ -646,7 +661,6 @@ function docHtmlFormal(M){
   o+='<div class="doc-row"><span class="doc-f" style="flex:2"><span class="lbl">Landlord / agent signature</span><span class="line"></span></span><span class="doc-f" style="flex:.8"><span class="lbl">Date</span><span class="line"></span></span></div>';
   o+='<div class="doc-row" style="margin-top:14px"><span class="doc-f" style="flex:1"><span class="lbl">Printed name:</span><span class="line filled">'+ll+'</span></span></div>';
   o+=cosHtml(M);
-  o+='<div class="statenote"><strong>State note — '+escHtml(M.stName)+':</strong> Pay-or-quit cure period: '+escHtml(M.c.d)+'. '+escHtml(VERIFY_LINE)+'</div>';
   o+=docFootHtml();
   return o;
 }
@@ -716,8 +730,6 @@ function docTextFormal(M){
     L.push('  ['+(S.method===k?'X':' ')+'] '+METHODS[k]);
   });
   L.push('Server’s signature: _______________________________   Date: ____________');
-  L.push('');
-  L.push('STATE NOTE — '+M.stName+': Pay-or-quit cure period: '+M.c.d+'. '+VERIFY_LINE);
   L.push('');
   L.push(FOOT_LINE1);
   L.push(FOOT_LEGAL);
@@ -982,8 +994,10 @@ function buildNoticePdf(){
         });
         y-=h+24;
       }
-      function heading(t){
-        need(30);
+      /* keep = extra height that must fit on the same page as the heading
+         (its first row / the whole block), so a heading never strands at a page bottom */
+      function heading(t,keep){
+        need(30+(keep||0));
         page.drawText(t,{x:MG,y:y-12,size:10.5,font:bold,color:INK});
         page.drawLine({start:{x:MG,y:y-17},end:{x:W-MG,y:y-17},thickness:0.6,color:LINE});
         y-=28;
@@ -995,7 +1009,7 @@ function buildNoticePdf(){
       row2([{l:'Date served',w:.5,v:M.served?fmtDateMid(M.served):''},{l:'Rent was due',w:.5,v:M.due?fmtDateMid(M.due):''}]);
       tf('To (tenant name(s))',S.tenants);
       tf('Property address',(S.street?S.street+', ':'')+(S.city?S.city+', ':'')+M.stName+(S.zip?' '+S.zip:''));
-      heading('AMOUNT DUE');
+      heading('AMOUNT DUE',36); /* heading + its first ledger row stay together */
       var lim=Math.min(M.rows.length,8);
       for(var i=0;i<lim;i++){
         var r=M.rows[i];
@@ -1013,7 +1027,7 @@ function buildNoticePdf(){
       }
       tf('Payment instructions',S.payTo);
       row2([{l:'Contact phone',w:.5,v:S.phone},{l:'Contact email',w:.5,v:S.email}]);
-      heading('METHOD OF SERVICE');
+      heading('METHOD OF SERVICE',122); /* heading + 4 checkbox lines + signature row stay together */
       Object.keys(METHODS).forEach(function(k){
         need(20);
         var cb=form.createCheckBox('c'+(fc++));
@@ -1024,9 +1038,12 @@ function buildNoticePdf(){
       });
       y-=6;
       row2([{l:'Landlord / manager (print + sign)',w:.68,v:S.landlord},{l:'Date',w:.32,v:M.served?fmtDateMid(M.served):''}]);
-      page.drawText(FOOT_LINE1,{x:MG,y:36,size:8,font:font,color:GRAY});
-      wrapTxt(FOOT_LEGAL,6.5,ital,W-2*MG).forEach(function(l,idx){
-        page.drawText(l,{x:MG,y:26-idx*8,size:6.5,font:ital,color:GRAY});
+      /* two-line ACB footer, anchored to the bottom of the final page (lowest line at y=20,
+         well below the need() floor of MG+30, so body content can never overlap it) */
+      var footLines=wrapTxt(FOOT_LEGAL,6.5,ital,W-2*MG);
+      page.drawText(FOOT_LINE1,{x:MG,y:24+footLines.length*8,size:8,font:font,color:GRAY});
+      footLines.forEach(function(l,idx){
+        page.drawText(l,{x:MG,y:20+(footLines.length-1-idx)*8,size:6.5,font:ital,color:GRAY});
       });
       form.updateFieldAppearances(font);
       return doc.save();
@@ -1055,7 +1072,11 @@ renderRows();
 renderChips();
 setMode(S.mode);
 acbTipUpgrade(document);
-acbCoach('late-rent-notice-generator','#inState','Start here','Pick your state and we\u2019ll fill in its cure period \u2014 then add what\u2019s owed and the notice writes itself.');
+acbCoachSeq('late-rent-notice-generator',[
+  {target:'#inState',title:'1. Your state',body:'Pick your state \u2014 we fill in its cure period.'},
+  {target:'#inTenants',title:'2. Tenant name(s)',body:'List every adult tenant on the lease \u2014 e.g. Jordan Smith and Casey Smith.'},
+  {target:'#ledger .led-amt',title:'3. Amount owed',body:'What\u2019s owed \u2014 e.g. 2,200; add late fees as separate rows.'}
+]);
 })();
 </script>
 
