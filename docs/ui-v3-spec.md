@@ -133,7 +133,18 @@ document.addEventListener('click',function(){document.querySelectorAll('.acb-tip
 When migrating existing tooltips, wrap the body in `<b></b><i>old text</i>` and set `data-t` to the
 term being explained (e.g. the field label).
 
-## 5. First-run guided walkthrough (acbCoachSeq — replaces the single coach mark)
+## 5. First-run guided walkthrough (acbCoachSeq)
+
+> **v3.2:** the canonical CSS + JS now live in `tools/cap-rate-calculator/index.html` — copy
+> them from there verbatim (the code blocks below are superseded). v3.2 requirements:
+> bubble styled like the ⓘ tooltips (white card, border, shadow, blue uppercase title, arrow);
+> BIG and clear (290px, 13.5px/1.6); footer row with "Step x of N" + a **Next →** button
+> (last step shows **Done ✓**); a "Skip tour" link; step titles carry NO numbering (the
+> step counter already shows position); bubble is appended to `document.body` and hangs in
+> the page's side margins — right of the field if the viewport has ≥320px of gutter, else left,
+> else below — so it never covers the field, its label, or neighboring content; target keeps the
+> pulse ring + soft glow; advances on the target's input/change OR the Next button; once per
+> tool ever; Escape exits.
 
 A SEQUENTIAL walkthrough, once per tool ever. Each step: pulse-highlight the field, show a
 bubble BESIDE it (right of the field when space allows, else left — never covering the field or
@@ -280,6 +291,17 @@ Wrap mutations that change a card/section's height (mode switches, expanding pan
 that appear/disappear). Don't wrap per-keystroke recomputes of same-size text.
 
 ## 8. Layout: one input card, sections inside; results-first; mini chart in first viewport
+
+> **v3.2 — titles:** section titles must be unmistakably titles, clearly distinct from field
+> labels. `.sec-label` and `.sec-divider` everywhere become:
+> `font-size:15.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--acb-text);margin-bottom:16px;padding-bottom:9px;border-bottom:2px solid var(--acb-blue-light)`
+> (field labels stay 14px/600 sentence-case). Copy from cap-rate.
+> **v3.2 — sticky inputs:** when a tool's INPUT column is shorter than its results column
+> (70% rule, rent-increase calculator), the input card gets
+> `position:sticky;top:16px` on desktop so it rides with the viewport.
+> **v3.2 — no horizontal scroll:** results columns must never scroll horizontally; wide tables
+> get their own `.matrix-scroll`-style inner wrapper, and the column gets `overflow-x:hidden;
+> min-width:0` (grid children need `min-width:0` to shrink).
 
 - Merge multiple input cards into ONE `.card` with internal section headers:
   ```css
