@@ -25,6 +25,9 @@ collections funnel.
 |---|---|---|
 | Lease Agreement Generator | /resources/lease-agreement-generator | Build a state-specific lease in 5 minutes, or download a fillable PDF. All 50 states + D.C. |
 | Rental Application Generator | /resources/rental-application-generator | A customizable, fair-housing-safe application with fillable PDF download. |
+| Late Rent Notice Generator | /resources/late-rent-notice-generator | Friendly reminder or formal pay-or-quit notice — state cure periods and deadlines computed. |
+| Security Deposit Return Letter | /resources/security-deposit-return-letter-generator | Itemized disposition letter with your state's deadline, incl. the balance-owed path. |
+| Rent Increase Notice Generator | /resources/rent-increase-notice-generator | Notice periods validated, rent-control caps flagged, effective date computed. |
 | Rental Property ROI Calculator | /resources/rental-property-roi-calculator | Cash flow, cash-on-cash, cap rate, IRR, and year-by-year projections. |
 | Mortgage Calculator | /resources/mortgage-calculator | Full PITI with PMI auto-drop, extra payments, and amortization. |
 | Cap Rate Calculator | /resources/cap-rate-calculator | Solve cap rate, max price, or required NOI — instantly. |
@@ -50,6 +53,9 @@ collections funnel.
   "hasPart": [
     {"@type": "WebApplication", "name": "Lease Agreement Generator", "url": "https://www.advancedcb.com/resources/lease-agreement-generator"},
     {"@type": "WebApplication", "name": "Rental Application Generator", "url": "https://www.advancedcb.com/resources/rental-application-generator"},
+    {"@type": "WebApplication", "name": "Late Rent Notice Generator", "url": "https://www.advancedcb.com/resources/late-rent-notice-generator"},
+    {"@type": "WebApplication", "name": "Security Deposit Return Letter Generator", "url": "https://www.advancedcb.com/resources/security-deposit-return-letter-generator"},
+    {"@type": "WebApplication", "name": "Rent Increase Notice Generator", "url": "https://www.advancedcb.com/resources/rent-increase-notice-generator"},
     {"@type": "WebApplication", "name": "Rental Property ROI Calculator", "url": "https://www.advancedcb.com/resources/rental-property-roi-calculator"},
     {"@type": "WebApplication", "name": "Mortgage Calculator", "url": "https://www.advancedcb.com/resources/mortgage-calculator"},
     {"@type": "WebApplication", "name": "Cap Rate Calculator", "url": "https://www.advancedcb.com/resources/cap-rate-calculator"},

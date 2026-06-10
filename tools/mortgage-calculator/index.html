@@ -103,6 +103,9 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .amort tr.mo td{background:#FAFBFD;color:var(--acb-text-mid);font-size:12.5px;font-weight:400}
 .amort tr.mo td:first-child{padding-left:26px}
 .amort-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.amort tr.cur td{background:var(--acb-blue-light);font-weight:700;border-bottom:1px solid var(--acb-blue-mid)}
+.amort td.save{color:var(--acb-green);font-weight:600}
+.amort td.cost{color:var(--acb-red);font-weight:600}
 .explain{display:flex;gap:14px;align-items:flex-start;background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:16px 18px;margin-top:18px}
 .explain svg{flex-shrink:0;margin-top:2px}
 .explain p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.6}
@@ -293,7 +296,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <div class="amort-scroll"><table class="amort" id="amort"></table></div>
   </div>
 
+  <div class="card full-card" id="rateCard">
+    <div class="sec-label">What a better rate is worth</div>
+    <div class="amort-scroll"><table class="amort" id="rateTable"></table></div>
+    <p class="hint" style="margin-top:10px">An eighth of a point matters — use this when comparing lender quotes.</p>
+  </div>
+
   <div class="actions">
+    <button type="button" class="btn-secondary" id="shareBtn">🔗 Copy link to this scenario</button>
     <button type="button" class="btn-secondary" id="copyBtn">Copy results summary</button>
     <button type="button" class="btn-secondary" onclick="window.print()">Print results</button>
   </div>
@@ -527,6 +537,29 @@ function buildAmort(sched,hasPmi,startY0,startM0){
   });
 }
 
+/* ---- rate-shopping sensitivity ("What a better rate is worth") ---- */
+function fmtRate(r){return r.toFixed(3).replace(/\.?0+$/,'')+'%';}
+function buildRateTable(loan,rate,term,curSched,opts,escrowMo){
+  var t=$('rateTable'),seen={};
+  var html='<thead><tr><th>Rate</th><th>Monthly P&amp;I</th><th>Total monthly</th><th>Total interest</th><th>vs current</th></tr></thead><tbody>';
+  for(var si=-4;si<=4;si++){
+    var r=rate+si*0.25;
+    if(si<0){r=Math.max(r,0.125);if(r>=rate)continue;}
+    var key=r.toFixed(3);
+    if(seen[key])continue;seen[key]=1;
+    var s=si===0?curSched:buildSchedule({loan:loan,rate:r,termYears:term,pmiMonthly:opts.pmiMonthly,pmiCutoff:opts.pmiCutoff,
+      extraMonthly:opts.extraMonthly,oneTimeAmt:opts.oneTimeAmt,oneTimeIdx:opts.oneTimeIdx});
+    var d=s.totalInterest-curSched.totalInterest;
+    html+='<tr'+(si===0?' class="cur"':'')+'><td>'+fmtRate(r)+(si===0?' ◆':'')+'</td>'+
+      '<td>'+fmtUSD(s.pi,true)+'</td>'+
+      '<td>'+fmtUSD(s.pi+escrowMo,true)+'</td>'+
+      '<td>'+fmtUSD(s.totalInterest)+'</td>'+
+      (si===0?'<td>Current</td>':(d<0?'<td class="save">−'+fmtUSD(-d)+'</td>':'<td class="cost">+'+fmtUSD(d)+'</td>'))+
+      '</tr>';
+  }
+  t.innerHTML=html+'</tbody>';
+}
+
 function fmtYrsMo(months){
   var y=Math.floor(months/12),m=months%12;
   return (y?y+' yr'+(y>1?'s':''):'')+(y&&m?' ':'')+(m?m+' mo':'')||'0 mo';
@@ -652,6 +685,14 @@ function calc(){
     buildAmort(sched,sched.totalPmi>0,startY0,startM0);
   }
 
+  /* rate-shopping sensitivity */
+  $('rateCard').style.display=loan>0?'':'none';
+  if(loan>0){
+    buildRateTable(loan,rate,term,sched,
+      {pmiMonthly:pmiMonthly,pmiCutoff:pmiCutoff,extraMonthly:extraMo,oneTimeAmt:oneAmt,oneTimeIdx:oneIdx},
+      taxMo+insMo+pmiMonthly+hoa);
+  }
+
   /* copy summary */
   var payoffTxt=loan>0?(function(){var p=addMonths(startY0,startM0,sched.months-1);return monthLabel(p.y,p.m0);})():'—';
   lastSummary='Mortgage Calculator (advancedcb.com)\n'
@@ -695,6 +736,39 @@ function statRow(k,v,tip){
   $(id).addEventListener('change',function(){calc();persist();});
 });
 
+/* shareable scenario links: #acb=<base64 json> (forwarded into the iframe by the embed snippet) */
+var SHARE_IDS=IDS;
+function encodeState(){
+  var o={};
+  SHARE_IDS.forEach(function(id){o[id]=$(id).value;});
+  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'');
+}
+function applyHash(){
+  var m=(location.hash||'').match(/[#&]acb=([^&]+)/);
+  if(!m)return;
+  try{
+    var o=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    SHARE_IDS.forEach(function(id){if(o[id]!==undefined&&o[id]!=='')$(id).value=o[id];});
+    if(moneyVal($('oneAmt'))>0)oneExp.classList.add('open');
+  }catch(e){}
+}
+function shareUrl(){
+  var base=(window.parent!==window&&document.referrer)?document.referrer.split('#')[0]:location.href.split('#')[0];
+  return base+'#acb='+encodeState();
+}
+function copyText(txt,btn,label){
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){
+    btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);}catch(e){}
+    document.body.removeChild(ta);
+  });
+}
+$('shareBtn').addEventListener('click',function(){
+  copyText(shareUrl(),this,'🔗 Copy link to this scenario');
+});
+
 $('copyBtn').addEventListener('click',function(){
   var b=this;
   (navigator.clipboard?navigator.clipboard.writeText(lastSummary):Promise.reject()).then(function(){
@@ -706,6 +780,7 @@ $('copyBtn').addEventListener('click',function(){
   });
 });
 
+applyHash();
 calc();
 })();
 </script>

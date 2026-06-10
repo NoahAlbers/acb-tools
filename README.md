@@ -1,6 +1,6 @@
 # ACB Tools — Free Landlord Tools for advancedcb.com
 
-Eight production-ready, embeddable tools for Advanced Collection Bureau's Webflow site.
+Eleven production-ready, embeddable tools for Advanced Collection Bureau's Webflow site.
 Every tool is a single self-contained `index.html` (vanilla JS, no build step) styled to ACB's
 brand, plus a `webflow-embed.md` page kit with everything needed to publish the page: title tag,
 meta description, intro copy, the iframe embed snippet, SEO body content, FAQ section, and
@@ -10,14 +10,23 @@ JSON-LD (star ratings, FAQ, breadcrumbs).
 
 | Tool | Folder | Type |
 |---|---|---|
-| Lease Agreement Generator (50 states + DC, wizard + fillable PDF) | `tools/lease-agreement-generator` | Document builder |
+| Lease Agreement Generator (50 states + DC, wizard, clause presets, fillable PDF) | `tools/lease-agreement-generator` | Document builder |
 | Rental Application Generator (fillable PDF, state fee rules) | `tools/rental-application-generator` | Document builder |
-| Rental Property ROI Calculator (cash flow, CoC, IRR, projections) | `tools/rental-property-roi-calculator` | Calculator |
-| Mortgage Calculator (PITI, PMI auto-drop, extra payments) | `tools/mortgage-calculator` | Calculator |
+| Late Rent Notice Generator (friendly reminder / pay-or-quit, state cure periods + computed deadlines) | `tools/late-rent-notice-generator` | Notice generator |
+| Security Deposit Return Letter (state deadlines, itemized deductions, balance-owed mode) | `tools/security-deposit-return-letter-generator` | Notice generator |
+| Rent Increase Notice Generator (state notice periods, rent-control warnings, effective-date validation) | `tools/rent-increase-notice-generator` | Notice generator |
+| Rental Property ROI Calculator (cash flow, CoC, IRR, save & compare scenarios, stress test) | `tools/rental-property-roi-calculator` | Calculator |
+| Mortgage Calculator (PITI, PMI auto-drop, extra payments, rate-shopping table) | `tools/mortgage-calculator` | Calculator |
 | Cap Rate Calculator (3 solve modes, sensitivity matrix) | `tools/cap-rate-calculator` | Calculator |
-| NOI Calculator (itemized builder, benchmarks) | `tools/net-operating-income-calculator` | Calculator |
-| Turnover Cost Estimator (turnover vs. retention) | `tools/turnover-cost-estimator` | Calculator |
+| NOI Calculator (itemized builder, benchmarks, CSV export) | `tools/net-operating-income-calculator` | Calculator |
+| Turnover Cost Estimator (turnover vs. retention, portfolio mode) | `tools/turnover-cost-estimator` | Calculator |
 | 70% Rule Calculator (MAO + deal check) | `tools/70-percent-rule-calculator` | Calculator |
+
+**Shareable scenario links:** every calculator encodes its inputs in a `#acb=` URL fragment with
+a "Copy link to this scenario" button. The embed snippets forward the Webflow page's hash into
+the iframe, so shared links open the tool pre-filled on advancedcb.com. (Document/notice tools
+intentionally skip this — they contain personal names.) See `docs/competitive-analysis.md` for
+the persona analysis behind the v2 feature set.
 
 `index.html` at the repo root is a directory page linking all tools (handy as the deployed
 host's homepage).
@@ -87,9 +96,12 @@ Also see `docs/webflow-resources-hub.md` for the `/resources` hub landing page a
 
 ## Legal-content caveat
 
-The lease and application generators encode commonly cited state rules (deposit caps, return
-deadlines, entry notice, late-fee limits, disclosures) current to the best of our knowledge as
-of 2025, and every generated document carries a "not legal advice — verify current law"
-disclaimer. Laws change: it's worth a periodic (e.g. annual) review of `SD` in
-`tools/lease-agreement-generator/index.html` and `STATE_NOTES` in
-`tools/rental-application-generator/index.html`.
+The document and notice generators encode commonly cited state rules (deposit caps, return
+deadlines, entry notice, late-fee limits, disclosures, nonpayment cure periods, rent-increase
+notice periods) current to the best of our knowledge as of 2025, and every generated document
+carries a "not legal advice — verify current law" disclaimer. Laws change: it's worth a periodic
+(e.g. annual) review of `SD` in `tools/lease-agreement-generator/index.html`, `STATE_NOTES` in
+`tools/rental-application-generator/index.html`, `CURE` in
+`tools/late-rent-notice-generator/index.html`, `DEP` in
+`tools/security-deposit-return-letter-generator/index.html`, and the notice data in
+`tools/rent-increase-notice-generator/index.html`.

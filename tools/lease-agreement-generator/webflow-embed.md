@@ -59,6 +59,9 @@ Collect the deposit and first month's rent before handing over keys, complete a 
 
 6. **Related tools section** (H2: More free landlord tools):
    [Rental Application Generator](/resources/rental-application-generator) ·
+   [Late Rent Notice Generator](/resources/late-rent-notice-generator) ·
+   [Security Deposit Return Letter](/resources/security-deposit-return-letter-generator) ·
+   [Rent Increase Notice Generator](/resources/rent-increase-notice-generator) ·
    [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator) ·
    [Rental Property ROI Calculator](/resources/rental-property-roi-calculator) ·
    [Cap Rate Calculator](/resources/cap-rate-calculator) ·

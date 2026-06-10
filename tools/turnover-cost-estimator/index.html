@@ -109,6 +109,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .peryear{text-align:center;padding:8px 0 2px}
 .peryear .big{font-size:34px;font-weight:800;letter-spacing:-.02em;color:var(--acb-text)}
 .peryear .cap-label{font-size:13.5px;color:var(--acb-text-light);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+/* portfolio */
+.portfolio-card{margin-top:22px}
+.pf-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:26px;align-items:center}
+@media(max-width:840px){.pf-grid{grid-template-columns:1fr}}
+.pf-out{text-align:center;padding:8px 0 2px}
+.pf-out .cap-label{font-size:13.5px;color:var(--acb-text-light);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.pf-out .big{font-size:40px;font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--acb-red)}
+.pf-flip{margin-top:14px;font-size:16px;font-weight:700;color:var(--acb-green)}
 .explain{display:flex;gap:14px;align-items:flex-start;background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:16px 18px;margin-top:18px}
 .explain svg{flex-shrink:0;margin-top:2px}
 .explain p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.6}
@@ -364,7 +372,36 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     </div>
   </div>
 
+  <div class="card portfolio-card" aria-live="polite">
+    <div class="sec-label">Across your portfolio
+      <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Scale this per-turnover cost across every unit you own or manage. Units × annual turnover rate × cost per turn = what turnover takes out of the portfolio every single year.</span></span>
+    </div>
+    <div class="pf-grid">
+      <div>
+        <div class="mini-row">
+          <div class="field">
+            <label for="units">Number of units</label>
+            <div class="in-wrap has-suf"><input type="number" id="units" inputmode="numeric" value="10" min="1" max="100000" step="1"><span class="suf">units</span></div>
+          </div>
+          <div class="field">
+            <label for="turnRate">Annual turnover rate</label>
+            <div class="in-wrap has-suf"><input type="number" id="turnRate" inputmode="decimal" value="30" min="0" max="100" step="1"><span class="suf">%</span></div>
+            <div class="hint">U.S. average ~30–50% for apartments</div>
+          </div>
+        </div>
+        <div class="stat-row"><span class="k">Cost per turnover (from above)</span><span class="v" id="pfPerTurn">$0</span></div>
+        <div class="stat-row"><span class="k">Turnovers per year</span><span class="v" id="pfTurns">0.0</span></div>
+      </div>
+      <div class="pf-out">
+        <div class="cap-label">Annual portfolio turnover cost</div>
+        <div class="big" id="pfAnnual">$0</div>
+        <div class="pf-flip" id="pfFlip"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="actions">
+    <button type="button" class="btn-secondary" id="shareBtn">🔗 Copy link to this scenario</button>
     <button type="button" class="btn-secondary" id="copyBtn">Copy results summary</button>
     <button type="button" class="btn-secondary" onclick="window.print()">Print results</button>
   </div>
@@ -402,7 +439,7 @@ function fmtMoneyField(el){var v=moneyVal(el);el.value=v?v.toLocaleString('en-US
 function numVal(el){var v=parseFloat(el.value);return isFinite(v)?v:0;}
 
 var MONEY=['rent','utils','clean','paint','floor','repairs','rekey','landscape','appliance','adv','leaseFlat','screening','concessions','unpaid','legal','incentive','skipInc'];
-var NUMS=['days','leasePct','years'];
+var NUMS=['days','leasePct','years','units','turnRate'];
 var CHECKS=['cbLostRent','cbUtils','cbClean','cbPaint','cbFloor','cbRepairs','cbRekey','cbLandscape','cbAppliance','cbAdv','cbLease','cbScreening','cbConcessions','cbUnpaid','cbLegal','cbSkip'];
 var ROWS={cbLostRent:'liLostRent',cbUtils:'liUtils',cbClean:'liClean',cbPaint:'liPaint',cbFloor:'liFloor',cbRepairs:'liRepairs',cbRekey:'liRekey',cbLandscape:'liLandscape',cbAppliance:'liAppliance',cbAdv:'liAdv',cbLease:'liLease',cbScreening:'liScreening',cbConcessions:'liConcessions',cbUnpaid:'liUnpaid',cbLegal:'liLegal',cbSkip:'liSkip'};
 var leaseMode='pct';
@@ -555,6 +592,17 @@ function calc(){
   $('perYearVal').textContent=fmtUSD(perYear);
   $('perYearNote').textContent='If tenants stay '+years+' year'+(years===1?'':'s')+' on average, every year of operation absorbs '+fmtUSD(perYear)+' of this turn — about '+(rent>0?fmtUSD(perYear/12)+'/mo':'—')+' off your effective rent.';
 
+  /* portfolio */
+  var units=clamp(numVal($('units')),0,100000);
+  var turnRate=clamp(numVal($('turnRate')),0,100);
+  var turnsPerYear=units*turnRate/100;
+  var pfAnnual=turnsPerYear*total;
+  var pfSave=units*0.10*total;
+  $('pfPerTurn').textContent=fmtUSD(total);
+  $('pfTurns').textContent=turnsPerYear.toFixed(1);
+  $('pfAnnual').textContent=fmtUSD(pfAnnual);
+  $('pfFlip').textContent='Cutting turnover by 10 points would save '+fmtUSD(pfSave)+'/year';
+
   /* summary */
   lastSummary='Tenant Turnover Cost Estimator (advancedcb.com)\n'
     +'Monthly rent: '+fmtUSD(rent)+' · Days vacant: '+days+'\n'
@@ -564,7 +612,8 @@ function calc(){
     +'Admin & loss: '+fmtUSD(admin)+'\n'
     +'TOTAL TURNOVER COST: '+fmtUSD(total)+(isFinite(months)?' (= '+months.toFixed(1)+' months of rent)':'')+'\n'
     +'Retention cost: '+fmtUSD(retention)+(saved>0?' — keeping the tenant saves '+fmtUSD(saved):'')+'\n'
-    +'Annualized over '+years+'-year tenancy: '+fmtUSD(perYear)+' per year';
+    +'Annualized over '+years+'-year tenancy: '+fmtUSD(perYear)+' per year\n'
+    +'Portfolio ('+units+' units @ '+turnRate+'% turnover): '+turnsPerYear.toFixed(1)+' turns/yr = '+fmtUSD(pfAnnual)+'/year — cutting turnover by 10 points saves '+fmtUSD(pfSave)+'/year';
 }
 
 /* wire inputs */
@@ -572,7 +621,7 @@ MONEY.forEach(function(id){
   $(id).addEventListener('input',function(){calc();persist();});
   $(id).addEventListener('blur',function(){fmtMoneyField(this);calc();persist();});
 });
-['leasePct','years'].forEach(function(id){
+['leasePct','years','units','turnRate'].forEach(function(id){
   $(id).addEventListener('input',function(){calc();persist();});
 });
 $('days').addEventListener('input',function(){
@@ -587,6 +636,44 @@ CHECKS.forEach(function(id){
   $(id).addEventListener('change',function(){calc();persist();});
 });
 
+/* shareable scenario links: #acb=<base64 json> (forwarded into the iframe by the embed snippet) */
+var SHARE_IDS=MONEY.concat(NUMS);
+function encodeState(){
+  var o={lm:leaseMode,ck:CHECKS.map(function(id){return $(id).checked?'1':'0';}).join('')};
+  SHARE_IDS.forEach(function(id){o[id]=$(id).value;});
+  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'');
+}
+function applyHash(){
+  var m=(location.hash||'').match(/[#&]acb=([^&]+)/);
+  if(!m)return;
+  try{
+    var o=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    SHARE_IDS.forEach(function(id){if(o[id]!==undefined&&o[id]!=='')$(id).value=o[id];});
+    if(typeof o.ck==='string')CHECKS.forEach(function(id,i){
+      if(o.ck.charAt(i)==='1')$(id).checked=true;
+      else if(o.ck.charAt(i)==='0')$(id).checked=false;
+    });
+    if(o.lm==='pct'||o.lm==='flat')leaseMode=o.lm;
+  }catch(e){}
+}
+function shareUrl(){
+  var base=(window.parent!==window&&document.referrer)?document.referrer.split('#')[0]:location.href.split('#')[0];
+  return base+'#acb='+encodeState();
+}
+function copyText(txt,btn,label){
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){
+    btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);}catch(e){}
+    document.body.removeChild(ta);
+  });
+}
+$('shareBtn').addEventListener('click',function(){
+  copyText(shareUrl(),this,'🔗 Copy link to this scenario');
+});
+applyHash();
+
 $('copyBtn').addEventListener('click',function(){
   var b=this;
   (navigator.clipboard?navigator.clipboard.writeText(lastSummary):Promise.reject()).then(function(){
@@ -598,7 +685,7 @@ $('copyBtn').addEventListener('click',function(){
   });
 });
 
-/* init */
+/* init (applyHash ran above so hash state wins before first render) */
 $('daysRange').value=clamp(numVal($('days')),0,120);
 setLeaseMode(leaseMode);
 })();

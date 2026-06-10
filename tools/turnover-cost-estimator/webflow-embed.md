@@ -16,16 +16,19 @@ Target URL: `https://www.advancedcb.com/resources/turnover-cost-estimator`
 3. **Embed block #1** — the tool iframe (paste in an Embed element):
 
 ```html
-<iframe id="acb-tool-frame" src="https://YOUR-TOOLS-HOST/tools/turnover-cost-estimator/"
-  title="Tenant Turnover Cost Calculator" style="width:1px;min-width:100%;border:0;height:1900px"
-  loading="eager"></iframe>
+<iframe id="acb-tool-frame" title="Tenant Turnover Cost Calculator"
+  style="width:1px;min-width:100%;border:0;height:1900px" loading="eager"></iframe>
 <script>
-window.addEventListener('message',function(e){
-  if(e.data&&e.data.acbTool==='turnover-cost-estimator'){
-    var f=document.getElementById('acb-tool-frame');
-    if(f) f.style.height=(e.data.height+2)+'px';
-  }
-});
+(function(){
+  var f=document.getElementById('acb-tool-frame');
+  /* forward #acb=… shared-scenario links into the tool */
+  f.src='https://YOUR-TOOLS-HOST/tools/turnover-cost-estimator/'+(location.hash||'');
+  window.addEventListener('message',function(e){
+    if(e.data&&e.data.acbTool==='turnover-cost-estimator'&&e.data.height){
+      f.style.height=(e.data.height+2)+'px';
+    }
+  });
+})();
 </script>
 ```
 
@@ -56,6 +59,7 @@ Respond to maintenance fast (it's the #1 cited reason for not renewing), start r
 - **H3: Why does the calculator divide rent by 30.44?** 30.44 is the average number of days in a month (365.25 ÷ 12), so lost rent is prorated accurately whatever the month. A $2,200 unit loses about $72.28 per vacant day.
 - **H3: Should I count my own time in turnover costs?** Ideally, yes. If you self-manage, showings, screening, and coordinating trades easily consume 10–20 hours per turn. Add an hourly value under the leasing fee (use the Flat $ option) or repairs line to see your true all-in cost.
 - **H3: Is it ever better to let a tenant leave?** Sometimes. If the tenant pays late, damages the unit, or the rent is far below market, turnover can be worth the cost. The retention card shows the break-even: if the rent increase you'd gain exceeds the annualized turnover cost, re-leasing can pencil out — with a well-screened replacement.
+- **H3: How much does turnover cost across a whole portfolio?** Multiply your per-turnover cost by units × annual turnover rate. U.S. apartment turnover averages roughly 30–50% per year, so a 10-unit portfolio at 30% with a $5,000 per-turn cost loses about $15,000 every year — and cutting the turnover rate by just 10 percentage points saves around $5,000/year. The calculator's "Across your portfolio" card runs this with your own numbers, ready to drop into an owner report.
 
 6. **Related tools section** (H2: More free landlord tools) — link grid:
    [Rental Property ROI Calculator](/resources/rental-property-roi-calculator) ·
@@ -102,7 +106,9 @@ Respond to maintenance fast (it's the #1 cited reason for not renewing), start r
         {"@type": "Question", "name": "Should I count my own time in turnover costs?",
          "acceptedAnswer": {"@type": "Answer", "text": "Ideally, yes. If you self-manage, showings, screening, and coordinating trades easily consume 10–20 hours per turn. Add an hourly value under the leasing fee or repairs line to see your true all-in cost."}},
         {"@type": "Question", "name": "Is it ever better to let a tenant leave?",
-         "acceptedAnswer": {"@type": "Answer", "text": "Sometimes. If the tenant pays late, damages the unit, or the rent is far below market, turnover can be worth the cost. If the rent increase you'd gain exceeds the annualized turnover cost, re-leasing can pencil out — with a well-screened replacement."}}
+         "acceptedAnswer": {"@type": "Answer", "text": "Sometimes. If the tenant pays late, damages the unit, or the rent is far below market, turnover can be worth the cost. If the rent increase you'd gain exceeds the annualized turnover cost, re-leasing can pencil out — with a well-screened replacement."}},
+        {"@type": "Question", "name": "How much does turnover cost across a whole portfolio?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Multiply your per-turnover cost by units × annual turnover rate. U.S. apartment turnover averages roughly 30–50% per year, so a 10-unit portfolio at 30% with a $5,000 per-turn cost loses about $15,000 every year — and cutting the turnover rate by 10 percentage points saves around $5,000/year."}}
       ]
     },
     {

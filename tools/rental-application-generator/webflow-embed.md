@@ -59,6 +59,9 @@ Both come out of this generator from the same template. The **printed form** (Pr
 
 6. **Related tools section** (H2: More free landlord tools) — link grid:
    [Lease Agreement Generator](/resources/lease-agreement-generator) ·
+   [Late Rent Notice Generator](/resources/late-rent-notice-generator) ·
+   [Security Deposit Return Letter](/resources/security-deposit-return-letter-generator) ·
+   [Rent Increase Notice Generator](/resources/rent-increase-notice-generator) ·
    [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator) ·
    [Turnover Cost Estimator](/resources/turnover-cost-estimator) ·
    [Rental Property ROI Calculator](/resources/rental-property-roi-calculator) ·

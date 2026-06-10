@@ -203,6 +203,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
 
   <div class="actions">
+    <button type="button" class="btn-secondary" id="shareBtn">🔗 Copy link to this scenario</button>
     <button type="button" class="btn-secondary" id="copyBtn">Copy results summary</button>
     <button type="button" class="btn-secondary" onclick="window.print()">Print results</button>
   </div>
@@ -419,6 +420,41 @@ $('copyBtn').addEventListener('click',function(){
     document.body.removeChild(ta);
   });
 });
+
+/* shareable scenario links: #acb=<base64 json> (forwarded into the iframe by the embed snippet) */
+var SHARE_IDS=['arv','repairs','offer','rulePct'];
+function encodeState(){
+  var o={m:mode};
+  SHARE_IDS.forEach(function(id){o[id]=$(id).value;});
+  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'');
+}
+function applyHash(){
+  var m=(location.hash||'').match(/[#&]acb=([^&]+)/);
+  if(!m)return;
+  try{
+    var o=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    SHARE_IDS.forEach(function(id){if(o[id]!==undefined&&o[id]!=='')$(id).value=o[id];});
+    if(o.m==='mao'||o.m==='deal')mode=o.m;
+    els.rulePctRange.value=clamp(parseFloat(els.rulePct.value)||70,60,85);
+  }catch(e){}
+}
+function shareUrl(){
+  var base=(window.parent!==window&&document.referrer)?document.referrer.split('#')[0]:location.href.split('#')[0];
+  return base+'#acb='+encodeState();
+}
+function copyText(txt,btn,label){
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){
+    btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);}catch(e){}
+    document.body.removeChild(ta);
+  });
+}
+$('shareBtn').addEventListener('click',function(){
+  copyText(shareUrl(),this,'🔗 Copy link to this scenario');
+});
+applyHash();
 
 setMode(mode);
 })();

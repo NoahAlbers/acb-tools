@@ -16,16 +16,19 @@ Target URL: `https://www.advancedcb.com/resources/cap-rate-calculator`
 3. **Embed block #1** — the tool iframe (paste in an Embed element):
 
 ```html
-<iframe id="acb-tool-frame" src="https://YOUR-TOOLS-HOST/tools/cap-rate-calculator/"
-  title="Cap Rate Calculator" style="width:1px;min-width:100%;border:0;height:1400px"
-  loading="eager"></iframe>
+<iframe id="acb-tool-frame" title="Cap Rate Calculator"
+  style="width:1px;min-width:100%;border:0;height:1400px" loading="eager"></iframe>
 <script>
-window.addEventListener('message',function(e){
-  if(e.data&&e.data.acbTool==='cap-rate-calculator'){
-    var f=document.getElementById('acb-tool-frame');
-    if(f) f.style.height=(e.data.height+2)+'px';
-  }
-});
+(function(){
+  var f=document.getElementById('acb-tool-frame');
+  /* forward #acb=… shared-scenario links into the tool */
+  f.src='https://YOUR-TOOLS-HOST/tools/cap-rate-calculator/'+(location.hash||'');
+  window.addEventListener('message',function(e){
+    if(e.data&&e.data.acbTool==='cap-rate-calculator'&&e.data.height){
+      f.style.height=(e.data.height+2)+'px';
+    }
+  });
+})();
 </script>
 ```
 
@@ -61,6 +64,9 @@ Add up all income (rent, parking, laundry, pet rent), subtract vacancy, then sub
    [Turnover Cost Estimator](/resources/turnover-cost-estimator) ·
    [Lease Agreement Generator](/resources/lease-agreement-generator) ·
    [Rental Application Generator](/resources/rental-application-generator) ·
+   [Late Rent Notice Generator](/resources/late-rent-notice-generator) ·
+   [Security Deposit Return Letter](/resources/security-deposit-return-letter-generator) ·
+   [Rent Increase Notice Generator](/resources/rent-increase-notice-generator) ·
    [Move-In/Move-Out Checklist](/resources/move-in-move-out-checklist-creator)
 
 ## Embed block #2 — JSON-LD (paste in page head custom code)

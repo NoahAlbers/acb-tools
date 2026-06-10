@@ -16,16 +16,19 @@ Target URL: `https://www.advancedcb.com/resources/70-percent-rule-calculator`
 3. **Embed block #1** — the tool iframe (paste in an Embed element):
 
 ```html
-<iframe id="acb-tool-frame" src="https://YOUR-TOOLS-HOST/tools/70-percent-rule-calculator/"
-  title="70% Rule Calculator" style="width:1px;min-width:100%;border:0;height:1600px"
-  loading="eager"></iframe>
+<iframe id="acb-tool-frame" title="70% Rule Calculator"
+  style="width:1px;min-width:100%;border:0;height:1600px" loading="eager"></iframe>
 <script>
-window.addEventListener('message',function(e){
-  if(e.data&&e.data.acbTool==='70-percent-rule-calculator'){
-    var f=document.getElementById('acb-tool-frame');
-    if(f) f.style.height=(e.data.height+2)+'px';
-  }
-});
+(function(){
+  var f=document.getElementById('acb-tool-frame');
+  /* forward #acb=… shared-scenario links into the tool */
+  f.src='https://YOUR-TOOLS-HOST/tools/70-percent-rule-calculator/'+(location.hash||'');
+  window.addEventListener('message',function(e){
+    if(e.data&&e.data.acbTool==='70-percent-rule-calculator'&&e.data.height){
+      f.style.height=(e.data.height+2)+'px';
+    }
+  });
+})();
 </script>
 ```
 

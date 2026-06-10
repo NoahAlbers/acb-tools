@@ -16,16 +16,19 @@ Target URL: `https://www.advancedcb.com/resources/mortgage-calculator`
 3. **Embed block #1** — the tool iframe (paste in an Embed element):
 
 ```html
-<iframe id="acb-tool-frame" src="https://YOUR-TOOLS-HOST/tools/mortgage-calculator/"
-  title="Mortgage Calculator" style="width:1px;min-width:100%;border:0;height:2400px"
-  loading="eager"></iframe>
+<iframe id="acb-tool-frame" title="Mortgage Calculator"
+  style="width:1px;min-width:100%;border:0;height:2400px" loading="eager"></iframe>
 <script>
-window.addEventListener('message',function(e){
-  if(e.data&&e.data.acbTool==='mortgage-calculator'){
-    var f=document.getElementById('acb-tool-frame');
-    if(f) f.style.height=(e.data.height+2)+'px';
-  }
-});
+(function(){
+  var f=document.getElementById('acb-tool-frame');
+  /* forward #acb=… shared-scenario links into the tool */
+  f.src='https://YOUR-TOOLS-HOST/tools/mortgage-calculator/'+(location.hash||'');
+  window.addEventListener('message',function(e){
+    if(e.data&&e.data.acbTool==='mortgage-calculator'&&e.data.height){
+      f.style.height=(e.data.height+2)+'px';
+    }
+  });
+})();
 </script>
 ```
 
@@ -56,6 +59,7 @@ Before buying a rental, check whether the rent actually covers the full monthly 
 - **H3: Are property taxes and insurance included in the payment?** Yes. Enter annual amounts and the calculator escrows them monthly into the total payment, exactly as most servicers do. Investment properties often lose homestead exemptions, so check the assessor's non-exempt rate, and price a landlord (dwelling-fire) policy rather than a standard homeowner's policy.
 - **H3: Should I pay extra on the mortgage or invest the cash?** Paying extra earns a guaranteed return equal to your mortgage rate — at 7%+, that's hard to beat risk-free. But many investors prefer keeping cash for reserves or the next down payment. Use the extra-payment comparison to see the exact dollars saved, then weigh it against your alternatives.
 - **H3: What's the difference between interest rate and APR?** The interest rate is what the amortization math uses — that's what you enter here. APR bundles the rate with closing costs and fees to make loan offers comparable; it's a shopping tool, not a payment input.
+- **H3: How do I compare rate quotes from different lenders?** Use the "What a better rate is worth" table. It re-runs the full amortization at every quarter-point from 1% below to 1% above your current rate and shows the monthly payment and lifetime-interest difference for each — on a $240,000 30-year loan, dropping from 7% to 6.75% saves about $40 a month and roughly $14,400 in interest over the term. Enter each lender's quoted rate, read the savings or cost straight off the table, and share the scenario link with your co-buyer or broker.
 
 6. **Related tools section** (H2: More free landlord tools) — link grid:
    [Cap Rate Calculator](/resources/cap-rate-calculator) ·
@@ -102,7 +106,9 @@ Before buying a rental, check whether the rent actually covers the full monthly 
         {"@type": "Question", "name": "Should I pay extra on the mortgage or invest the cash?",
          "acceptedAnswer": {"@type": "Answer", "text": "Paying extra earns a guaranteed return equal to your mortgage rate. Many investors instead keep cash for reserves or the next down payment. Use the extra-payment comparison to see the exact dollars saved, then weigh it against your alternatives."}},
         {"@type": "Question", "name": "What's the difference between interest rate and APR?",
-         "acceptedAnswer": {"@type": "Answer", "text": "The interest rate is what the amortization math uses — that's what you enter here. APR bundles the rate with closing costs and fees to make loan offers comparable; it's a shopping tool, not a payment input."}}
+         "acceptedAnswer": {"@type": "Answer", "text": "The interest rate is what the amortization math uses — that's what you enter here. APR bundles the rate with closing costs and fees to make loan offers comparable; it's a shopping tool, not a payment input."}},
+        {"@type": "Question", "name": "How do I compare rate quotes from different lenders?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Use the \"What a better rate is worth\" table. It re-runs the full amortization at every quarter-point from 1% below to 1% above your current rate and shows the monthly payment and lifetime-interest difference for each — on a $240,000 30-year loan, dropping from 7% to 6.75% saves about $40 a month and roughly $14,400 in interest over the term."}}
       ]
     },
     {

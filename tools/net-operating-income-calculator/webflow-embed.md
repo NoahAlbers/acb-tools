@@ -16,16 +16,19 @@ Target URL: `https://www.advancedcb.com/resources/net-operating-income-calculato
 3. **Embed block #1** — the tool iframe (paste in an Embed element):
 
 ```html
-<iframe id="acb-tool-frame" src="https://YOUR-TOOLS-HOST/tools/net-operating-income-calculator/"
-  title="Net Operating Income (NOI) Calculator" style="width:1px;min-width:100%;border:0;height:1700px"
-  loading="eager"></iframe>
+<iframe id="acb-tool-frame" title="Net Operating Income (NOI) Calculator"
+  style="width:1px;min-width:100%;border:0;height:1700px" loading="eager"></iframe>
 <script>
-window.addEventListener('message',function(e){
-  if(e.data&&e.data.acbTool==='net-operating-income-calculator'){
-    var f=document.getElementById('acb-tool-frame');
-    if(f) f.style.height=(e.data.height+2)+'px';
-  }
-});
+(function(){
+  var f=document.getElementById('acb-tool-frame');
+  /* forward #acb=… shared-scenario links into the tool */
+  f.src='https://YOUR-TOOLS-HOST/tools/net-operating-income-calculator/'+(location.hash||'');
+  window.addEventListener('message',function(e){
+    if(e.data&&e.data.acbTool==='net-operating-income-calculator'&&e.data.height){
+      f.style.height=(e.data.height+2)+'px';
+    }
+  });
+})();
 </script>
 ```
 
@@ -56,6 +59,7 @@ Income property is priced as **Value = NOI ÷ Cap Rate**. At a 6% market cap rat
 - **H3: Are property management fees an operating expense?** Yes — even if you self-manage. Appraisers and buyers will deduct a market management fee anyway, so including 8–10% of collected income gives you the property's true, transferable NOI.
 - **H3: What is a good operating expense ratio?** Most rentals run 35–55% of effective gross income. Below 35%, double-check you haven't missed an expense; above 55%, look for costs to trim or rents to raise. Older buildings and owner-paid-utility properties naturally run higher.
 - **H3: Can NOI be negative?** Yes — if operating expenses exceed collected income, the property loses money before the mortgage even enters the picture. The calculator shows a negative NOI in red so the problem is impossible to miss.
+- **H3: Can I share or export my NOI statement?** Yes — both. "Copy link to this scenario" gives you a URL that reopens the calculator with your exact income and expense line items, so you can send it to a partner or revisit it later on any device. "Download as spreadsheet (CSV)" exports a clean, itemized NOI statement — income lines, vacancy, EGI, every expense, total operating expenses, NOI, and expense ratio — ready to open in Excel or Google Sheets and hand to a lender, broker, or appraiser.
 
 6. **Related tools section** (H2: More free landlord tools) — link grid:
    [Cap Rate Calculator](/resources/cap-rate-calculator) ·
@@ -102,7 +106,9 @@ Income property is priced as **Value = NOI ÷ Cap Rate**. At a 6% market cap rat
         {"@type": "Question", "name": "What is a good operating expense ratio?",
          "acceptedAnswer": {"@type": "Answer", "text": "Most rentals run 35–55% of effective gross income. Below 35%, double-check you haven't missed an expense; above 55%, look for costs to trim or rents to raise. Older buildings and owner-paid-utility properties naturally run higher."}},
         {"@type": "Question", "name": "Can NOI be negative?",
-         "acceptedAnswer": {"@type": "Answer", "text": "Yes — if operating expenses exceed collected income, the property loses money before the mortgage even enters the picture. The calculator shows a negative NOI in red so the problem is impossible to miss."}}
+         "acceptedAnswer": {"@type": "Answer", "text": "Yes — if operating expenses exceed collected income, the property loses money before the mortgage even enters the picture. The calculator shows a negative NOI in red so the problem is impossible to miss."}},
+        {"@type": "Question", "name": "Can I share or export my NOI statement?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Yes — both. \"Copy link to this scenario\" gives you a URL that reopens the calculator with your exact income and expense line items, and \"Download as spreadsheet (CSV)\" exports a clean, itemized NOI statement — income lines, vacancy, EGI, every expense, total operating expenses, NOI, and expense ratio — ready to open in Excel or Google Sheets and hand to a lender, broker, or appraiser."}}
       ]
     },
     {

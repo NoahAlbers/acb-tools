@@ -320,6 +320,20 @@ function money(s){var v=parseFloat(String(s).replace(/[^0-9.\-]/g,''));return is
 window.ACB.money=money;
 
 var UTIL_KEYS=['Electricity','Gas','Water / Sewer','Trash Collection','Internet / Cable','Lawn Care','Snow Removal','Pest Control'];
+var CLAUSE_PRESETS=[
+{label:'HVAC filters',text:'Tenant shall replace HVAC/furnace filters at least every ninety (90) days at Tenant’s expense.'},
+{label:'Lawn care',text:'Tenant shall maintain the lawn and landscaping, including mowing, watering, and weeding, at Tenant’s expense, keeping the grounds in substantially the condition received.'},
+{label:'HOA rules',text:'Tenant acknowledges receipt of the homeowners/condominium association rules and agrees to comply with them; any association fines resulting from a violation by Tenant, occupants, or guests are Tenant’s responsibility.'},
+{label:'No pools / trampolines',text:'No swimming pools, hot tubs, or trampolines may be installed or kept on the Premises without Landlord’s prior written consent and proof of adequate liability insurance.'},
+{label:'Vehicles & parking',text:'Tenant and guest vehicles must be parked only in designated areas. Inoperable, unregistered, or commercial vehicles may not be kept on the Premises without Landlord’s prior written consent.'},
+{label:'Home business',text:'The Premises may not be used for any business involving regular customer, client, employee, or delivery traffic without Landlord’s prior written consent.'},
+{label:'Locks & codes',text:'Tenant shall not change, add, or re-key locks or alarm codes without Landlord’s prior written consent, and Landlord shall be provided keys or codes to all locks at all times.'},
+{label:'Periodic inspections',text:'Landlord may conduct routine inspections of the Premises up to twice per twelve-month period, with notice as provided in the Right of Entry section.'},
+{label:'Utility transfer',text:'Tenant shall place all Tenant-paid utilities in Tenant’s name effective as of the start date; any Tenant-period utility usage billed to Landlord shall be reimbursed by Tenant within fourteen (14) days of invoice.'},
+{label:'Keys & lockouts',text:'Tenant will receive two (2) sets of keys at move-in, all of which must be returned at move-out. Lockout assistance and key replacement may incur a reasonable fee.'},
+{label:'Wall mounting',text:'Televisions, shelving, and other heavy items may be mounted only with appropriate anchors; Tenant is responsible for restoring walls beyond ordinary picture-hook holes at move-out.'},
+{label:'Satellite dish',text:'Satellite dishes and antennas may be installed only in accordance with applicable FCC rules and Landlord’s reasonable placement requirements, and must be removed (with any damage repaired) at move-out.'}
+];
 var DEFAULT_A={
   state:'',addr:'',unit:'',city:'',zip:'',ptype:'House',furnished:false,furnishings:'',parking:'',storage:'',
   llName:'',llAddr:'',tenants:[''],occupants:'',maxOcc:'',
@@ -662,17 +676,29 @@ var steps=[
  valid:function(){return true;}},
 
 {id:'extras',title:'Anything else?',
- sub:'Add custom rules or agreements — each becomes its own numbered clause. Optional.',
+ sub:'Tap a popular clause to insert it (the wording stays editable), or write your own. Each becomes its own numbered clause. Optional.',
  html:function(){
-   var t='<div id="wClauses">';
+   var t='<div class="field"><label>Popular clauses</label><div class="chips">';
+   CLAUSE_PRESETS.forEach(function(p,i){
+     var added=A.clauses.indexOf(p.text)>=0;
+     t+='<button type="button" class="chip'+(added?' on':'')+'" data-preset="'+i+'">'+esc(p.label)+'</button>';
+   });
+   t+='</div><p class="hint">Tap again to remove an unedited preset.</p></div><div id="wClauses">';
    A.clauses.forEach(function(c,i){
      t+='<div class="clause-row"><textarea data-clause="'+i+'" placeholder="e.g. Tenant is responsible for replacing HVAC filters every 90 days.">'+esc(c)+'</textarea><button type="button" class="rm-btn" data-crm="'+i+'" aria-label="Remove clause">×</button></div>';
    });
    t+='</div><button type="button" class="add-btn" id="wAddClause">+ Add a custom clause</button>';
-   if(!A.clauses.length)t+='<p class="hint" style="margin-top:10px">Common examples: lawn-care duties, HOA rules acknowledgment, pool/trampoline prohibition, home business rules, smart-lock/alarm codes.</p>';
    return t;
  },
  bind:function(root){
+   root.querySelectorAll('[data-preset]').forEach(function(b){
+     b.addEventListener('click',function(){
+       var p=CLAUSE_PRESETS[+b.dataset.preset];
+       var i=A.clauses.indexOf(p.text);
+       if(i>=0)A.clauses.splice(i,1);else A.clauses.push(p.text);
+       save();rerender();
+     });
+   });
    root.querySelectorAll('[data-clause]').forEach(function(ta){
      ta.addEventListener('input',function(){A.clauses[+ta.dataset.clause]=ta.value;save();});
    });
