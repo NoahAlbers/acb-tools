@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Rent Increase Calculator | Advanced Collection Bureau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --acb-blue:#3D5AF1;--acb-blue-dark:#2D45C6;--acb-blue-light:#EEF1FE;--acb-blue-mid:#D5DBFC;
+  --acb-bg:#F4F5F9;--acb-card:#FFFFFF;--acb-text:#1A1A2E;--acb-text-mid:#4A4A68;--acb-text-light:#8889A0;
+  --acb-border:#E2E4EC;--acb-warn:#E8A83E;--acb-warn-bg:#FEF9EE;--acb-green:#16A34A;--acb-red:#DC2626;--acb-gold:#F5B301;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-text);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px 48px}
+.tool-head{text-align:center;margin-bottom:26px}
+.tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
+.tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
+.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+@media(max-width:840px){.grid{grid-template-columns:1fr}}
+.card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
+.sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:14px;font-weight:600;color:var(--acb-text);margin-bottom:7px}
+.in-wrap{position:relative;display:flex;align-items:center}
+.in-wrap .pre,.in-wrap .suf{position:absolute;color:var(--acb-text-light);font-size:15px;font-weight:500;pointer-events:none}
+.in-wrap .pre{left:14px}.in-wrap .suf{right:14px}
+input[type=text],input[type=number]{width:100%;padding:13px 16px;background:#fff;border:1.5px solid var(--acb-border);border-radius:10px;color:var(--acb-text);font-size:16px;font-family:inherit;outline:none;transition:border-color .25s,box-shadow .25s}
+.in-wrap.has-pre input{padding-left:30px}
+.in-wrap.has-suf input{padding-right:34px}
+input:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(61,90,241,.09)}
+input[type=range]{width:100%;accent-color:var(--acb-blue);margin-top:8px}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}
+.hint{font-size:12.5px;color:var(--acb-text-light);margin-top:6px;line-height:1.5}
+.basis-row{display:flex;gap:10px;align-items:center}
+.basis-row .in-wrap{flex:1}
+.basis-toggle{display:inline-flex;border:1.5px solid var(--acb-border);border-radius:50px;overflow:hidden;flex-shrink:0}
+.basis-btn{padding:12px 16px;border:none;background:#fff;color:var(--acb-text-mid);font-size:13.5px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s;min-height:44px}
+.basis-btn.on{background:var(--acb-blue-light);color:var(--acb-blue);font-weight:600}
+.slider-pair{display:flex;gap:14px;align-items:center}
+.slider-pair input[type=range]{flex:1;margin-top:0}
+.slider-pair .in-wrap{width:104px;flex-shrink:0}
+.hero{text-align:center;padding:8px 0 4px}
+.hero .big{font-size:42px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.hero .big.pos{color:var(--acb-green)}.hero .big.neg{color:var(--acb-red)}
+.hero .hero-label{font-size:13.5px;color:var(--acb-text-light);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.hero .equiv{font-size:14px;color:var(--acb-text-light);margin-top:7px}
+.chip{display:inline-block;margin-top:12px;font-size:13.5px;font-weight:600;padding:7px 16px;border-radius:50px;background:var(--acb-blue-light);color:var(--acb-blue);border:1px solid var(--acb-blue-mid)}
+.stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px dashed var(--acb-border);font-size:14.5px;gap:12px}
+.stat-row:last-child{border-bottom:none}
+.stat-row .k{color:var(--acb-text-mid)}
+.stat-row .v{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.stat-row .v.pos{color:var(--acb-green)}.stat-row .v.neg{color:var(--acb-red)}
+.acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--acb-text);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;padding:10px 12px;border-radius:10px;width:230px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;text-transform:none;letter-spacing:normal}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble{opacity:1}
+@media(max-width:720px){.acb-tip-bubble{left:auto;right:-10px;transform:none}}
+.chart-card{margin-top:22px}
+#chartBox svg{width:100%;height:auto;display:block}
+.explain{display:flex;gap:14px;align-items:flex-start;background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:16px 18px;margin-top:18px}
+.explain svg{flex-shrink:0;margin-top:2px}
+.explain p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.6}
+.explain p + p{margin-top:8px}
+.explain a{color:var(--acb-blue);font-weight:600;text-decoration:none}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+.btn-secondary{padding:11px 24px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-secondary:hover{border-color:var(--acb-blue-mid);color:var(--acb-blue)}
+.acb-btn-primary{display:inline-block;padding:14px 36px;border-radius:50px;border:none;background:var(--acb-blue);color:#fff;font-size:15px;font-family:inherit;font-weight:600;cursor:pointer;text-decoration:none;box-shadow:0 4px 18px rgba(61,90,241,.27);transition:all .2s}
+.acb-btn-primary:hover{background:var(--acb-blue-dark);transform:translateY(-1px)}
+.acb-cta{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:var(--acb-blue-light);border-left:4px solid var(--acb-blue);border-radius:6px 16px 16px 6px;padding:24px 28px;margin-top:34px}
+.acb-cta-title{font-size:19px;font-weight:700;color:var(--acb-text);margin-bottom:6px}
+.acb-cta p{font-size:14.5px;color:var(--acb-text-mid);line-height:1.55;margin:0;max-width:520px}
+.acb-cta-actions{display:flex;flex-direction:column;align-items:center;gap:8px}
+.acb-cta-tel{font-size:13px;color:var(--acb-blue);text-decoration:none;font-weight:600;white-space:nowrap}
+.acb-rating{display:flex;flex-direction:column;align-items:center;gap:6px;margin:34px auto 0;text-align:center}
+.acb-star{background:none;border:none;font-size:30px;line-height:1;color:#D0D3DC;cursor:pointer;padding:2px 3px;transition:color .15s,transform .15s;font-family:inherit}
+.acb-star.on{color:var(--acb-gold)}
+.acb-star:hover{transform:scale(1.15)}
+.acb-rating-meta{font-size:13px;color:var(--acb-text-light)}
+.disclaimer{font-size:12px;color:var(--acb-text-light);text-align:center;line-height:1.6;margin-top:26px;max-width:640px;margin-left:auto;margin-right:auto}
+.fade{animation:fadeIn .35s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media print{
+  body{background:#fff}
+  .actions,.acb-cta,.acb-rating,.basis-toggle{display:none!important}
+  .card{box-shadow:none;border-color:#ccc}
+  .wrap{padding:0}
+  input[type=range]{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tool-head">
+    <h1>Rent Increase Calculator</h1>
+    <p>Project where your rent ends up when it grows a steady percentage every year — and how much total rent you'll collect along the way.</p>
+    <div class="badges"><span class="badge">100% Free</span><span class="badge">No Signup</span><span class="badge">No Email Required</span></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="sec-label">Your numbers</div>
+
+      <div class="field">
+        <label for="rent">Current rent
+          <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">What the unit rents for today. Switch between monthly and annual — the projection stays the same either way.</span></span>
+        </label>
+        <div class="basis-row">
+          <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="rent" inputmode="decimal" value="2,000" aria-describedby="rentHint"></div>
+          <div class="basis-toggle" role="group" aria-label="Rent basis">
+            <button type="button" class="basis-btn on" id="basisMonthly" aria-pressed="true">Monthly</button>
+            <button type="button" class="basis-btn" id="basisAnnual" aria-pressed="false">Annual</button>
+          </div>
+        </div>
+        <div class="hint" id="rentHint"></div>
+      </div>
+
+      <div class="field">
+        <label for="rate">Average increase per year
+          <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">U.S. rents have historically grown about 2–5% per year on average, but it varies a lot by market. Negative numbers model a declining market.</span></span>
+        </label>
+        <div class="slider-pair">
+          <input type="range" id="rateRange" min="-20" max="50" step="0.5" value="3" aria-label="Average increase per year slider">
+          <div class="in-wrap has-suf"><input type="number" id="rate" inputmode="decimal" value="3" step="0.1" min="-20" max="50"><span class="suf">%</span></div>
+        </div>
+        <div class="hint">Applied as one increase at each lease anniversary, compounding. Range: −20% to 50%.</div>
+      </div>
+
+      <div class="field">
+        <label for="years">Years to project</label>
+        <div class="slider-pair">
+          <input type="range" id="yearsRange" min="1" max="50" step="1" value="10" aria-label="Years to project slider">
+          <div class="in-wrap has-suf"><input type="number" id="years" inputmode="numeric" value="10" step="1" min="1" max="50"><span class="suf">yrs</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" aria-live="polite">
+      <div class="sec-label">Results</div>
+      <div class="hero">
+        <div class="hero-label" id="heroLabel">Projected rent in 10 years</div>
+        <div class="big" id="heroVal">—</div>
+        <div class="equiv" id="heroEquiv"></div>
+        <div><span class="chip" id="heroChip"></span></div>
+      </div>
+      <div style="margin-top:18px" id="statRows"></div>
+      <div class="explain">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="#3D5AF1"/></svg>
+        <div>
+          <p><strong>Raising rent on a current tenant?</strong> Check your state's notice rules and generate the letter with the <a href="https://www.advancedcb.com/resources/rent-increase-notice-generator" target="_top">Rent Increase Notice Generator</a>.</p>
+          <p>And remember: a big increase that causes turnover can cost more than it gains — see the <a href="https://www.advancedcb.com/resources/turnover-cost-estimator" target="_top">Turnover Cost Estimator</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card chart-card">
+    <div class="sec-label" id="chartTitle">Rent by year</div>
+    <div id="chartBox"></div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="btn-secondary" id="shareBtn">🔗 Copy link to this scenario</button>
+    <button type="button" class="btn-secondary" id="csvBtn">Download CSV (year by year)</button>
+    <button type="button" class="btn-secondary" id="copyBtn">Copy results summary</button>
+    <button type="button" class="btn-secondary" onclick="window.print()">Print results</button>
+  </div>
+
+  <div class="acb-rating" id="acbRating" aria-label="Rate this tool">
+    <div class="acb-rating-stars" id="acbStars" role="radiogroup"></div>
+    <div class="acb-rating-meta" id="acbRatingMeta"></div>
+  </div>
+
+  <div class="acb-cta">
+    <div class="acb-cta-text">
+      <div class="acb-cta-title">Tenant left owing money?</div>
+      <p>Advanced Collection Bureau has recovered over <strong>$85&nbsp;million</strong> in unpaid rent, fees, and damages for landlords and property managers. No recovery, no fee.</p>
+    </div>
+    <div class="acb-cta-actions">
+      <a class="acb-btn-primary" href="https://www.advancedcb.com/" target="_top">Get Started</a>
+      <a class="acb-cta-tel" href="tel:3216334999">or call (321) 633-4999</a>
+    </div>
+  </div>
+
+  <p class="disclaimer">This calculator provides estimates for educational purposes only and is not financial, investment, or legal advice. Actual rent growth varies by market, lease terms, and local rent regulations — verify limits in your jurisdiction before raising rent. © Advanced Collection Bureau, Inc.</p>
+</div>
+
+<script>
+(function(){
+"use strict";
+var fmtUSD=function(n,c){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:c?2:0,maximumFractionDigits:c?2:0}).format(isFinite(n)?n:0);};
+var clamp=function(n,a,b){return Math.min(b,Math.max(a,n));};
+var $=function(id){return document.getElementById(id);};
+var LS='acb:rent-increase-calculator:';
+
+function moneyVal(el){var v=parseFloat(String(el.value).replace(/[^0-9.\-]/g,''));return isFinite(v)?v:0;}
+function fmtMoneyField(el){var v=moneyVal(el);el.value=v?v.toLocaleString('en-US',{maximumFractionDigits:2}):'';}
+function numVal(el){var v=parseFloat(el.value);return isFinite(v)?v:0;}
+function fmtRate(p){return (Math.round(p*100)/100).toLocaleString('en-US',{maximumFractionDigits:2})+'%';}
+
+var basis='monthly'; /* 'monthly' | 'annual' */
+var els={rent:$('rent'),rate:$('rate'),rateRange:$('rateRange'),years:$('years'),yearsRange:$('yearsRange')};
+
+/* ---- persistence ---- */
+try{
+  ['rent','rate','years'].forEach(function(id){
+    var s=localStorage.getItem(LS+id);if(s!==null&&s!=='')$(id).value=s;
+  });
+  var b=localStorage.getItem(LS+'basis');if(b==='monthly'||b==='annual')basis=b;
+}catch(e){}
+function persist(){try{
+  ['rent','rate','years'].forEach(function(id){localStorage.setItem(LS+id,$(id).value);});
+  localStorage.setItem(LS+'basis',basis);
+}catch(e){}}
+
+/* ---- model ---- */
+function model(){
+  var rentIn=moneyVal(els.rent);
+  var m0=basis==='monthly'?rentIn:rentIn/12;
+  var pct=clamp(numVal(els.rate),-20,50);
+  var years=clamp(Math.round(numVal(els.years))||1,1,50);
+  var r=pct/100;
+  var series=[];/* monthly rent at start of year k (after k increases), k=0..years */
+  for(var k=0;k<=years;k++)series.push(m0*Math.pow(1+r,k));
+  var cumulative=0;/* total rent collected: each year you collect 12 × that year's monthly rent */
+  for(var j=0;j<years;j++)cumulative+=12*series[j];
+  return {m0:m0,pct:pct,years:years,r:r,series:series,cumulative:cumulative,
+    disp:function(m){return basis==='monthly'?m:m*12;},
+    suffix:basis==='monthly'?' / mo':' / yr'};
+}
+
+/* ---- basis toggle ---- */
+function setBasis(b,convert){
+  if(b===basis)return;
+  if(convert){
+    var v=moneyVal(els.rent);
+    if(v)els.rent.value=(b==='annual'?v*12:v/12).toLocaleString('en-US',{maximumFractionDigits:2});
+  }
+  basis=b;
+  syncBasisButtons();
+  calc();persist();
+}
+function syncBasisButtons(){
+  var m=basis==='monthly';
+  $('basisMonthly').classList.toggle('on',m);$('basisMonthly').setAttribute('aria-pressed',m?'true':'false');
+  $('basisAnnual').classList.toggle('on',!m);$('basisAnnual').setAttribute('aria-pressed',!m?'true':'false');
+}
+$('basisMonthly').addEventListener('click',function(){setBasis('monthly',true);});
+$('basisAnnual').addEventListener('click',function(){setBasis('annual',true);});
+
+/* ---- chart (inline SVG, no libraries) ---- */
+function tickLabel(v){
+  if(Math.abs(v)>=1e9)return '$'+(v/1e9).toFixed(1)+'B';
+  if(Math.abs(v)>=1e6)return '$'+(v/1e6).toFixed(2)+'M';
+  if(Math.abs(v)>=1e5)return '$'+Math.round(v/1000).toLocaleString('en-US')+'k';
+  return '$'+Math.round(v).toLocaleString('en-US');
+}
+function drawChart(m){
+  var box=$('chartBox');
+  var vals=m.series.map(m.disp);
+  if(!isFinite(vals[0])||vals[0]<=0&&vals[vals.length-1]<=0){box.innerHTML='<p class="hint">Enter a current rent above to see the projection.</p>';return;}
+  var W=720,H=280,padL=64,padR=20,padT=26,padB=36;
+  var vMin=Math.min.apply(null,vals),vMax=Math.max.apply(null,vals);
+  if(vMax===vMin){vMax=vMin*1.1||10;vMin=vMin*0.9;}
+  var span=vMax-vMin;
+  var yMin=Math.max(0,vMin-span*0.12),yMax=vMax+span*0.12;
+  var n=m.years;
+  function X(k){return padL+(k/n)*(W-padL-padR);}
+  function Y(v){return padT+(1-(v-yMin)/(yMax-yMin))*(H-padT-padB);}
+  var html='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Projected '+(basis==='monthly'?'monthly':'annual')+' rent by year">';
+  /* gridlines + y currency ticks */
+  for(var g=0;g<=4;g++){
+    var v=yMin+(yMax-yMin)*g/4,y=Y(v);
+    html+='<line x1="'+padL+'" y1="'+y.toFixed(1)+'" x2="'+(W-padR)+'" y2="'+y.toFixed(1)+'" stroke="#E2E4EC" stroke-width="1"'+(g===0?'':' stroke-dasharray="3 4"')+'></line>';
+    html+='<text x="'+(padL-8)+'" y="'+(y+4).toFixed(1)+'" text-anchor="end" font-family="Outfit,sans-serif" font-size="11" fill="#8889A0">'+tickLabel(v)+'</text>';
+  }
+  /* x axis labels at sensible intervals */
+  var step=Math.max(1,Math.ceil(n/6));
+  for(var x=0;x<=n;x+=step){
+    if(n-x<step&&x!==n)continue; /* avoid crowding the last label */
+    html+='<text x="'+X(x).toFixed(1)+'" y="'+(H-12)+'" text-anchor="middle" font-family="Outfit,sans-serif" font-size="11" fill="#8889A0">'+(x===0?'Now':'Yr '+x)+'</text>';
+  }
+  if(n%step!==0)html+='<text x="'+X(n).toFixed(1)+'" y="'+(H-12)+'" text-anchor="middle" font-family="Outfit,sans-serif" font-size="11" fill="#8889A0">Yr '+n+'</text>';
+  /* area + line */
+  var pts=vals.map(function(v,k){return X(k).toFixed(1)+','+Y(v).toFixed(1);});
+  html+='<polygon points="'+X(0).toFixed(1)+','+Y(yMin).toFixed(1)+' '+pts.join(' ')+' '+X(n).toFixed(1)+','+Y(yMin).toFixed(1)+'" fill="rgba(61,90,241,0.07)"></polygon>';
+  html+='<polyline points="'+pts.join(' ')+'" fill="none" stroke="#3D5AF1" stroke-width="2.5"></polyline>';
+  /* value labels at intervals (no hover needed) */
+  var lblStep=Math.max(1,Math.ceil(n/5));
+  for(var k=0;k<=n;k+=lblStep){
+    if(n-k<lblStep&&k!==n)continue;
+    html+=dotLabel(X(k),Y(vals[k]),vals[k],k===0?'start':(k===n?'end':'middle'));
+  }
+  if(n%lblStep!==0)html+=dotLabel(X(n),Y(vals[n]),vals[n],'end');
+  html+='</svg>';
+  box.innerHTML=html;
+}
+function dotLabel(x,y,v,anchor){
+  var a=anchor==='start'?'start':(anchor==='end'?'end':'middle');
+  return '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="3.5" fill="#3D5AF1"></circle>'
+    +'<text x="'+x.toFixed(1)+'" y="'+(y-9).toFixed(1)+'" text-anchor="'+a+'" font-family="Outfit,sans-serif" font-size="11.5" font-weight="600" fill="#1A1A2E">'+tickLabel(v)+'</text>';
+}
+
+/* ---- render ---- */
+function statRow(k,v,cls,tip){
+  return '<div class="stat-row"><span class="k">'+k+(tip?'<span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">'+tip+'</span></span>':'')+'</span><span class="v'+(cls?' '+cls:'')+'">'+v+'</span></div>';
+}
+var lastSummary='',lastModel=null;
+function calc(){
+  var m=model();lastModel=m;
+  var dispStart=m.disp(m.series[0]),dispFinal=m.disp(m.series[m.years]);
+  var otherStart=basis==='monthly'?m.series[0]*12:m.series[0];
+  var otherFinal=basis==='monthly'?m.series[m.years]*12:m.series[m.years];
+  var unit=basis==='monthly'?'month':'year',otherUnit=basis==='monthly'?'year':'month';
+
+  $('rentHint').textContent=m.series[0]>0?('≈ '+fmtUSD(otherStart,true)+' per '+otherUnit):'Enter the rent you charge today.';
+
+  $('heroLabel').textContent='Projected rent in '+m.years+' year'+(m.years>1?'s':'');
+  if(m.series[0]>0){
+    $('heroVal').textContent=fmtUSD(dispFinal,true)+(basis==='monthly'?' / mo':' / yr');
+    $('heroVal').className='big '+(m.pct>0?'pos':(m.pct<0?'neg':''));
+    $('heroEquiv').textContent='≈ '+fmtUSD(otherFinal,true)+' per '+otherUnit;
+  }else{
+    $('heroVal').textContent='—';$('heroVal').className='big';$('heroEquiv').textContent='';
+  }
+  $('heroChip').textContent=m.years+' year'+(m.years>1?'s':'')+' @ '+fmtRate(m.pct)+'/yr';
+
+  var incD=dispFinal-dispStart;
+  var incP=Math.pow(1+m.r,m.years)-1;
+  var rows='';
+  rows+=statRow('Starting rent',m.series[0]>0?fmtUSD(dispStart,true)+m.suffix:'—');
+  rows+=statRow('Total increase',m.series[0]>0?((incD>=0?'+':'−')+fmtUSD(Math.abs(incD),true)+m.suffix+' ('+(incP>=0?'+':'−')+fmtRate(Math.abs(incP)*100)+')'):'—',incD>0?'pos':(incD<0?'neg':''));
+  if(m.years>=5)rows+=statRow('Rent after 5 years',fmtUSD(m.disp(m.series[5]),true)+m.suffix);
+  if(m.years>=10)rows+=statRow('Rent after 10 years',fmtUSD(m.disp(m.series[10]),true)+m.suffix);
+  rows+=statRow('Total rent collected over '+m.years+' yrs',m.series[0]>0?fmtUSD(m.cumulative):'—','','Adds up every year of rent at that year’s rate (12 × monthly rent, increased each anniversary). Assumes full occupancy with no missed payments.');
+  $('statRows').innerHTML=rows;
+
+  $('chartTitle').textContent=(basis==='monthly'?'Monthly':'Annual')+' rent by year';
+  drawChart(m);
+
+  lastSummary='Rent Increase Calculator (advancedcb.com)\n'
+    +'Current rent: '+fmtUSD(dispStart,true)+' per '+unit+'\n'
+    +'Average increase: '+fmtRate(m.pct)+' per year, compounding\n'
+    +'Projected rent in '+m.years+' years: '+fmtUSD(dispFinal,true)+' per '+unit+'\n'
+    +'Total increase: '+(incD>=0?'+':'−')+fmtUSD(Math.abs(incD),true)+' ('+(incP>=0?'+':'−')+fmtRate(Math.abs(incP)*100)+')\n'
+    +'Total rent collected over '+m.years+' years: '+fmtUSD(m.cumulative);
+}
+
+/* ---- wire inputs ---- */
+els.rent.addEventListener('input',function(){calc();persist();});
+els.rent.addEventListener('blur',function(){fmtMoneyField(this);calc();persist();});
+els.rate.addEventListener('input',function(){
+  els.rateRange.value=clamp(numVal(els.rate),-20,50);calc();persist();
+});
+els.rateRange.addEventListener('input',function(){els.rate.value=this.value;calc();persist();});
+els.years.addEventListener('input',function(){
+  els.yearsRange.value=clamp(Math.round(numVal(els.years))||1,1,50);calc();persist();
+});
+els.years.addEventListener('blur',function(){this.value=clamp(Math.round(numVal(this))||1,1,50);calc();persist();});
+els.yearsRange.addEventListener('input',function(){els.years.value=this.value;calc();persist();});
+
+/* ---- CSV export ---- */
+function buildCsv(){
+  var m=lastModel||model();
+  var lines=['Year,Monthly Rent,Annual Rent'];
+  for(var k=0;k<=m.years;k++){
+    var mo=m.series[k];
+    lines.push(k+','+mo.toFixed(2)+','+(mo*12).toFixed(2));
+  }
+  return lines.join('\n');
+}
+$('csvBtn').addEventListener('click',function(){
+  var blob=new Blob([buildCsv()],{type:'text/csv'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='rent-increase-projection.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+});
+
+/* ---- shareable scenario links: #acb=<base64 json> (forwarded into the iframe by the embed snippet) ---- */
+function encodeState(){
+  var o={b:basis,rent:els.rent.value,rate:els.rate.value,years:els.years.value};
+  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'');
+}
+function applyHash(){
+  var m=(location.hash||'').match(/[#&]acb=([^&]+)/);
+  if(!m)return false;
+  try{
+    var o=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    if(o.rent!==undefined&&o.rent!=='')els.rent.value=o.rent;
+    if(o.rate!==undefined&&o.rate!=='')els.rate.value=o.rate;
+    if(o.years!==undefined&&o.years!=='')els.years.value=o.years;
+    if(o.b==='monthly'||o.b==='annual')basis=o.b;
+    return true;
+  }catch(e){return false;}
+}
+/* legacy links: ?rent=&rate=&years= — the old tool used ANNUAL rent */
+function applyLegacyQuery(){
+  var q=location.search||'';
+  if(!q)return false;
+  var get=function(k){var mm=q.match(new RegExp('[?&]'+k+'=([^&]+)'));return mm?decodeURIComponent(mm[1]):null;};
+  var rent=parseFloat(get('rent')),rate=parseFloat(get('rate')),years=parseFloat(get('years'));
+  if(!isFinite(rent)&&!isFinite(rate)&&!isFinite(years))return false;
+  if(isFinite(rent)&&rent>0){basis='annual';els.rent.value=rent.toLocaleString('en-US',{maximumFractionDigits:2});}
+  if(isFinite(rate))els.rate.value=clamp(rate,-20,50);
+  if(isFinite(years))els.years.value=clamp(Math.round(years)||1,1,50);
+  return true;
+}
+function shareUrl(){
+  var base=(window.parent!==window&&document.referrer)?document.referrer.split('#')[0]:location.href.split('#')[0];
+  return base.split('?')[0]+'#acb='+encodeState();
+}
+function copyText(txt,btn,label){
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){
+    btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);}catch(e){}
+    document.body.removeChild(ta);
+  });
+}
+$('shareBtn').addEventListener('click',function(){copyText(shareUrl(),this,'🔗 Copy link to this scenario');});
+$('copyBtn').addEventListener('click',function(){copyText(lastSummary,this,'Copy results summary');});
+
+/* init: localStorage (already applied) → legacy query → #acb hash wins */
+applyLegacyQuery();
+applyHash();
+els.rateRange.value=clamp(numVal(els.rate),-20,50);
+els.yearsRange.value=clamp(Math.round(numVal(els.years))||1,1,50);
+syncBasisButtons();
+calc();
+})();
+</script>
+
+<script>
+(function(){
+  var SEED={value:4.7,count:284};              /* keep in sync with page JSON-LD */
+  var KEY='acb:rent-increase-calculator:rating';
+  var box=document.getElementById('acbStars'),meta=document.getElementById('acbRatingMeta');
+  var mine=parseInt(localStorage.getItem(KEY)||'0',10);
+  function agg(){var c=SEED.count+(mine?1:0);
+    var v=mine?((SEED.value*SEED.count+mine)/c):SEED.value;
+    return {v:Math.round(v*10)/10,c:c};}
+  function render(hover){
+    var a=agg();box.innerHTML='';
+    for(var i=1;i<=5;i++){(function(i){
+      var b=document.createElement('button');
+      b.type='button';b.className='acb-star'+((hover||mine||Math.round(a.v))>=i?' on':'');
+      b.setAttribute('aria-label',i+' star'+(i>1?'s':''));b.textContent='★';
+      b.onmouseenter=function(){render(i)};b.onmouseleave=function(){render(0)};
+      b.onclick=function(){mine=i;localStorage.setItem(KEY,String(i));render(0);
+        try{fetch('https://formsubmit.co/ajax/RATINGS_EMAIL',{method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({tool:'rent-increase-calculator',rating:i,_subject:'Tool rating: rent-increase-calculator'})
+        }).catch(function(){});}catch(e){}};
+      box.appendChild(b);})(i);}
+    meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
+  }
+  render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var last=0;
+  function send(){
+    var h=document.documentElement.scrollHeight;
+    if(Math.abs(h-last)>2){last=h;parent.postMessage({acbTool:'rent-increase-calculator',height:h},'*');}
+  }
+  if(window.ResizeObserver){new ResizeObserver(send).observe(document.body);}
+  window.addEventListener('load',send);
+  setInterval(send,800);
+})();
+</script>
+</body>
+</html>
