@@ -104,6 +104,21 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .yt td.neg{color:var(--acb-red)}
 .yt td.pos{color:var(--acb-green)}
 .yt tr.sale-yr td{background:var(--acb-blue-light);font-weight:600}
+.yt td.best{background:#EFFAF1;font-weight:700;box-shadow:inset 0 0 0 1px #BFE8C8}
+.yt th.rowh,.yt td.rowh{text-align:left;font-weight:600}
+.yt .sub{display:block;font-weight:400;font-size:11px;color:var(--acb-text-light)}
+.verdict.bad{background:#FDEEEE;color:var(--acb-red);border:1px solid #F2C4C4}
+.scn-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center}
+.scn-namebox{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;flex:1;min-width:240px}
+.scn-namebox input{flex:1;min-width:170px}
+.scn-list{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.scn-list:empty{display:none}
+.scn-chip{display:inline-flex;align-items:center;gap:8px;background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 6px 5px 14px;font-size:13px;font-weight:600;color:var(--acb-text)}
+.scn-chip .when{font-weight:400;color:var(--acb-text-light);font-size:11.5px}
+.scn-chip button{border:none;background:#fff;border-radius:50px;font-family:inherit;font-size:12px;font-weight:600;padding:8px 13px;cursor:pointer;color:var(--acb-blue);transition:all .15s}
+.scn-chip button:hover{background:var(--acb-blue);color:#fff}
+.scn-chip button.del{color:var(--acb-red);padding:8px 10px}
+.scn-chip button.del:hover{background:var(--acb-red);color:#fff}
 .explain{display:flex;gap:14px;align-items:flex-start;background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:16px 18px;margin-top:18px}
 .explain svg{flex-shrink:0;margin-top:2px}
 .explain p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.6}
@@ -129,7 +144,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media print{
   body{background:#fff}
-  .actions,.acb-cta,.acb-rating,.table-toggle-row,#inputsCol{display:none!important}
+  .actions,.acb-cta,.acb-rating,.table-toggle-row,#inputsCol,.scn-bar,.scn-chip button{display:none!important}
   .card{box-shadow:none;border-color:#ccc;break-inside:avoid}
   .table-card{break-inside:auto}
   .wrap{padding:0}
@@ -413,6 +428,14 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         </div>
       </div>
 
+      <div class="card" aria-live="polite">
+        <div class="sec-label">One-click stress test
+          <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Each row re-runs the full year-1 math with one thing going wrong: vacancy doubled, the interest rate 1% higher, rent 10% lower — and all of them at once. A deal that survives its stress test is a much safer buy.</span></span>
+        </div>
+        <div class="yt-scroll"><table class="yt" id="stressTable"></table></div>
+        <div id="stressVerdict" style="margin-top:12px;text-align:center"></div>
+      </div>
+
     </div>
   </div>
 
@@ -432,7 +455,26 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     </div>
   </div>
 
+  <!-- ============ SAVE & COMPARE SCENARIOS ============ -->
+  <div class="card table-card" id="scenarioCard">
+    <div class="sec-label">Scenarios — save &amp; compare deals
+      <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Save the current inputs under a name (e.g. an address), then change the numbers and save the next deal. With two or more saved you get a side-by-side comparison. Everything stays in your browser — nothing is uploaded.</span></span>
+    </div>
+    <div class="scn-bar">
+      <button type="button" class="btn-secondary" id="saveScnBtn">＋ Save this scenario</button>
+      <div class="scn-namebox" id="scnNameBox" hidden>
+        <input type="text" id="scnName" maxlength="40" placeholder="Name this deal — e.g. 12 Oak St" aria-label="Scenario name">
+        <button type="button" class="btn-secondary" id="scnConfirm" style="border-color:var(--acb-blue);color:var(--acb-blue);font-weight:600">Save</button>
+        <button type="button" class="btn-secondary" id="scnCancel">Cancel</button>
+      </div>
+    </div>
+    <div class="scn-list" id="scnList"></div>
+    <div class="yt-scroll" id="scnTableWrap" style="margin-top:16px"></div>
+    <p class="hint" id="scnHint" style="text-align:center;margin-top:10px"></p>
+  </div>
+
   <div class="actions">
+    <button type="button" class="btn-secondary" id="shareBtn">🔗 Copy link to this scenario</button>
     <button type="button" class="btn-secondary" id="copyBtn">Copy results summary</button>
     <button type="button" class="btn-secondary" onclick="window.print()">Print results</button>
   </div>
@@ -617,35 +659,52 @@ function lineChartSVG(eqPts,cfPts,H){
 }
 
 /* ---------- main calc ---------- */
-var lastSummary='';
-function calc(){
-  var P=moneyVal($('price'));
-  var useLoan=$('useLoan').checked;
-  var closing=moneyVal($('closing')),repairs=moneyVal($('repairs'));
-  var arvIn=moneyVal($('arv'));
-  var ARV=arvIn>0?arvIn:(P+repairs);
-  $('arv').placeholder=(P+repairs)>0?'Auto: '+(P+repairs).toLocaleString('en-US'):'Auto';
-  var downPctV=useLoan?clamp(numVal($('downPct')),0,100):100;
+/* read every input into a plain object — the pure compute() below never touches the DOM,
+   so the stress test and saved scenarios can re-run it with modified inputs */
+function readInputs(){
+  return {
+    P:moneyVal($('price')),
+    useLoan:$('useLoan').checked,
+    closing:moneyVal($('closing')),
+    repairs:moneyVal($('repairs')),
+    arvIn:moneyVal($('arv')),
+    downPctV:clamp(numVal($('downPct')),0,100),
+    ratePct:clamp(numVal($('rate')),0,30),
+    termY:clamp(Math.round(numVal($('term')))||30,1,40),
+    rentM:moneyVal($('rent')),
+    othM:moneyVal($('otherInc')),
+    vac:clamp(numVal($('vacancy')),0,100)/100,
+    g:clamp(numVal($('rentGrowth')),-50,50)/100,
+    taxA:moneyVal($('tax')),taxG:clamp(numVal($('taxInc')),0,50)/100,
+    insA:moneyVal($('ins')),insG:clamp(numVal($('insInc')),0,50)/100,
+    hoaM:moneyVal($('hoa')),utilM:moneyVal($('util')),otherA:moneyVal($('otherExp')),
+    othG:clamp(numVal($('othInc')),0,50)/100,
+    maintP:clamp(numVal($('maint')),0,100)/100,
+    capexP:clamp(numVal($('capex')),0,100)/100,
+    mgmtP:clamp(numVal($('mgmt')),0,100)/100,
+    H:clamp(Math.round(numVal($('holdNum')))||1,1,30),
+    app:clamp(numVal($('appreciation')),-50,50)/100,
+    sellC:clamp(numVal($('sellCost')),0,100)/100
+  };
+}
+function cloneInp(o){var c={};for(var k in o)c[k]=o[k];return c;}
+
+/* pure function of an inputs object → all derived results */
+function compute(inp){
+  var P=inp.P,useLoan=inp.useLoan,closing=inp.closing,repairs=inp.repairs;
+  var ARV=inp.arvIn>0?inp.arvIn:(P+repairs);
+  var downPctV=useLoan?inp.downPctV:100;
   var downD=P*downPctV/100;
   var L=useLoan?Math.max(0,P-downD):0;
-  var ratePct=clamp(numVal($('rate')),0,30);
-  var termY=clamp(Math.round(numVal($('term')))||30,1,40);
+  var ratePct=inp.ratePct,termY=inp.termY;
   var invested=(useLoan?downD:P)+closing+repairs;
   var pmtM=pmtCalc(L,ratePct,termY);
 
-  var rentM=moneyVal($('rent')),othM=moneyVal($('otherInc'));
-  var vac=clamp(numVal($('vacancy')),0,100)/100;
-  var g=clamp(numVal($('rentGrowth')),-50,50)/100;
-  var taxA=moneyVal($('tax')),taxG=clamp(numVal($('taxInc')),0,50)/100;
-  var insA=moneyVal($('ins')),insG=clamp(numVal($('insInc')),0,50)/100;
-  var hoaM=moneyVal($('hoa')),utilM=moneyVal($('util')),otherA=moneyVal($('otherExp'));
-  var othG=clamp(numVal($('othInc')),0,50)/100;
-  var maintP=clamp(numVal($('maint')),0,100)/100;
-  var capexP=clamp(numVal($('capex')),0,100)/100;
-  var mgmtP=clamp(numVal($('mgmt')),0,100)/100;
-  var H=clamp(Math.round(numVal($('holdNum')))||1,1,30);
-  var app=clamp(numVal($('appreciation')),-50,50)/100;
-  var sellC=clamp(numVal($('sellCost')),0,100)/100;
+  var rentM=inp.rentM,othM=inp.othM,vac=inp.vac,g=inp.g;
+  var taxA=inp.taxA,taxG=inp.taxG,insA=inp.insA,insG=inp.insG;
+  var hoaM=inp.hoaM,utilM=inp.utilM,otherA=inp.otherA,othG=inp.othG;
+  var maintP=inp.maintP,capexP=inp.capexP,mgmtP=inp.mgmtP;
+  var H=inp.H,app=inp.app,sellC=inp.sellC;
 
   var nMonths=termY*12;
   var years=[],cfs=[-invested],cum=0;
@@ -680,12 +739,28 @@ function calc(){
     y.irr=irrCalc(sub)*100;
   });
   var y1=years[0],yh=years[H-1];
-
-  /* hero strip */
   var moCF=y1.cf/12;
   var coc=invested>0?y1.cf/invested*100:NaN;
   var cap=P>0?y1.noi/P*100:NaN;
   var capAllIn=(P+repairs)>0?y1.noi/(P+repairs)*100:NaN;
+  return {ARV:ARV,downPctV:downPctV,downD:downD,L:L,invested:invested,pmtM:pmtM,
+    years:years,y1:y1,yh:yh,moCF:moCF,coc:coc,cap:cap,capAllIn:capAllIn};
+}
+
+var lastSummary='',lastInp=null,lastR=null;
+function calc(){
+  var inp=readInputs(),R=compute(inp);
+  lastInp=inp;lastR=R;
+  var P=inp.P,useLoan=inp.useLoan,closing=inp.closing,repairs=inp.repairs,
+      ratePct=inp.ratePct,termY=inp.termY,rentM=inp.rentM,othM=inp.othM,
+      vac=inp.vac,g=inp.g,taxA=inp.taxA,insA=inp.insA,
+      maintP=inp.maintP,capexP=inp.capexP,mgmtP=inp.mgmtP,
+      H=inp.H,app=inp.app,sellC=inp.sellC;
+  var ARV=R.ARV,downPctV=R.downPctV,downD=R.downD,L=R.L,invested=R.invested,pmtM=R.pmtM,
+      years=R.years,y1=R.y1,yh=R.yh,moCF=R.moCF,coc=R.coc,cap=R.cap,capAllIn=R.capAllIn;
+  $('arv').placeholder=(P+repairs)>0?'Auto: '+(P+repairs).toLocaleString('en-US'):'Auto';
+
+  /* hero strip */
   $('heroCF').textContent=fmtUSD(moCF);
   $('heroCF').className='hv '+(moCF>=0.5?'pos':(moCF<-0.5?'neg':''));
   $('heroCFsub').textContent=fmtUSD(y1.cf)+' / year before sale proceeds';
@@ -811,6 +886,43 @@ function calc(){
     +'Cumulative cash flow: '+fmtUSD(yh.cum)+'\n'
     +'Total profit: '+fmtUSD(yh.profit)+'\n'
     +'Annualized return (IRR): '+(isFinite(irrH)?fmtPct(irrH,1):'—')+' · Return multiple: '+(isFinite(multiple)?multiple.toFixed(2)+'x':'—');
+
+  renderStress(inp,R);
+}
+
+/* ---------- one-click stress test ---------- */
+function renderStress(inp,base){
+  var cases=[
+    {label:'Vacancy doubled',sub:fmtPct(Math.min(100,inp.vac*200),1)+' vacancy',
+     mod:function(o){o.vac=Math.min(1,o.vac*2);}}
+  ];
+  if(inp.useLoan)cases.push({label:'Rate +1%',sub:fmtPct(Math.min(30,inp.ratePct+1),2)+' interest',
+     mod:function(o){o.ratePct=Math.min(30,o.ratePct+1);}});
+  cases.push({label:'Rent −10%',sub:fmtUSD(inp.rentM*0.9)+'/mo rent',
+     mod:function(o){o.rentM=o.rentM*0.9;}});
+  cases.push({label:'Worst case',sub:'all of the above at once',
+     mod:function(o){o.vac=Math.min(1,o.vac*2);if(o.useLoan)o.ratePct=Math.min(30,o.ratePct+1);o.rentM=o.rentM*0.9;}});
+
+  function row(name,sub,r,isBase){
+    var d=r.moCF-base.moCF;
+    return '<tr><td class="rowh">'+name+(sub?'<span class="sub">'+sub+'</span>':'')+'</td>'
+      +'<td class="'+(r.moCF<-0.5?'neg':'pos')+'">'+fmtUSD(r.moCF)+'</td>'
+      +'<td class="'+(d<-0.5?'neg':'')+'">'+(isBase?'—':fmtUSD(d))+'</td>'
+      +'<td class="'+(isFinite(r.coc)?(r.coc<0?'neg':'pos'):'')+'">'+(isFinite(r.coc)?fmtPct(r.coc,1):'—')+'</td></tr>';
+  }
+  var html='<thead><tr><th class="rowh">Scenario</th><th>Mo. cash flow</th><th>vs baseline</th><th>CoC</th></tr></thead><tbody>';
+  html+=row('Baseline','as entered',base,true);
+  var fails=[];
+  cases.forEach(function(c){
+    var o=cloneInp(inp);c.mod(o);
+    var r=compute(o);
+    html+=row(c.label,c.sub,r,false);
+    if(r.moCF<-0.5)fails.push(c.label);
+  });
+  $('stressTable').innerHTML=html+'</tbody>';
+  $('stressVerdict').innerHTML=fails.length
+    ?'<span class="verdict bad">✗ Goes negative under: '+fails.join(', ')+'</span>'
+    :'<span class="verdict pass">✓ Survives all stresses with positive cash flow</span>';
 }
 
 /* ---------- wiring ---------- */
@@ -863,6 +975,147 @@ $('copyBtn').addEventListener('click',function(){
   });
 });
 
+/* ---------- save & compare scenarios ---------- */
+var SCN_KEY=LS+'scenarios',SCN_MAX=8;
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function fin(n){return typeof n==='number'&&isFinite(n);}
+function loadScns(){try{var a=JSON.parse(localStorage.getItem(SCN_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
+function saveScns(a){try{localStorage.setItem(SCN_KEY,JSON.stringify(a));}catch(e){}}
+
+var SCN_METRICS=[
+  {label:'Purchase price',v:function(s){return s.out.price;},f:function(n){return fin(n)?fmtUSD(n):'—';},best:'min'},
+  {label:'Monthly rent',v:function(s){return s.out.rent;},f:function(n){return fin(n)?fmtUSD(n):'—';},best:'max'},
+  {label:'Monthly cash flow',v:function(s){return s.out.cf;},f:function(n){return fin(n)?fmtUSD(n):'—';},best:'max',color:true},
+  {label:'Cash-on-cash',v:function(s){return s.out.coc;},f:function(n){return fin(n)?fmtPct(n,1):'—';},best:'max',color:true},
+  {label:'Cap rate',v:function(s){return s.out.cap;},f:function(n){return fin(n)?fmtPct(n,1):'—';},best:'max'},
+  {label:'NOI (yr 1)',v:function(s){return s.out.noi;},f:function(n){return fin(n)?fmtUSD(n):'—';},best:'max'},
+  {label:'IRR at hold',v:function(s){return s.out.irr;},f:function(n,s){return (fin(n)?fmtPct(n,1):'—')+(s.out.hold?'<span class="sub">'+s.out.hold+'-yr hold</span>':'');},best:'max'},
+  {label:'Cash invested',v:function(s){return s.out.invested;},f:function(n){return fin(n)?fmtUSD(n):'—';},best:'min'}
+];
+
+function renderScenarios(){
+  var scns=loadScns();
+  var html='';
+  scns.forEach(function(s,i){
+    html+='<span class="scn-chip"><span>'+esc(s.name)+'</span>'
+      +'<span class="when">'+new Date(s.savedAt).toLocaleDateString('en-US',{month:'short',day:'numeric'})+'</span>'
+      +'<button type="button" data-act="load" data-i="'+i+'">Load</button>'
+      +'<button type="button" class="del" data-act="del" data-i="'+i+'" aria-label="Delete scenario '+esc(s.name)+'">✕</button></span>';
+  });
+  $('scnList').innerHTML=html;
+  var full=scns.length>=SCN_MAX;
+  $('saveScnBtn').disabled=full;
+  $('saveScnBtn').textContent=full?'Limit of '+SCN_MAX+' scenarios reached':'＋ Save this scenario';
+  if(scns.length>=2){
+    var t='<thead><tr><th class="rowh">Metric</th>';
+    scns.forEach(function(s){t+='<th>'+esc(s.name)+'</th>';});
+    t+='</tr></thead><tbody>';
+    SCN_METRICS.forEach(function(m){
+      var vals=scns.map(function(s){return m.v(s);});
+      var finite=vals.filter(fin);
+      var best=finite.length>1?(m.best==='min'?Math.min.apply(null,finite):Math.max.apply(null,finite)):NaN;
+      t+='<tr><th class="rowh">'+m.label+'</th>';
+      vals.forEach(function(v,i){
+        var cls=[];
+        if(fin(v)&&fin(best)&&Math.abs(v-best)<1e-9)cls.push('best');
+        if(m.color&&fin(v))cls.push(v<-0.5?'neg':'pos');
+        t+='<td'+(cls.length?' class="'+cls.join(' ')+'"':'')+'>'+m.f(v,scns[i])+'</td>';
+      });
+      t+='</tr>';
+    });
+    $('scnTableWrap').innerHTML='<table class="yt">'+t+'</tbody></table>';
+  }else{
+    $('scnTableWrap').innerHTML='';
+  }
+  $('scnHint').textContent=scns.length===0
+    ?'Comparing deals? Save this one with a name, change the numbers, and save the next — a side-by-side comparison appears here. Saved only in your browser.'
+    :(scns.length===1
+      ?'Saved. Change the inputs (or open a shared link) and save another scenario to compare them side-by-side.'
+      :'Best value in each row is highlighted. "Load" restores all of a scenario’s inputs. Saved only in your browser.');
+}
+
+function closeNameBox(){$('scnNameBox').hidden=true;$('saveScnBtn').hidden=false;}
+$('saveScnBtn').addEventListener('click',function(){
+  this.hidden=true;
+  $('scnNameBox').hidden=false;
+  $('scnName').value='';
+  $('scnName').focus();
+});
+$('scnCancel').addEventListener('click',closeNameBox);
+function doSaveScn(){
+  var scns=loadScns();
+  if(scns.length>=SCN_MAX){closeNameBox();renderScenarios();return;}
+  var name=$('scnName').value.replace(/\s+/g,' ').trim()||('Scenario '+(scns.length+1));
+  var inputs={useLoan:$('useLoan').checked};
+  ALL_IDS.forEach(function(id){inputs[id]=$(id).value;});
+  var inp=lastInp||readInputs(),R=lastR||compute(inp);
+  scns.push({name:name,savedAt:Date.now(),inputs:inputs,
+    out:{price:inp.P,rent:inp.rentM,cf:R.moCF,coc:R.coc,cap:R.cap,noi:R.y1.noi,irr:R.yh.irr,hold:inp.H,invested:R.invested}});
+  saveScns(scns);
+  closeNameBox();
+  renderScenarios();
+}
+$('scnConfirm').addEventListener('click',doSaveScn);
+$('scnName').addEventListener('keydown',function(e){
+  if(e.key==='Enter'){e.preventDefault();doSaveScn();}
+  else if(e.key==='Escape'){closeNameBox();}
+});
+$('scnList').addEventListener('click',function(e){
+  var b=e.target.closest?e.target.closest('button'):null;
+  if(!b||b.dataset.i===undefined)return;
+  var i=parseInt(b.dataset.i,10),scns=loadScns();
+  if(!(i>=0&&i<scns.length))return;
+  if(b.dataset.act==='del'){
+    scns.splice(i,1);saveScns(scns);renderScenarios();
+  }else if(b.dataset.act==='load'){
+    var s=scns[i];
+    ALL_IDS.forEach(function(id){if(s.inputs[id]!==undefined)$(id).value=s.inputs[id];});
+    if(s.inputs.useLoan!==undefined)$('useLoan').checked=!!s.inputs.useLoan;
+    $('loanFields').style.display=$('useLoan').checked?'':'none';
+    $('holdRange').value=clamp(Math.round(numVal($('holdNum')))||1,1,30);
+    syncDownFromPct();
+    calc();persist();
+  }
+});
+
+/* shareable scenario links: #acb=<base64 json> (forwarded into the iframe by the embed snippet) */
+var SHARE_IDS=ALL_IDS;
+function encodeState(){
+  var o={l:$('useLoan').checked?1:0};
+  SHARE_IDS.forEach(function(id){o[id]=$(id).value;});
+  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'');
+}
+function applyHash(){
+  var m=(location.hash||'').match(/[#&]acb=([^&]+)/);
+  if(!m)return;
+  try{
+    var o=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    SHARE_IDS.forEach(function(id){if(o[id]!==undefined&&o[id]!=='')$(id).value=o[id];});
+    if(o.arv!==undefined)$('arv').value=o.arv;
+    if(o.l!==undefined)$('useLoan').checked=(o.l===1||o.l==='1');
+    $('loanFields').style.display=$('useLoan').checked?'':'none';
+    $('holdRange').value=clamp(Math.round(numVal($('holdNum')))||1,1,30);
+  }catch(e){}
+}
+function shareUrl(){
+  var base=(window.parent!==window&&document.referrer)?document.referrer.split('#')[0]:location.href.split('#')[0];
+  return base+'#acb='+encodeState();
+}
+function copyText(txt,btn,label){
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){
+    btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);
+  }).catch(function(){
+    var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=label;},1600);}catch(e){}
+    document.body.removeChild(ta);
+  });
+}
+$('shareBtn').addEventListener('click',function(){
+  copyText(shareUrl(),this,'🔗 Copy link to this scenario');
+});
+applyHash();
+
+renderScenarios();
 syncDownFromPct();
 calc();
 })();

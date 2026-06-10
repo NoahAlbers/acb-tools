@@ -16,16 +16,19 @@ Target URL: `https://www.advancedcb.com/resources/rental-property-roi-calculator
 3. **Embed block #1** — the tool iframe (paste in an Embed element):
 
 ```html
-<iframe id="acb-tool-frame" src="https://YOUR-TOOLS-HOST/tools/rental-property-roi-calculator/"
-  title="Rental Property ROI Calculator" style="width:1px;min-width:100%;border:0;height:2400px"
-  loading="eager"></iframe>
+<iframe id="acb-tool-frame" title="Rental Property ROI Calculator"
+  style="width:1px;min-width:100%;border:0;height:2400px" loading="eager"></iframe>
 <script>
-window.addEventListener('message',function(e){
-  if(e.data&&e.data.acbTool==='rental-property-roi-calculator'){
-    var f=document.getElementById('acb-tool-frame');
-    if(f) f.style.height=(e.data.height+2)+'px';
-  }
-});
+(function(){
+  var f=document.getElementById('acb-tool-frame');
+  /* forward #acb=… shared-scenario links into the tool */
+  f.src='https://YOUR-TOOLS-HOST/tools/rental-property-roi-calculator/'+(location.hash||'');
+  window.addEventListener('message',function(e){
+    if(e.data&&e.data.acbTool==='rental-property-roi-calculator'&&e.data.height){
+      f.style.height=(e.data.height+2)+'px';
+    }
+  });
+})();
 </script>
 ```
 
@@ -55,6 +58,7 @@ Internal rate of return (IRR) is the single annual rate that explains every cash
 - **H3: What's a good cash-on-cash return for a rental?** Many investors target 5–8%+ in year one, but it depends on the market and your goals. Appreciation markets often start lower; cash-flow markets higher. Judge the full IRR over your hold period, not just year one.
 - **H3: Why is my IRR higher than my cash-on-cash return?** Because cash-on-cash only counts the rent left over each month, while IRR also counts the loan being paid down with the tenant's rent and the property appreciating — both of which you collect when you sell.
 - **H3: What expenses should I include?** Property taxes, insurance, maintenance, a CapEx reserve for big-ticket items (roof, HVAC), property management, owner-paid utilities, HOA dues, and a vacancy allowance. Forgetting CapEx and vacancy is the most common way new landlords overestimate returns.
+- **H3: Can I save and compare multiple deals?** Yes — free, no account needed. Save each scenario with a name (up to 8) and the calculator builds a side-by-side comparison table of price, rent, monthly cash flow, cash-on-cash, cap rate, NOI, IRR, and cash invested, with the best number in each row highlighted. You can also copy a share link that reopens the calculator with your exact inputs, and run a one-click stress test (vacancy doubled, rate +1%, rent −10%) to see whether the deal still cash-flows. Everything is stored in your browser — nothing is uploaded.
 - **H3: How accurate are the projections?** They're as good as your assumptions. The math (amortization, NOI, IRR) is exact; rents, expenses, and appreciation are estimates you control. Test conservative numbers — a deal that only works at 5% appreciation isn't a cash-flow deal, it's a bet.
 
 6. **Related tools section** (H2: More free landlord tools) — link grid:
@@ -101,6 +105,8 @@ Internal rate of return (IRR) is the single annual rate that explains every cash
          "acceptedAnswer": {"@type": "Answer", "text": "Because cash-on-cash only counts the rent left over each month, while IRR also counts the loan being paid down with the tenant's rent and the property appreciating — both of which you collect when you sell."}},
         {"@type": "Question", "name": "What expenses should I include?",
          "acceptedAnswer": {"@type": "Answer", "text": "Property taxes, insurance, maintenance, a CapEx reserve for big-ticket items (roof, HVAC), property management, owner-paid utilities, HOA dues, and a vacancy allowance. Forgetting CapEx and vacancy is the most common way new landlords overestimate returns."}},
+        {"@type": "Question", "name": "Can I save and compare multiple deals?",
+         "acceptedAnswer": {"@type": "Answer", "text": "Yes — free, no account needed. Save each scenario with a name (up to 8) and the calculator builds a side-by-side comparison table of price, rent, monthly cash flow, cash-on-cash, cap rate, NOI, IRR, and cash invested, with the best number in each row highlighted. You can also copy a share link that reopens the calculator with your exact inputs, and run a one-click stress test (vacancy doubled, rate +1%, rent −10%). Everything is stored in your browser — nothing is uploaded."}},
         {"@type": "Question", "name": "How accurate are the projections?",
          "acceptedAnswer": {"@type": "Answer", "text": "They're as good as your assumptions. The math (amortization, NOI, IRR) is exact; rents, expenses, and appreciation are estimates you control. Test conservative numbers before you buy."}}
       ]
