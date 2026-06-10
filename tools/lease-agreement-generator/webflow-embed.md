@@ -89,7 +89,7 @@ Collect the deposit and first month's rent before handing over keys, complete a 
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
-      "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "ratingCount": "853"},
+      "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "ratingCount": "784"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}
     },

@@ -22,7 +22,7 @@ body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-te
 .tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
 .tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
 .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.badge{font-size:12px;font-weight:500;color:#7E88B8;background:rgba(61,90,241,.045);border:1px solid rgba(61,90,241,.10);border-radius:50px;padding:4px 12px;letter-spacing:.01em}
 .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:start}
 @media(max-width:840px){.grid{grid-template-columns:1fr}}
 .col{display:flex;flex-direction:column;gap:22px;min-width:0}
@@ -45,14 +45,17 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .hint{font-size:12.5px;color:var(--acb-text-light);margin-top:6px;line-height:1.5}
 .mini-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:480px){.mini-row{grid-template-columns:1fr}}
-.switch{position:relative;display:inline-flex;align-items:center;gap:10px;cursor:pointer;min-height:44px}
-.switch input{position:absolute;opacity:0;width:46px;height:26px;cursor:pointer}
-.switch .track{width:46px;height:26px;border-radius:50px;background:#D0D3DC;transition:background .2s;position:relative;flex-shrink:0}
-.switch .track::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-.switch input:checked+.track{background:var(--acb-blue)}
-.switch input:checked+.track::after{left:23px}
-.switch input:focus-visible+.track{box-shadow:0 0 0 3px rgba(61,90,241,.25)}
-.switch .sw-label{font-size:14px;font-weight:600;color:var(--acb-text)}
+.switch{position:relative;width:46px;height:26px;background:#D0D3DC;border-radius:50px;border:none;cursor:pointer;transition:background .25s;flex-shrink:0;padding:0}
+.switch.on{background:var(--acb-blue)}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .25s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch.on::after{transform:translateX(20px)}
+.switch:focus-visible{box-shadow:0 0 0 3px rgba(61,90,241,.25)}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.switch-row label{margin-bottom:0}
+.sec-divider{display:flex;align-items:center;gap:8px;margin:22px 0 12px;padding-top:18px;border-top:1px solid var(--acb-border);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light)}
+.sec-divider:first-child{margin-top:0;padding-top:0;border-top:none}
+.sec-divider svg{width:15px;height:15px;color:var(--acb-blue)}
+@media(min-width:841px){#resultsCol{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto;scrollbar-width:thin}}
 .hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 @media(max-width:480px){.hero-grid{grid-template-columns:1fr 1fr}}
 .hero-tile{background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:14px 12px;text-align:center;min-width:0}
@@ -73,9 +76,25 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .stat-row .v{font-weight:700;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
 .stat-row .v.pos{color:var(--acb-green)}.stat-row .v.neg{color:var(--acb-red)}
 .acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
-.acb-tip-bubble{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--acb-text);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;padding:10px 12px;border-radius:10px;width:230px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;text-transform:none;letter-spacing:normal}
-.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble{opacity:1}
-@media(max-width:720px){.acb-tip-bubble{left:auto;right:-10px;transform:none}}
+.acb-tip:hover,.acb-tip:focus,.acb-tip.open{color:var(--acb-blue)}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 10px 30px rgba(26,26,46,.14);font-size:12.5px;font-weight:400;line-height:1.6;padding:12px 14px;border-radius:12px;width:270px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;text-transform:none;letter-spacing:normal;text-align:left}
+.acb-tip-bubble::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#fff;filter:drop-shadow(0 1.5px 0 var(--acb-border))}
+.acb-tip-bubble b{display:block;font-size:12px;font-weight:700;color:var(--acb-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.acb-tip-bubble i{font-style:normal;display:block}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:720px){.acb-tip-bubble{left:auto;right:-12px;transform:none}.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{transform:none}.acb-tip-bubble::after{left:auto;right:14px;transform:none}}
+.acb-coach-ring{position:relative;z-index:91}
+.acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.55;width:250px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach::before{content:"";position:absolute;bottom:100%;left:24px;border:8px solid transparent;border-bottom-color:var(--acb-text)}
+.acb-coach b{display:block;margin-bottom:3px}
+.acb-coach button{margin-top:9px;background:#fff;color:var(--acb-text);border:none;border-radius:50px;padding:6px 16px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+.acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
+.acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
+.acb-rate-card p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:12px}
+.acb-rate-card .skip{margin-top:10px;background:none;border:none;color:var(--acb-text-light);font-size:12.5px;cursor:pointer;font-family:inherit;text-decoration:underline}
 .sale-irr{text-align:center;background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:16px 14px;margin-bottom:14px}
 .sale-irr .hl{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:5px}
 .sale-irr .hv{font-size:34px;font-weight:800;letter-spacing:-.01em}
@@ -171,20 +190,18 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <!-- ============ INPUTS ============ -->
     <div class="col" id="inputsCol">
 
-      <div class="card">
-        <div class="sec-label">Purchase</div>
+      <div class="card" id="inputsCard">
+        <div class="sec-divider"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Purchase</div>
         <div class="field">
           <label for="price">Purchase price</label>
           <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="price" inputmode="decimal" value="250,000"></div>
         </div>
-        <div class="field">
-          <label class="switch" for="useLoan">
-            <input type="checkbox" id="useLoan" checked>
-            <span class="track" aria-hidden="true"></span>
-            <span class="sw-label">Use a loan
-              <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Turn this off for an all-cash purchase. With a loan, your cash return is "leveraged" — smaller cash in, but mortgage payments come out of the rent.</span></span>
-            </span>
+        <div class="field switch-row">
+          <label id="useLoanLabel">Use a loan
+            <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Turn this off for an all-cash purchase. With a loan, your cash return is "leveraged" — smaller cash in, but mortgage payments come out of the rent.</span></span>
           </label>
+          <button type="button" class="switch on" id="useLoanSwitch" role="switch" aria-checked="true" aria-labelledby="useLoanLabel"></button>
+          <input type="checkbox" id="useLoan" checked hidden>
         </div>
         <div id="loanFields">
           <div class="field">
@@ -231,10 +248,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
             <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="arv" inputmode="decimal" value="" placeholder="Auto"></div>
           </div>
         </div>
-      </div>
 
-      <div class="card">
-        <div class="sec-label">Income</div>
+        <div class="sec-divider"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>Income</div>
         <div class="mini-row">
           <div class="field">
             <label for="rent">Monthly rent</label>
@@ -261,10 +276,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
             <div class="in-wrap has-suf"><input type="number" id="rentGrowth" inputmode="decimal" value="3" step="0.5" min="-10" max="20"><span class="suf">%</span></div>
           </div>
         </div>
-      </div>
 
-      <div class="card">
-        <div class="sec-label">Operating expenses</div>
+        <div class="sec-divider"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M12 10h2M16 10h2M8 14h2M12 14h2M16 14h2M8 18h2M12 18h6"/></svg>Operating expenses</div>
         <div class="mini-row">
           <div class="field">
             <label for="tax">Property tax / yr</label>
@@ -332,10 +345,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
             <div class="in-wrap has-suf"><input type="number" id="othInc" inputmode="decimal" value="3" step="0.5" min="0" max="20"><span class="suf">%</span></div>
           </div>
         </div>
-      </div>
 
-      <div class="card">
-        <div class="sec-label">Sale / exit</div>
+        <div class="sec-divider"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2l-2 2m-7.6 7.6a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m3 3L21 8m-3-3 3 3"/></svg>Sale / exit</div>
         <div class="field">
           <label for="holdNum">Hold length
             <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">How many years you plan to own before selling. The at-sale numbers, charts, and IRR are all built on this horizon.</span></span>
@@ -362,7 +373,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     </div>
 
     <!-- ============ RESULTS ============ -->
-    <div class="col">
+    <div class="col" id="resultsCol">
 
       <div class="card" aria-live="polite">
         <div class="sec-label">Year-1 results</div>
@@ -393,6 +404,9 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
             <div class="hv" id="heroNOI">$0</div>
           </div>
         </div>
+        <div class="sec-label" style="margin:18px 0 10px">Where the rent goes (monthly, yr 1)</div>
+        <div id="donutChart" class="donut-wrap"></div>
+        <p class="chart-note" id="donutNote"></p>
         <div class="callout" id="negCallout">
           <strong>This property loses money each month at these assumptions.</strong> That is not automatically a deal-breaker — appreciation and loan paydown can still carry the deal (check the IRR below) — but make sure you can comfortably float the shortfall.
         </div>
@@ -411,23 +425,6 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <div id="saleRows"></div>
       </div>
 
-      <div class="card">
-        <div class="sec-label">Where the rent goes (monthly, year 1)</div>
-        <div id="donutChart" class="donut-wrap"></div>
-        <p class="chart-note" id="donutNote"></p>
-      </div>
-
-      <div class="card">
-        <div class="sec-label" id="lineLabel">Wealth built over 10 years</div>
-        <div id="lineChart"></div>
-        <div class="line-legend">
-          <span><span class="dot" style="background:#3D5AF1"></span>Equity
-            <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Property value minus loan balance. It grows two ways: appreciation pushes the value up while each payment pays the loan down.</span></span>
-          </span>
-          <span><span class="dot" style="background:#16A34A"></span>Cumulative cash flow</span>
-        </div>
-      </div>
-
       <div class="card" aria-live="polite">
         <div class="sec-label">One-click stress test
           <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Each row re-runs the full year-1 math with one thing going wrong: vacancy doubled, the interest rate 1% higher, rent 10% lower — and all of them at once. A deal that survives its stress test is a much safer buy.</span></span>
@@ -436,6 +433,18 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <div id="stressVerdict" style="margin-top:12px;text-align:center"></div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ============ WEALTH CHART ============ -->
+  <div class="card table-card">
+    <div class="sec-label" id="lineLabel">Wealth built over 10 years</div>
+    <div id="lineChart"></div>
+    <div class="line-legend">
+      <span><span class="dot" style="background:#3D5AF1"></span>Equity
+        <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Property value minus loan balance. It grows two ways: appreciation pushes the value up while each payment pays the loan down.</span></span>
+      </span>
+      <span><span class="dot" style="background:#16A34A"></span>Cumulative cash flow</span>
     </div>
   </div>
 
@@ -498,6 +507,71 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   <p class="disclaimer">This calculator provides estimates for educational purposes only and is not financial, investment, or tax advice. Projections depend entirely on your assumptions; actual results will differ. Verify all figures independently before making investment decisions. © Advanced Collection Bureau, Inc.</p>
 </div>
 
+<script>
+/* ===== shared UI v3 helpers (see docs/ui-v3-spec.md) ===== */
+var ACB_REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tweenText(el,fmt,to,ms){
+  if(!el)return;
+  if(ACB_REDUCED||!isFinite(to)){el.textContent=fmt(isFinite(to)?to:0);el.__tv=isFinite(to)?to:0;return;}
+  var from=isFinite(el.__tv)?el.__tv:0;
+  el.__tv=to;
+  if(from===to){el.textContent=fmt(to);return;}
+  var t0=performance.now();ms=ms||480;
+  (function step(){
+    var p=Math.min(1,(performance.now()-t0)/ms);p=1-Math.pow(1-p,3);
+    el.textContent=fmt(from+(to-from)*p);
+    if(p<1)requestAnimationFrame(step);
+  })();
+}
+function smoothResize(el,mutate){
+  if(ACB_REDUCED||!el){if(mutate)mutate();return;}
+  var h0=el.offsetHeight;if(mutate)mutate();var h1=el.offsetHeight;
+  if(Math.abs(h0-h1)<3)return;
+  el.style.height=h0+'px';el.style.overflow='hidden';el.style.transition='height .3s ease';
+  void el.offsetHeight;
+  el.style.height=h1+'px';
+  setTimeout(function(){el.style.height='';el.style.overflow='';el.style.transition='';},320);
+}
+function acbTipUpgrade(root){
+  (root||document).querySelectorAll('.acb-tip').forEach(function(t){
+    if(t.__up)return;t.__up=true;
+    var bub=t.querySelector('.acb-tip-bubble');
+    if(bub&&!bub.querySelector('b')){
+      var body=bub.innerHTML;
+      var title=t.dataset.t||'';
+      if(!title){
+        var host=t.closest('label')||t.parentNode;
+        if(host){var c=host.cloneNode(true);var tip=c.querySelector('.acb-tip');if(tip)tip.remove();title=c.textContent.replace(/\s+/g,' ').trim();}
+      }
+      bub.innerHTML='<i>'+body+'</i>';
+      var b=document.createElement('b');b.textContent=(title||'About this field').slice(0,42);
+      bub.insertBefore(b,bub.firstChild);
+    }
+    t.addEventListener('click',function(e){e.stopPropagation();t.classList.toggle('open');});
+  });
+}
+document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
+function acbCoach(slug,target,title,body){
+  try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
+  var el=typeof target==='string'?document.querySelector(target):target;
+  if(!el)return;
+  var tip=null;
+  function done(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}
+    el.classList.remove('acb-coach-ring');if(tip)tip.remove();
+    document.removeEventListener('input',done,true);}
+  el.classList.add('acb-coach-ring');
+  var wrap=el.closest('.field')||el.parentNode;
+  if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+  tip=document.createElement('div');tip.className='acb-coach';
+  tip.innerHTML='<b>'+title+'</b>'+body+'<br><button type="button">Got it</button>';
+  wrap.appendChild(tip);
+  tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';
+  tip.style.left=Math.max(0,Math.min(el.offsetLeft,wrap.clientWidth-260))+'px';
+  tip.querySelector('button').addEventListener('click',done);
+  document.addEventListener('input',done,true);
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){done();document.removeEventListener('keydown',esc);}});
+}
+</script>
 <script>
 (function(){
 "use strict";
@@ -761,13 +835,13 @@ function calc(){
   $('arv').placeholder=(P+repairs)>0?'Auto: '+(P+repairs).toLocaleString('en-US'):'Auto';
 
   /* hero strip */
-  $('heroCF').textContent=fmtUSD(moCF);
+  tweenText($('heroCF'),function(v){return fmtUSD(v);},moCF);
   $('heroCF').className='hv '+(moCF>=0.5?'pos':(moCF<-0.5?'neg':''));
   $('heroCFsub').textContent=fmtUSD(y1.cf)+' / year before sale proceeds';
-  $('heroCoC').textContent=isFinite(coc)?fmtPct(coc,1):'—';
+  if(isFinite(coc)){tweenText($('heroCoC'),function(v){return fmtPct(v,1);},coc);}else{$('heroCoC').textContent='—';$('heroCoC').__tv=0;}
   $('heroCoC').className='hv '+(isFinite(coc)?(coc>=0?'pos':'neg'):'');
-  $('heroCap').textContent=isFinite(cap)?fmtPct(cap,1):'—';
-  $('heroNOI').textContent=fmtUSD(y1.noi);
+  if(isFinite(cap)){tweenText($('heroCap'),function(v){return fmtPct(v,1);},cap);}else{$('heroCap').textContent='—';$('heroCap').__tv=0;}
+  tweenText($('heroNOI'),function(v){return fmtUSD(v);},y1.noi);
   $('heroNOI').className='hv '+(y1.noi<0?'neg':'');
   $('negCallout').className='callout'+(moCF<-0.5?' show':'');
 
@@ -791,6 +865,7 @@ function calc(){
   rows+=statRow('Operating expense ratio',isFinite(oer)?fmtPct(oer,1):'—','Operating expenses ÷ effective gross income (after vacancy). 35–45% is common for single-family rentals; the "50% rule" is the conservative end.');
   rows+=statRow('1% rule',onePctChip,'Quick screen: monthly rent ÷ purchase price. At 1%+ a property has a good shot at positive cash flow with 20% down. A screen, not a verdict — always run the full numbers.');
   $('statRows').innerHTML=rows;
+  acbTipUpgrade($('statRows'));
 
   /* at-sale card */
   $('saleLabel').textContent='If you sell after '+H+' year'+(H>1?'s':'');
@@ -954,6 +1029,20 @@ $('useLoan').addEventListener('change',function(){
   $('loanFields').style.display=this.checked?'':'none';
   calc();persist();
 });
+function syncLoanSwitch(){
+  var on=$('useLoan').checked;
+  var sw=$('useLoanSwitch');
+  sw.classList.toggle('on',on);
+  sw.setAttribute('aria-checked',on?'true':'false');
+}
+$('useLoanSwitch').addEventListener('click',function(){
+  $('useLoan').checked=!$('useLoan').checked;
+  syncLoanSwitch();
+  smoothResize($('inputsCard')||document.querySelector('.card'),function(){
+    $('useLoan').dispatchEvent(new Event('change'));
+  });
+});
+syncLoanSwitch();
 $('loanFields').style.display=$('useLoan').checked?'':'none';
 $('holdRange').value=clamp(Math.round(numVal($('holdNum')))||1,1,30);
 
@@ -1072,6 +1161,7 @@ $('scnList').addEventListener('click',function(e){
     ALL_IDS.forEach(function(id){if(s.inputs[id]!==undefined)$(id).value=s.inputs[id];});
     if(s.inputs.useLoan!==undefined)$('useLoan').checked=!!s.inputs.useLoan;
     $('loanFields').style.display=$('useLoan').checked?'':'none';
+    syncLoanSwitch();
     $('holdRange').value=clamp(Math.round(numVal($('holdNum')))||1,1,30);
     syncDownFromPct();
     calc();persist();
@@ -1118,6 +1208,8 @@ applyHash();
 renderScenarios();
 syncDownFromPct();
 calc();
+acbTipUpgrade(document);
+acbCoach('rental-property-roi-calculator','#price','Start here','Enter the purchase price \u2014 everything recalculates live, and you can save scenarios below to compare deals side by side.');
 })();
 </script>
 
@@ -1146,6 +1238,37 @@ calc();
     meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
   }
   render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var SLUG='rental-property-roi-calculator',clicks=0,shown=false,t0=Date.now();
+  try{if(localStorage.getItem('acb:'+SLUG+':ratePrompted')||localStorage.getItem('acb:'+SLUG+':rating'))return;}catch(e){return;}
+  document.addEventListener('click',function(){clicks++;maybe();});
+  setTimeout(maybe,121000);
+  function maybe(){
+    if(shown||clicks<6||Date.now()-t0<120000)return;
+    shown=true;
+    try{localStorage.setItem('acb:'+SLUG+':ratePrompted','1');}catch(e){}
+    var pop=document.createElement('div');pop.className='acb-rate-pop';
+    pop.innerHTML='<div class="acb-rate-card"><h3>Quick favor?</h3><p>If this tool saved you time, a rating helps other landlords find it.</p><div class="acb-rate-stars"></div><button type="button" class="skip">Maybe later</button></div>';
+    document.body.appendChild(pop);
+    var stars=pop.querySelector('.acb-rate-stars');
+    for(var i=1;i<=5;i++)(function(i){
+      var b=document.createElement('button');b.type='button';b.className='acb-star';b.textContent='★';b.style.fontSize='34px';
+      b.onmouseenter=function(){[].forEach.call(stars.children,function(s,j){s.classList.toggle('on',j<i);});};
+      b.onclick=function(){
+        var w=document.querySelectorAll('#acbStars .acb-star')[i-1];
+        if(w)w.click();
+        pop.querySelector('.acb-rate-card').innerHTML='<h3>Thank you! ⭐</h3><p>Your rating was recorded.</p>';
+        setTimeout(function(){pop.remove();},1400);
+      };
+      stars.appendChild(b);
+    })(i);
+    pop.querySelector('.skip').addEventListener('click',function(){pop.remove();});
+    pop.addEventListener('click',function(e){if(e.target===pop)pop.remove();});
+  }
 })();
 </script>
 

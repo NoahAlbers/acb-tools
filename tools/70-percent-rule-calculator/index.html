@@ -22,7 +22,7 @@ body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-te
 .tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
 .tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
 .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.badge{font-size:12px;font-weight:500;color:#7E88B8;background:rgba(61,90,241,.045);border:1px solid rgba(61,90,241,.10);border-radius:50px;padding:4px 12px;letter-spacing:.01em}
 .modes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
 .mode-btn{padding:11px 22px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14.5px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
 .mode-btn.on{background:var(--acb-blue-light);border-color:var(--acb-blue);color:var(--acb-blue);font-weight:600}
@@ -58,17 +58,34 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .verdict.vhigh{background:#FDEEEE;color:var(--acb-red);border:1px solid #F2C4C4}
 .nodeal{background:var(--acb-warn-bg);border:1px solid #F0DCB2;border-left:4px solid var(--acb-warn);border-radius:6px 12px 12px 6px;padding:14px 16px;margin-top:16px;font-size:13.5px;color:var(--acb-text-mid);line-height:1.6}
 .nodeal strong{color:var(--acb-text);display:block;margin-bottom:3px}
-.wf{margin:20px 0 6px}
-.wf svg{width:100%;height:auto;display:block}
+.wf{margin:14px 0 6px}
+.wf svg{width:100%;height:auto;max-height:170px;display:block;margin:0 auto}
 .stat-row{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px dashed var(--acb-border);font-size:14.5px}
 .stat-row:last-child{border-bottom:none}
 .stat-row .k{color:var(--acb-text-mid)}
 .stat-row .v{font-weight:700;font-variant-numeric:tabular-nums}
 .stat-row .v.pos{color:var(--acb-green)}.stat-row .v.neg{color:var(--acb-red)}
 .acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
-.acb-tip-bubble{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--acb-text);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;padding:10px 12px;border-radius:10px;width:230px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;text-transform:none;letter-spacing:normal}
-.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble{opacity:1}
-@media(max-width:720px){.acb-tip-bubble{left:auto;right:-10px;transform:none}}
+.acb-tip:hover,.acb-tip:focus,.acb-tip.open{color:var(--acb-blue)}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 10px 30px rgba(26,26,46,.14);font-size:12.5px;font-weight:400;line-height:1.6;padding:12px 14px;border-radius:12px;width:270px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;text-transform:none;letter-spacing:normal;text-align:left}
+.acb-tip-bubble::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#fff;filter:drop-shadow(0 1.5px 0 var(--acb-border))}
+.acb-tip-bubble b{display:block;font-size:12px;font-weight:700;color:var(--acb-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.acb-tip-bubble i{font-style:normal;display:block}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:720px){.acb-tip-bubble{left:auto;right:-12px;transform:none}.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{transform:none}.acb-tip-bubble::after{left:auto;right:14px;transform:none}}
+.acb-coach-ring{position:relative;z-index:91}
+.acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.55;width:250px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach::before{content:"";position:absolute;bottom:100%;left:24px;border:8px solid transparent;border-bottom-color:var(--acb-text)}
+.acb-coach b{display:block;margin-bottom:3px}
+.acb-coach button{margin-top:9px;background:#fff;color:var(--acb-text);border:none;border-radius:50px;padding:6px 16px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+.acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
+.acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
+.acb-rate-card p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:12px}
+.acb-rate-card .skip{margin-top:10px;background:none;border:none;color:var(--acb-text-light);font-size:12.5px;cursor:pointer;font-family:inherit;text-decoration:underline}
+@media(min-width:841px){.results-col{position:sticky;top:16px}}
 .edu{background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px;padding:16px 18px;margin-top:18px}
 .edu-title{font-size:14px;font-weight:700;color:var(--acb-text);margin-bottom:10px}
 .edu-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
@@ -166,7 +183,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       </div>
     </div>
 
-    <div class="card" aria-live="polite">
+    <div class="card results-col" id="resultsCard" aria-live="polite">
       <div class="sec-label">Results</div>
       <div class="hero">
         <div class="cap-label" id="heroLabel">Maximum Allowable Offer</div>
@@ -228,6 +245,71 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 </div>
 
 <script>
+/* ===== shared UI v3 helpers (see docs/ui-v3-spec.md) ===== */
+var ACB_REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tweenText(el,fmt,to,ms){
+  if(!el)return;
+  if(ACB_REDUCED||!isFinite(to)){el.textContent=fmt(isFinite(to)?to:0);el.__tv=isFinite(to)?to:0;return;}
+  var from=isFinite(el.__tv)?el.__tv:0;
+  el.__tv=to;
+  if(from===to){el.textContent=fmt(to);return;}
+  var t0=performance.now();ms=ms||480;
+  (function step(){
+    var p=Math.min(1,(performance.now()-t0)/ms);p=1-Math.pow(1-p,3);
+    el.textContent=fmt(from+(to-from)*p);
+    if(p<1)requestAnimationFrame(step);
+  })();
+}
+function smoothResize(el,mutate){
+  if(ACB_REDUCED||!el){if(mutate)mutate();return;}
+  var h0=el.offsetHeight;if(mutate)mutate();var h1=el.offsetHeight;
+  if(Math.abs(h0-h1)<3)return;
+  el.style.height=h0+'px';el.style.overflow='hidden';el.style.transition='height .3s ease';
+  void el.offsetHeight;
+  el.style.height=h1+'px';
+  setTimeout(function(){el.style.height='';el.style.overflow='';el.style.transition='';},320);
+}
+function acbTipUpgrade(root){
+  (root||document).querySelectorAll('.acb-tip').forEach(function(t){
+    if(t.__up)return;t.__up=true;
+    var bub=t.querySelector('.acb-tip-bubble');
+    if(bub&&!bub.querySelector('b')){
+      var body=bub.innerHTML;
+      var title=t.dataset.t||'';
+      if(!title){
+        var host=t.closest('label')||t.parentNode;
+        if(host){var c=host.cloneNode(true);var tip=c.querySelector('.acb-tip');if(tip)tip.remove();title=c.textContent.replace(/\s+/g,' ').trim();}
+      }
+      bub.innerHTML='<i>'+body+'</i>';
+      var b=document.createElement('b');b.textContent=(title||'About this field').slice(0,42);
+      bub.insertBefore(b,bub.firstChild);
+    }
+    t.addEventListener('click',function(e){e.stopPropagation();t.classList.toggle('open');});
+  });
+}
+document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
+function acbCoach(slug,target,title,body){
+  try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
+  var el=typeof target==='string'?document.querySelector(target):target;
+  if(!el)return;
+  var tip=null;
+  function done(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}
+    el.classList.remove('acb-coach-ring');if(tip)tip.remove();
+    document.removeEventListener('input',done,true);}
+  el.classList.add('acb-coach-ring');
+  var wrap=el.closest('.field')||el.parentNode;
+  if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+  tip=document.createElement('div');tip.className='acb-coach';
+  tip.innerHTML='<b>'+title+'</b>'+body+'<br><button type="button">Got it</button>';
+  wrap.appendChild(tip);
+  tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';
+  tip.style.left=Math.max(0,Math.min(el.offsetLeft,wrap.clientWidth-260))+'px';
+  tip.querySelector('button').addEventListener('click',done);
+  document.addEventListener('input',done,true);
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){done();document.removeEventListener('keydown',esc);}});
+}
+</script>
+<script>
 (function(){
 "use strict";
 var fmtUSD=function(n,c){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:c?2:0,maximumFractionDigits:c?2:0}).format(isFinite(n)?n:0);};
@@ -261,7 +343,7 @@ var modeBtns=document.querySelectorAll('.mode-btn');
 function setMode(m){
   mode=m;
   modeBtns.forEach(function(b){var on=b.dataset.mode===m;b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false');});
-  $('fOffer').style.display=(m==='deal')?'':'none';
+  smoothResize($('inputsCard'),function(){$('fOffer').style.display=(m==='deal')?'':'none';});
   $('inputsLabel').textContent=m==='deal'?'Deal numbers & price':'Deal numbers';
   calc();persist();
 }
@@ -322,7 +404,7 @@ function buildMatrix(arv,rep,rule){
   t.innerHTML=html+'</tbody>';
 }
 
-var lastSummary='';
+var lastSummary='',lastDead=null;
 function calc(){
   var arv=moneyVal(els.arv),repairs=moneyVal(els.repairs),offerP=moneyVal(els.offer);
   var pct=clamp(numVal(els.rulePct),60,85),rule=pct/100,marginPct=100-pct;
@@ -334,7 +416,10 @@ function calc(){
 
   /* "doesn't work" callout */
   var dead=mao<=0;
-  $('noDeal').style.display=dead?'':'none';
+  if(dead!==lastDead){
+    lastDead=dead;
+    smoothResize($('resultsCard'),function(){$('noDeal').style.display=dead?'':'none';});
+  }
   if(dead){
     var minArv=rule>0?repairs/rule:0;
     $('noDealMsg').textContent='At a '+pct+'% rule, '+fmtUSD(repairs)+' of repairs eats the entire allowance'+(arv>0?' on a '+fmtUSD(arv)+' ARV':'')+'. You’d need an ARV of at least '+fmtUSD(minArv)+' just to reach a $0 offer — renegotiate the price, trim the scope, or walk away.';
@@ -342,7 +427,7 @@ function calc(){
 
   if(mode==='mao'){
     heroLabel.textContent='Maximum Allowable Offer';
-    heroVal.textContent=fmtUSD(mao);
+    tweenText(heroVal,function(v){return fmtUSD(v);},mao);
     heroVal.className='big '+(dead?'neg':'pos');
     $('heroVerdict').innerHTML=dead
       ?'<span class="verdict vhigh">No workable offer at these numbers</span>'
@@ -368,7 +453,7 @@ function calc(){
     var needArv=rule>0?(offerP+repairs)/rule:0;         /* reverse: ARV to satisfy rule */
     var beArv=offerP+repairs;                           /* simple break-even ARV */
     heroLabel.textContent='Projected Gross Profit at ARV';
-    heroVal.textContent=fmtUSD(profit);
+    tweenText(heroVal,function(v){return fmtUSD(v);},profit);
     heroVal.className='big '+(profit>0?'pos':'neg');
     var v;
     if(dead)v='<span class="verdict vhigh">No workable offer at these numbers</span>';
@@ -391,6 +476,7 @@ function calc(){
     lastSummary='70% Rule Calculator — Deal Check (advancedcb.com)\nARV: '+fmtUSD(arv)+'\nRepairs: '+fmtUSD(repairs)+'\nRule: '+pct+'%\nAsking/offer price: '+fmtUSD(offerP)+'\nMAO: '+fmtUSD(mao)+' ('+(diff>0?'over by '+fmtUSD(diff):'under by '+fmtUSD(-diff))+')\nImplied margin: '+(isFinite(impMargin)?fmtPct(impMargin,1):'—')+'\nProjected gross profit at ARV: '+fmtUSD(profit)+'\nARV needed to meet rule: '+fmtUSD(needArv);
   }
   $('statRows').innerHTML=rows;
+  acbTipUpgrade($('statRows'));
   buildMatrix(arv,repairs,rule);
 }
 
@@ -457,6 +543,8 @@ $('shareBtn').addEventListener('click',function(){
 applyHash();
 
 setMode(mode);
+acbTipUpgrade(document);
+acbCoach('70-percent-rule-calculator','#arv','Start here','Enter the After Repair Value (what it’ll sell for fixed up) — your max offer updates live.');
 })();
 </script>
 
@@ -485,6 +573,37 @@ setMode(mode);
     meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
   }
   render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var SLUG='70-percent-rule-calculator',clicks=0,shown=false,t0=Date.now();
+  try{if(localStorage.getItem('acb:'+SLUG+':ratePrompted')||localStorage.getItem('acb:'+SLUG+':rating'))return;}catch(e){return;}
+  document.addEventListener('click',function(){clicks++;maybe();});
+  setTimeout(maybe,121000);
+  function maybe(){
+    if(shown||clicks<6||Date.now()-t0<120000)return;
+    shown=true;
+    try{localStorage.setItem('acb:'+SLUG+':ratePrompted','1');}catch(e){}
+    var pop=document.createElement('div');pop.className='acb-rate-pop';
+    pop.innerHTML='<div class="acb-rate-card"><h3>Quick favor?</h3><p>If this tool saved you time, a rating helps other landlords find it.</p><div class="acb-rate-stars"></div><button type="button" class="skip">Maybe later</button></div>';
+    document.body.appendChild(pop);
+    var stars=pop.querySelector('.acb-rate-stars');
+    for(var i=1;i<=5;i++)(function(i){
+      var b=document.createElement('button');b.type='button';b.className='acb-star';b.textContent='★';b.style.fontSize='34px';
+      b.onmouseenter=function(){[].forEach.call(stars.children,function(s,j){s.classList.toggle('on',j<i);});};
+      b.onclick=function(){
+        var w=document.querySelectorAll('#acbStars .acb-star')[i-1];
+        if(w)w.click();
+        pop.querySelector('.acb-rate-card').innerHTML='<h3>Thank you! ⭐</h3><p>Your rating was recorded.</p>';
+        setTimeout(function(){pop.remove();},1400);
+      };
+      stars.appendChild(b);
+    })(i);
+    pop.querySelector('.skip').addEventListener('click',function(){pop.remove();});
+    pop.addEventListener('click',function(e){if(e.target===pop)pop.remove();});
+  }
 })();
 </script>
 

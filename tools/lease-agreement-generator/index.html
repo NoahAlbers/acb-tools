@@ -24,7 +24,7 @@ body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-te
 .tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
 .tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55;max-width:600px;margin-left:auto;margin-right:auto}
 .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.badge{font-size:12px;font-weight:500;color:#7E88B8;background:rgba(61,90,241,.045);border:1px solid rgba(61,90,241,.10);border-radius:50px;padding:4px 12px;letter-spacing:.01em}
 .card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
 .sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
 .entry-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
@@ -100,9 +100,39 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .review-sec .edit{font-size:12.5px;color:var(--acb-blue);font-weight:600;flex-shrink:0}
 .review-sec .body{padding:6px 18px 14px;font-size:13.5px;color:var(--acb-text-mid);line-height:1.7;border-top:1px solid var(--acb-border)}
 .acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
-.acb-tip-bubble{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--acb-text);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;padding:10px 12px;border-radius:10px;width:230px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;text-transform:none;letter-spacing:normal}
-.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble{opacity:1}
-@media(max-width:720px){.acb-tip-bubble{left:auto;right:-10px;transform:none}}
+.acb-tip:hover,.acb-tip:focus,.acb-tip.open{color:var(--acb-blue)}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 10px 30px rgba(26,26,46,.14);font-size:12.5px;font-weight:400;line-height:1.6;padding:12px 14px;border-radius:12px;width:270px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;text-transform:none;letter-spacing:normal;text-align:left}
+.acb-tip-bubble::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#fff;filter:drop-shadow(0 1.5px 0 var(--acb-border))}
+.acb-tip-bubble b{display:block;font-size:12px;font-weight:700;color:var(--acb-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.acb-tip-bubble i{font-style:normal;display:block}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:720px){.acb-tip-bubble{left:auto;right:-12px;transform:none}.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{transform:none}.acb-tip-bubble::after{left:auto;right:14px;transform:none}}
+.acb-cal{position:absolute;z-index:120;background:#fff;border:1px solid var(--acb-border);border-radius:14px;box-shadow:0 12px 32px rgba(26,26,46,.14);padding:14px;width:264px;font-family:inherit}
+.acb-cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.acb-cal-title{font-weight:700;font-size:14px}
+.acb-cal-nav{width:30px;height:30px;border:1px solid var(--acb-border);background:#fff;border-radius:8px;cursor:pointer;color:var(--acb-text-mid);font-size:14px}
+.acb-cal-nav:hover{border-color:var(--acb-blue);color:var(--acb-blue)}
+.acb-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.acb-cal-dow{font-size:10.5px;font-weight:700;color:var(--acb-text-light);padding:4px 0;text-transform:uppercase}
+.acb-cal-d{border:none;background:none;border-radius:8px;padding:7px 0;font-size:13px;font-family:inherit;cursor:pointer;color:var(--acb-text)}
+.acb-cal-d:hover{background:var(--acb-blue-light)}
+.acb-cal-d.out{color:#C9CDDC}
+.acb-cal-d.today{box-shadow:inset 0 0 0 1.5px var(--acb-blue-mid)}
+.acb-cal-d.sel{background:var(--acb-blue);color:#fff;font-weight:700}
+.acb-cal-foot{display:flex;justify-content:space-between;margin-top:8px}
+.acb-cal-foot button{border:none;background:none;color:var(--acb-blue);font-weight:600;font-size:12.5px;cursor:pointer;font-family:inherit;padding:4px 6px}
+.acb-coach-ring{position:relative;z-index:91}
+.acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.55;width:250px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach::before{content:"";position:absolute;bottom:100%;left:24px;border:8px solid transparent;border-bottom-color:var(--acb-text)}
+.acb-coach b{display:block;margin-bottom:3px}
+.acb-coach button{margin-top:9px;background:#fff;color:var(--acb-text);border:none;border-radius:50px;padding:6px 16px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+.acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
+.acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
+.acb-rate-card p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:12px}
+.acb-rate-card .skip{margin-top:10px;background:none;border:none;color:var(--acb-text-light);font-size:12.5px;cursor:pointer;font-family:inherit;text-decoration:underline}
 .doc-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
 .doc-paper{background:#fff;border:1px solid var(--acb-border);border-radius:4px;box-shadow:0 4px 24px rgba(0,0,0,.08);padding:64px 72px;font-family:Georgia,'Times New Roman',serif;font-size:14px;line-height:1.65;color:#111}
 @media(max-width:720px){.doc-paper{padding:32px 22px}}
@@ -206,7 +236,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   <!-- DOCUMENT -->
   <div id="screenDoc" style="display:none">
     <div class="doc-actions no-print">
-      <button class="btn-primary" onclick="window.print()">Print / Save as PDF</button>
+      <button class="btn-primary" onclick="window.print()">Print</button>
+      <button class="btn-primary" id="docPdf">Download PDF</button>
       <button class="btn-secondary" id="docWord">Download .doc</button>
       <button class="btn-secondary" id="docCopy">Copy text</button>
       <button class="btn-secondary" id="docEdit">← Edit answers</button>
@@ -304,6 +335,117 @@ WV:{n:"West Virginia",dep:"No statutory cap",depM:null,ret:"60 days (or 45 days 
 WI:{n:"Wisconsin",dep:"No statutory cap",depM:null,ret:"21 days",ent:"12 hours",entL:"at least twelve (12) hours'",late:"No statutory cap — must be reasonable and in the lease",mtm:"28 days",disc:[{t:"Nonstandard Rental Provisions",b:"Any provision authorizing deposit deductions beyond those allowed by Wis. Admin. Code ATCP 134 is set forth in a separate Nonstandard Rental Provisions document, discussed with and signed by Tenant."},{t:"Code Violations & Conditions",b:"Landlord discloses no uncorrected building or housing code violations of which Landlord has actual knowledge and that present a significant health or safety threat, except as otherwise stated in writing."},{t:"Utility Charges",b:"If utilities are not included in rent and not separately metered, Landlord has disclosed how utility charges are allocated among units."}],note:""},
 WY:{n:"Wyoming",dep:"No statutory cap",depM:null,ret:"30 days (60 days if damage deductions; +15 days for utility charges)",ent:"No statute — set by lease (24 hours used here)",entL:"at least twenty-four (24) hours'",late:"No statutory cap — must be reasonable",mtm:"No statute — lease should specify (30 days used here)",disc:[{t:"Nonrefundable Fees",b:"Any portion of money paid by Tenant that is a nonrefundable fee rather than a refundable deposit is expressly identified as nonrefundable in this Agreement."}],note:""}
 };
+</script>
+<script>
+/* ===== shared UI v3 helpers (see docs/ui-v3-spec.md) ===== */
+var ACB_REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tweenText(el,fmt,to,ms){
+  if(!el)return;
+  if(ACB_REDUCED||!isFinite(to)){el.textContent=fmt(isFinite(to)?to:0);el.__tv=isFinite(to)?to:0;return;}
+  var from=isFinite(el.__tv)?el.__tv:0;
+  el.__tv=to;
+  if(from===to){el.textContent=fmt(to);return;}
+  var t0=performance.now();ms=ms||480;
+  (function step(){
+    var p=Math.min(1,(performance.now()-t0)/ms);p=1-Math.pow(1-p,3);
+    el.textContent=fmt(from+(to-from)*p);
+    if(p<1)requestAnimationFrame(step);
+  })();
+}
+function smoothResize(el,mutate){
+  if(ACB_REDUCED||!el){if(mutate)mutate();return;}
+  var h0=el.offsetHeight;if(mutate)mutate();var h1=el.offsetHeight;
+  if(Math.abs(h0-h1)<3)return;
+  el.style.height=h0+'px';el.style.overflow='hidden';el.style.transition='height .3s ease';
+  void el.offsetHeight;
+  el.style.height=h1+'px';
+  setTimeout(function(){el.style.height='';el.style.overflow='';el.style.transition='';},320);
+}
+function acbTipUpgrade(root){
+  (root||document).querySelectorAll('.acb-tip').forEach(function(t){
+    if(t.__up)return;t.__up=true;
+    var bub=t.querySelector('.acb-tip-bubble');
+    if(bub&&!bub.querySelector('b')){
+      var body=bub.innerHTML;
+      var title=t.dataset.t||'';
+      if(!title){
+        var host=t.closest('label')||t.parentNode;
+        if(host){var c=host.cloneNode(true);var tip=c.querySelector('.acb-tip');if(tip)tip.remove();title=c.textContent.replace(/\s+/g,' ').trim();}
+      }
+      bub.innerHTML='<i>'+body+'</i>';
+      var b=document.createElement('b');b.textContent=(title||'About this field').slice(0,42);
+      bub.insertBefore(b,bub.firstChild);
+    }
+    t.addEventListener('click',function(e){e.stopPropagation();t.classList.toggle('open');});
+  });
+}
+document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
+function acbCoach(slug,target,title,body){
+  try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
+  var el=typeof target==='string'?document.querySelector(target):target;
+  if(!el)return;
+  var tip=null;
+  function done(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}
+    el.classList.remove('acb-coach-ring');if(tip)tip.remove();
+    document.removeEventListener('input',done,true);}
+  el.classList.add('acb-coach-ring');
+  var wrap=el.closest('.field')||el.parentNode;
+  if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+  tip=document.createElement('div');tip.className='acb-coach';
+  tip.innerHTML='<b>'+title+'</b>'+body+'<br><button type="button">Got it</button>';
+  wrap.appendChild(tip);
+  tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';
+  tip.style.left=Math.max(0,Math.min(el.offsetLeft,wrap.clientWidth-260))+'px';
+  tip.querySelector('button').addEventListener('click',done);
+  document.addEventListener('input',done,true);
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){done();document.removeEventListener('keydown',esc);}});
+}
+function acbDate(input){
+  var pop=null,view;
+  function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  function close(){if(pop){pop.remove();pop=null;document.removeEventListener('mousedown',onDoc);}}
+  function onDoc(e){if(pop&&!pop.contains(e.target)&&e.target!==input)close();}
+  function set(d){input.value=iso(d);input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));close();}
+  function render(){
+    var sel=input.value?new Date(input.value+'T00:00:00'):null;
+    var today=new Date();today.setHours(0,0,0,0);
+    var y=view.getFullYear(),m=view.getMonth();
+    var first=new Date(y,m,1),startDow=first.getDay(),dim=new Date(y,m+1,0).getDate();
+    var h='<div class="acb-cal-head"><button type="button" class="acb-cal-nav" data-n="-1" aria-label="Previous month">‹</button><span class="acb-cal-title">'+view.toLocaleDateString('en-US',{month:'long',year:'numeric'})+'</span><button type="button" class="acb-cal-nav" data-n="1" aria-label="Next month">›</button></div><div class="acb-cal-grid">';
+    ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(function(d){h+='<span class="acb-cal-dow">'+d+'</span>';});
+    var prev=new Date(y,m,0).getDate();
+    for(var i=0;i<startDow;i++)h+='<button type="button" class="acb-cal-d out" data-d="'+iso(new Date(y,m-1,prev-startDow+1+i))+'">'+(prev-startDow+1+i)+'</button>';
+    for(var d=1;d<=dim;d++){
+      var cur=new Date(y,m,d),cls='acb-cal-d';
+      if(sel&&cur.getTime()===sel.getTime())cls+=' sel';
+      if(cur.getTime()===today.getTime())cls+=' today';
+      h+='<button type="button" class="'+cls+'" data-d="'+iso(cur)+'">'+d+'</button>';
+    }
+    var cells=startDow+dim,next=1;
+    for(var j=cells;j%7!==0;j++)h+='<button type="button" class="acb-cal-d out" data-d="'+iso(new Date(y,m+1,next))+'">'+(next++)+'</button>';
+    h+='</div><div class="acb-cal-foot"><button type="button" data-t="1">Today</button><button type="button" data-c="1">Close</button></div>';
+    pop.innerHTML=h;
+    pop.querySelectorAll('[data-n]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();view.setMonth(view.getMonth()+(+b.dataset.n));render();});});
+    pop.querySelectorAll('[data-d]').forEach(function(b){b.addEventListener('click',function(){set(new Date(b.dataset.d+'T00:00:00'));});});
+    pop.querySelector('[data-t]').addEventListener('click',function(){set(new Date());});
+    pop.querySelector('[data-c]').addEventListener('click',close);
+  }
+  function open(){
+    if(pop)return;
+    view=input.value?new Date(input.value+'T00:00:00'):new Date();view.setDate(1);
+    pop=document.createElement('div');pop.className='acb-cal';
+    var r=input.getBoundingClientRect();
+    var wrap=input.closest('.field')||input.parentNode;
+    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+    wrap.appendChild(pop);
+    pop.style.top=(input.offsetTop+input.offsetHeight+6)+'px';
+    pop.style.left=Math.max(0,Math.min(input.offsetLeft,wrap.clientWidth-270))+'px';
+    render();
+    setTimeout(function(){document.addEventListener('mousedown',onDoc);},0);
+  }
+  input.addEventListener('click',function(e){e.preventDefault();open();});
+  input.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}if(e.key==='Escape')close();});
+}
 </script>
 <script>
 "use strict";
@@ -421,7 +563,8 @@ var steps=[
  bind:function(root){
    root.querySelector('#wState').addEventListener('change',function(){
      A.state=this.value;save();
-     root.querySelector('#wStateFacts').innerHTML=stateFacts(A.state);
+     var box=root.querySelector('#wStateFacts');
+     smoothResize(box.closest('.card')||box,function(){box.innerHTML=stateFacts(A.state);});
    });
  },
  valid:function(){return A.state?true:'Please choose a state to continue.';}},
@@ -536,21 +679,25 @@ var steps=[
    bindMultiChips(root,'pay',A.payMethods);
    bindChips(root,'lateType',function(v){A.lateType=(v==='Flat $')?'flat':'pct';rerender();});
    function prorate(){
-     var box=root.querySelector('#wProrate'),r=money(A.rent);
-     if(!A.start||!r){box.innerHTML='';return;}
-     var d=new Date(A.start+'T00:00:00');
-     if(d.getDate()===1){box.innerHTML='';return;}
-     var dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
-     var remain=dim-d.getDate()+1;
-     var p=r/dim*remain;
-     box.innerHTML='<div class="infobox">ℹ️ Mid-month start detected: first month’s prorated rent is <strong>&nbsp;'+fmtUSD(p,true)+'&nbsp;</strong> ('+remain+' of '+dim+' days). We’ll include it in the lease.</div>';
+     var box=root.querySelector('#wProrate'),r=money(A.rent),h='';
+     if(A.start&&r){
+       var d=new Date(A.start+'T00:00:00');
+       if(d.getDate()!==1){
+         var dim=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+         var remain=dim-d.getDate()+1;
+         var p=r/dim*remain;
+         h='<div class="infobox">ℹ️ Mid-month start detected: first month’s prorated rent is <strong>&nbsp;'+fmtUSD(p,true)+'&nbsp;</strong> ('+remain+' of '+dim+' days). We’ll include it in the lease.</div>';
+       }
+     }
+     if(box.innerHTML!==h)smoothResize(box,function(){box.innerHTML=h;});
    }
    function lateWarn(){
-     var s=SD[A.state]||{},box=root.querySelector('#wLateWarn'),r=money(A.rent),amt=money(A.lateAmt);
-     if(!s.lateCapPct||!amt){box.innerHTML='';return;}
-     var pct=A.lateType==='flat'?(r?amt/r*100:0):amt;
-     if(pct>s.lateCapPct){box.innerHTML='<div class="warnbox">⚠️ That late fee looks higher than '+esc(s.n)+'’s rule ('+esc(s.late)+'). Courts may not enforce it — consider lowering it.</div>';}
-     else box.innerHTML='';
+     var s=SD[A.state]||{},box=root.querySelector('#wLateWarn'),r=money(A.rent),amt=money(A.lateAmt),h='';
+     if(s.lateCapPct&&amt){
+       var pct=A.lateType==='flat'?(r?amt/r*100:0):amt;
+       if(pct>s.lateCapPct)h='<div class="warnbox">⚠️ That late fee looks higher than '+esc(s.n)+'’s rule ('+esc(s.late)+'). Courts may not enforce it — consider lowering it.</div>';
+     }
+     if(box.innerHTML!==h)smoothResize(box,function(){box.innerHTML=h;});
    }
    ['wRent','wLate'].forEach(function(id){root.querySelector('#'+id).addEventListener('input',function(){prorate();lateWarn();});});
    prorate();lateWarn();
@@ -571,10 +718,10 @@ var steps=[
    bindVal(root,'wDep','deposit');bindVal(root,'wPetDep','petDeposit');bindVal(root,'wPetRent','petRent');
    bindChips(root,'lastMo',function(v){A.lastMonth=(v==='Yes');});
    function warn(){
-     var s=SD[A.state]||{},box=root.querySelector('#wDepWarn');
+     var s=SD[A.state]||{},box=root.querySelector('#wDepWarn'),h='';
      var r=money(A.rent),d=money(A.deposit)+money(A.petDeposit);
-     if(s.depM&&r&&d>s.depM*r){box.innerHTML='<div class="warnbox">⚠️ Total deposits ('+fmtUSD(d)+') exceed '+esc(s.n)+'’s limit of '+esc(s.dep)+' ('+fmtUSD(s.depM*r)+' at this rent).</div>';}
-     else box.innerHTML='';
+     if(s.depM&&r&&d>s.depM*r)h='<div class="warnbox">⚠️ Total deposits ('+fmtUSD(d)+') exceed '+esc(s.n)+'’s limit of '+esc(s.dep)+' ('+fmtUSD(s.depM*r)+' at this rent).</div>';
+     if(box.innerHTML!==h)smoothResize(box,function(){box.innerHTML=h;});
    }
    ['wDep','wPetDep'].forEach(function(id){root.querySelector('#'+id).addEventListener('input',warn);});
    warn();
@@ -750,8 +897,12 @@ window.ACB.show=show;
 function rerender(){
   var st=steps[cur];
   var body=$('stepBody');
-  body.innerHTML='<div class="fade"><div class="step-title">'+st.title+'</div><p class="step-sub">'+st.sub+'</p><div id="stepErr"></div>'+st.html()+'</div>';
-  st.bind(body);
+  smoothResize(body.closest('.card'),function(){
+    body.innerHTML='<div class="fade"><div class="step-title">'+st.title+'</div><p class="step-sub">'+st.sub+'</p><div id="stepErr"></div>'+st.html()+'</div>';
+    st.bind(body);
+    acbTipUpgrade(body);
+    body.querySelectorAll('input[type=date]').forEach(acbDate);
+  });
   $('wizBack').style.visibility=cur===0?'hidden':'visible';
   $('stepDots').textContent='Step '+(cur+1)+' of '+steps.length;
   $('wizNext').textContent=(cur===steps.length-1)?'Generate My Lease →':'Continue';
@@ -776,10 +927,11 @@ document.addEventListener('keydown',function(e){
 });
 
 /* entry routing */
-$('entryBuild').addEventListener('click',function(){show('wizard');rerender();});
-$('entryBuild').addEventListener('keydown',function(e){if(e.key==='Enter'){show('wizard');rerender();}});
-$('entryBlank').addEventListener('click',function(){window.ACB.initBlank();show('blank');});
-$('entryBlank').addEventListener('keydown',function(e){if(e.key==='Enter'){window.ACB.initBlank();show('blank');}});
+function coachDismiss(){document.dispatchEvent(new Event('input'));}
+$('entryBuild').addEventListener('click',function(){coachDismiss();show('wizard');rerender();});
+$('entryBuild').addEventListener('keydown',function(e){if(e.key==='Enter'){coachDismiss();show('wizard');rerender();}});
+$('entryBlank').addEventListener('click',function(){coachDismiss();window.ACB.initBlank();show('blank');});
+$('entryBlank').addEventListener('keydown',function(e){if(e.key==='Enter'){coachDismiss();window.ACB.initBlank();show('blank');}});
 $('blankBack').addEventListener('click',function(){show('entry');});
 $('docEdit').addEventListener('click',function(){cur=steps.length-1;show('wizard');rerender();});
 $('docRestart').addEventListener('click',function(){
@@ -787,6 +939,9 @@ $('docRestart').addEventListener('click',function(){
   try{localStorage.removeItem(LS);}catch(e){}
   location.reload();
 });
+
+acbTipUpgrade(document);
+acbCoach('lease-agreement-generator','#entryBuild','Two ways to start','Build a custom lease step by step — or grab a blank fillable PDF on the right. Your progress saves automatically.');
 })();
 </script>
 <script>
@@ -932,7 +1087,7 @@ window.ACB.renderDoc=function(){
   h+='<div class="sig-block"><div class="line"></div><div class="lbl">Landlord: '+esc(A.llName)+' — Signature / Date</div></div>';
   tenants.forEach(function(t){h+='<div class="sig-block"><div class="line"></div><div class="lbl">Tenant: '+esc(t)+' — Signature / Date</div></div>';});
   h+='</div>';
-  h+='<div class="doc-foot">Generated free at advancedcb.com — Advanced Collection Bureau’s tools for landlords &amp; property managers.<br>This template is provided for general informational purposes only and is <strong>not legal advice</strong>. State rules referenced are current to the best of our knowledge as of 2025; laws change and local ordinances may add requirements. Have a local attorney review before use.</div>';
+  h+='<div class="doc-foot"><div style="font-size:12.5px;color:#333">This Lease Agreement was created with Advanced Collection Bureau, Inc. (advancedcb.com)</div><div style="font-size:9.5px;margin-top:4px">This resource from Advanced Collection Bureau, Inc. is for general informational purposes. It is not legal advice. Lease requirements vary by state, county, and city, and laws change; verify current requirements with a local attorney before using it.</div></div>';
   $('docPaper').innerHTML=h;
 };
 
@@ -966,7 +1121,8 @@ window.ACB.initBlank=function(){
   if(!sel.options.length||sel.options.length<2){
     sel.innerHTML=window.ACB.stateOptions(window.ACB.A.state);
     sel.addEventListener('change',function(){
-      $('blankFacts').innerHTML=window.ACB.stateFacts(sel.value);
+      var box=$('blankFacts');
+      smoothResize(box.closest('.card')||box,function(){box.innerHTML=window.ACB.stateFacts(sel.value);});
     });
   }
   sel.value=window.ACB.A.state||'';
@@ -979,7 +1135,7 @@ $('blankDownload').addEventListener('click',function(){
   if(!ab){status.textContent='Choose a state first.';return;}
   if(typeof PDFLib==='undefined'){status.textContent='PDF library failed to load — check your connection and refresh.';return;}
   status.textContent='Building your PDF…';
-  generateBlankPdf(ab).then(function(bytes){
+  generatePdf(ab).then(function(bytes){
     var blob=new Blob([bytes],{type:'application/pdf'});
     var a=document.createElement('a');
     a.href=URL.createObjectURL(blob);
@@ -990,8 +1146,52 @@ $('blankDownload').addEventListener('click',function(){
   }).catch(function(e){status.textContent='Sorry, something went wrong building the PDF.';});
 });
 
-function generateBlankPdf(ab){
+/* Pre-filled fillable PDF from the wizard's answers */
+function buildFill(){
+  var A=window.ACB.A;
+  var t=A.tenants.filter(function(x){return x.trim();});
+  return {
+    ll:A.llName,t1:t[0]||'',t2:t[1]||'',t3:t.slice(2).join('; '),
+    addr:A.addr+(A.unit?', '+A.unit:''),city:A.city,st:A.state,zip:A.zip,
+    ptHouse:A.ptype==='House',ptApt:A.ptype==='Apartment',ptCondo:A.ptype==='Condo',ptTown:A.ptype==='Townhouse',ptDuplex:A.ptype==='Duplex',ptOther:A.ptype==='Room'||A.ptype==='Other',
+    fixed:A.termType==='fixed',mtm:A.termType!=='fixed',
+    start:A.start?fmtDate(A.start):'',end:(A.termType==='fixed'&&A.end)?fmtDate(A.end):'',
+    rent:A.rent?('$'+A.rent):'',due:String(A.dueDay||''),pay:A.payMethods.join(', '),
+    grace:String(A.grace||''),late:money(A.lateAmt)?(A.lateType==='flat'?('$'+A.lateAmt):(A.lateAmt+'% of rent')):'',nsf:money(A.nsf)?('$'+A.nsf):'',
+    dep:A.deposit?('$'+A.deposit):'',petDep:A.petDeposit?('$'+A.petDeposit):'',
+    utils:A.utils,
+    petsNo:A.pets==='Not allowed',petsYes:A.pets!=='Not allowed',
+    smokeNo:A.smoking==='Prohibited anywhere on the property',smokeOut:A.smoking==='Allowed outside only',
+    ins:!!A.insurance,quiet:!!A.quietHours,
+    petLimits:[A.petDesc.trim(),money(A.petRent)?('Pet rent: $'+A.petRent+'/mo'):''].filter(Boolean).join(' — '),
+    lead:A.pre1978!=='no',
+    addl:A.clauses.join('\n\n')
+  };
+}
+window.ACB.buildFill=buildFill;
+
+$('docPdf').addEventListener('click',function(){
+  var b=this,A=window.ACB.A;
+  if(typeof PDFLib==='undefined'){alert('PDF library failed to load — check your connection and refresh.');return;}
+  b.disabled=true;b.textContent='Building PDF…';
+  generatePdf(A.state,buildFill()).then(function(bytes){
+    var blob=new Blob([bytes],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='Lease-Agreement-'+(A.state||'XX')+'.pdf';
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);
+    b.disabled=false;b.textContent='Download PDF';
+  }).catch(function(e){
+    b.disabled=false;b.textContent='Download PDF';
+    alert('Sorry, something went wrong building the PDF.');
+  });
+});
+
+/* Fillable AcroForm PDF — blank template when `fill` is omitted, pre-filled from the wizard otherwise */
+function generatePdf(ab,fill){
   var s=SD[ab];
+  var F=fill||{};
   var P=PDFLib,W=612,H=792,M=54;
   return P.PDFDocument.create().then(function(doc){
     return Promise.all([doc.embedFont(P.StandardFonts.Helvetica),doc.embedFont(P.StandardFonts.HelveticaBold),doc.embedFont(P.StandardFonts.HelveticaOblique)]).then(function(fonts){
@@ -1001,7 +1201,7 @@ function generateBlankPdf(ab){
       var BLUE=P.rgb(0.24,0.353,0.945),INK=P.rgb(0.1,0.1,0.18),GRAY=P.rgb(0.45,0.45,0.55),LINE=P.rgb(0.7,0.72,0.8);
 
       function footer(p){
-        p.drawText('Free template from Advanced Collection Bureau  ·  advancedcb.com  ·  Not legal advice — have a local attorney review before use.',{x:M,y:30,size:7,font:ital,color:GRAY});
+        p.drawText('This Lease Agreement was created with Advanced Collection Bureau, Inc. (advancedcb.com)',{x:M,y:30,size:7,font:ital,color:GRAY});
       }
       function newPage(){footer(page);page=doc.addPage([W,H]);y=H-M;}
       function need(h){if(y-h<M+20)newPage();}
@@ -1031,13 +1231,14 @@ function generateBlankPdf(ab){
         });
         y-=4;
       }
-      function field(label,w,h){
+      function field(label,w,h,val){
         h=h||16;
         need(h+18);
         page.drawText(label,{x:M,y:y-8,size:8,font:bold,color:GRAY});
         var tf=form.createTextField('f'+(fc++));
         tf.addToPage(page,{x:M,y:y-12-h,width:w||(W-2*M),height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:P.rgb(0.975,0.98,0.995)});
         tf.setFontSize(9);
+        if(val)tf.setText(String(val));
         y-=h+22;
       }
       function fieldRow(items){
@@ -1050,6 +1251,7 @@ function generateBlankPdf(ab){
           var tf=form.createTextField('f'+(fc++));
           tf.addToPage(page,{x:x,y:y-12-h,width:w,height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:P.rgb(0.975,0.98,0.995)});
           tf.setFontSize(9);
+          if(it.v)tf.setText(String(it.v));
           x+=w+gap;
         });
         y-=h+24;
@@ -1061,9 +1263,11 @@ function generateBlankPdf(ab){
           need(20);
           for(var j=0;j<perRow&&i+j<items.length;j++){
             var x=M+j*w;
+            var it=items[i+j],lb=typeof it==='string'?it:it.l;
             var cb=form.createCheckBox('c'+(fc++));
             cb.addToPage(page,{x:x,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
-            page.drawText(items[i+j],{x:x+16,y:y-11.5,size:8.5,font:font,color:INK});
+            if(it&&it.on)cb.check();
+            page.drawText(lb,{x:x+16,y:y-11.5,size:8.5,font:font,color:INK});
           }
           y-=20;
         }
@@ -1093,48 +1297,52 @@ function generateBlankPdf(ab){
       y-=boxH+16;
 
       heading('1. PARTIES');
-      field('Landlord / Property Owner or Company');
-      field('Tenant #1 (full legal name)');
-      fieldRow([{l:'Tenant #2 (if any)',w:.5},{l:'Tenant #3 (if any)',w:.5}]);
+      field('Landlord / Property Owner or Company',0,0,F.ll);
+      field('Tenant #1 (full legal name)',0,0,F.t1);
+      fieldRow([{l:'Tenant #2 (if any)',w:.5,v:F.t2},{l:'Tenant #3 (if any)',w:.5,v:F.t3}]);
 
       heading('2. PREMISES');
-      field('Street address & unit');
-      fieldRow([{l:'City',w:.45},{l:'State',w:.2},{l:'ZIP',w:.35}]);
-      checks(['House','Apartment','Condo','Townhouse','Duplex','Other'],3);
+      field('Street address & unit',0,0,F.addr);
+      fieldRow([{l:'City',w:.45,v:F.city},{l:'State',w:.2,v:F.st},{l:'ZIP',w:.35,v:F.zip}]);
+      checks([{l:'House',on:F.ptHouse},{l:'Apartment',on:F.ptApt},{l:'Condo',on:F.ptCondo},{l:'Townhouse',on:F.ptTown},{l:'Duplex',on:F.ptDuplex},{l:'Other',on:F.ptOther}],3);
 
       heading('3. TERM');
-      fieldRow([{l:'Start date',w:.5},{l:'End date (leave blank if month-to-month)',w:.5}]);
-      checks(['Fixed term','Month-to-month ('+s.mtm+' notice)'],2);
+      fieldRow([{l:'Start date',w:.5,v:F.start},{l:'End date (leave blank if month-to-month)',w:.5,v:F.end}]);
+      checks([{l:'Fixed term',on:F.fixed},{l:'Month-to-month ('+s.mtm+' notice)',on:F.mtm}],2);
 
       heading('4. RENT');
-      fieldRow([{l:'Monthly rent ($)',w:.34},{l:'Due on day of month',w:.3},{l:'Payable to / method',w:.36}]);
-      fieldRow([{l:'Grace period (days)',w:.34},{l:'Late fee ($ or %)',w:.3},{l:'Returned-payment fee ($)',w:.36}]);
+      fieldRow([{l:'Monthly rent ($)',w:.34,v:F.rent},{l:'Due on day of month',w:.3,v:F.due},{l:'Payable to / method',w:.36,v:F.pay}]);
+      fieldRow([{l:'Grace period (days)',w:.34,v:F.grace},{l:'Late fee ($ or %)',w:.3,v:F.late},{l:'Returned-payment fee ($)',w:.36,v:F.nsf}]);
       para('State late-fee rule: '+s.late+'.',8,ital,GRAY);
 
       heading('5. SECURITY DEPOSIT');
-      fieldRow([{l:'Security deposit ($)',w:.5},{l:'Pet deposit ($, if any)',w:.5}]);
+      fieldRow([{l:'Security deposit ($)',w:.5,v:F.dep},{l:'Pet deposit ($, if any)',w:.5,v:F.petDep}]);
       para('Limit in '+s.n+': '+s.dep+'. Must be returned within '+s.ret+' after move-out, less lawful deductions, with an itemized statement where required.',8,ital,GRAY);
 
       heading('6. UTILITIES & SERVICES — who pays');
       ['Electricity','Gas','Water / Sewer','Trash Collection','Internet / Cable','Lawn Care','Snow Removal','Pest Control'].forEach(function(u){
         need(20);
+        var who=F.utils?F.utils[u]:'';
         page.drawText(u,{x:M,y:y-11,size:9,font:font,color:INK});
         var cb1=form.createCheckBox('c'+(fc++));
         cb1.addToPage(page,{x:M+220,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
+        if(who==='Tenant')cb1.check();
         page.drawText('Tenant',{x:M+236,y:y-11,size:8.5,font:font,color:INK});
         var cb2=form.createCheckBox('c'+(fc++));
         cb2.addToPage(page,{x:M+310,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
+        if(who==='Landlord')cb2.check();
         page.drawText('Landlord',{x:M+326,y:y-11,size:8.5,font:font,color:INK});
         var cb3=form.createCheckBox('c'+(fc++));
         cb3.addToPage(page,{x:M+410,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
+        if(who==='N/A')cb3.check();
         page.drawText('N/A',{x:M+426,y:y-11,size:8.5,font:font,color:INK});
         y-=20;
       });
       y-=6;
 
       heading('7. POLICIES');
-      checks(['Pets: not allowed','Pets: allowed (see below)','Smoking prohibited','Smoking outside only','Renters insurance required','Quiet hours 10pm–8am'],2);
-      field('Pet limits (number / type / weight) and pet rent, if any');
+      checks([{l:'Pets: not allowed',on:F.petsNo},{l:'Pets: allowed (see below)',on:F.petsYes},{l:'Smoking prohibited',on:F.smokeNo},{l:'Smoking outside only',on:F.smokeOut},{l:'Renters insurance required',on:F.ins},{l:'Quiet hours 10pm–8am',on:F.quiet}],2);
+      field('Pet limits (number / type / weight) and pet rent, if any',0,0,F.petLimits);
 
       heading('8. STANDARD TERMS');
       para('OCCUPANCY & USE: The Premises shall be used only as a private residence by the tenants and occupants listed in this Agreement. Guests staying more than 14 consecutive days require Landlord’s written consent.',8.5);
@@ -1153,6 +1361,7 @@ function generateBlankPdf(ab){
       var cbL=form.createCheckBox('c'+(fc++));
       need(20);
       cbL.addToPage(page,{x:M,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
+      if(F.lead)cbL.check();
       page.drawText('Built before 1978 — lead disclosure & EPA pamphlet attached',{x:M+16,y:y-11.5,size:8.5,font:font,color:INK});
       y-=24;
 
@@ -1162,6 +1371,7 @@ function generateBlankPdf(ab){
       need(90);
       ta.addToPage(page,{x:M,y:y-84,width:W-2*M,height:80,borderWidth:0.75,borderColor:LINE,backgroundColor:P.rgb(0.975,0.98,0.995)});
       ta.setFontSize(9);
+      if(F.addl)ta.setText(String(F.addl));
       y-=96;
 
       heading('SIGNATURES');
@@ -1175,12 +1385,13 @@ function generateBlankPdf(ab){
     });
   });
 }
+window.ACB.generatePdf=generatePdf;
 })();
 </script>
 
 <script>
 (function(){
-  var SEED={value:4.9,count:853};
+  var SEED={value:4.9,count:784};
   var KEY='acb:lease-agreement-generator:rating';
   var box=document.getElementById('acbStars'),meta=document.getElementById('acbRatingMeta');
   var mine=parseInt(localStorage.getItem(KEY)||'0',10);
@@ -1203,6 +1414,37 @@ function generateBlankPdf(ab){
     meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
   }
   render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var SLUG='lease-agreement-generator',clicks=0,shown=false,t0=Date.now();
+  try{if(localStorage.getItem('acb:'+SLUG+':ratePrompted')||localStorage.getItem('acb:'+SLUG+':rating'))return;}catch(e){return;}
+  document.addEventListener('click',function(){clicks++;maybe();});
+  setTimeout(maybe,121000);
+  function maybe(){
+    if(shown||clicks<6||Date.now()-t0<120000)return;
+    shown=true;
+    try{localStorage.setItem('acb:'+SLUG+':ratePrompted','1');}catch(e){}
+    var pop=document.createElement('div');pop.className='acb-rate-pop';
+    pop.innerHTML='<div class="acb-rate-card"><h3>Quick favor?</h3><p>If this tool saved you time, a rating helps other landlords find it.</p><div class="acb-rate-stars"></div><button type="button" class="skip">Maybe later</button></div>';
+    document.body.appendChild(pop);
+    var stars=pop.querySelector('.acb-rate-stars');
+    for(var i=1;i<=5;i++)(function(i){
+      var b=document.createElement('button');b.type='button';b.className='acb-star';b.textContent='★';b.style.fontSize='34px';
+      b.onmouseenter=function(){[].forEach.call(stars.children,function(s,j){s.classList.toggle('on',j<i);});};
+      b.onclick=function(){
+        var w=document.querySelectorAll('#acbStars .acb-star')[i-1];
+        if(w)w.click();
+        pop.querySelector('.acb-rate-card').innerHTML='<h3>Thank you! ⭐</h3><p>Your rating was recorded.</p>';
+        setTimeout(function(){pop.remove();},1400);
+      };
+      stars.appendChild(b);
+    })(i);
+    pop.querySelector('.skip').addEventListener('click',function(){pop.remove();});
+    pop.addEventListener('click',function(e){if(e.target===pop)pop.remove();});
+  }
 })();
 </script>
 

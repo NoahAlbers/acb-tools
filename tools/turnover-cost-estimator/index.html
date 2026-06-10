@@ -22,15 +22,17 @@ body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-te
 .tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
 .tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
 .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.badge{font-size:12px;font-weight:500;color:#7E88B8;background:rgba(61,90,241,.045);border:1px solid rgba(61,90,241,.10);border-radius:50px;padding:4px 12px;letter-spacing:.01em}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
 @media(max-width:840px){.grid{grid-template-columns:1fr}}
 .card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
 .sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
-.group{margin-bottom:26px}
-.group:last-child{margin-bottom:0}
-.group .sec-label{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.group .sec-label .sub{font-size:12px;font-weight:700;color:var(--acb-text);letter-spacing:normal;text-transform:none;font-variant-numeric:tabular-nums}
+.group{margin-bottom:0}
+.sec-divider{display:flex;align-items:center;gap:8px;margin:22px 0 12px;padding-top:18px;border-top:1px solid var(--acb-border);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light)}
+.sec-divider:first-child{margin-top:0;padding-top:0;border-top:none}
+.sec-divider svg{width:15px;height:15px;color:var(--acb-blue);flex-shrink:0}
+.sec-divider .sub{margin-left:auto;font-size:12px;font-weight:700;color:var(--acb-text);letter-spacing:normal;text-transform:none;font-variant-numeric:tabular-nums}
+.group:first-child .sec-divider{margin-top:0;padding-top:0;border-top:none}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:14px;font-weight:600;color:var(--acb-text);margin-bottom:7px}
 .in-wrap{position:relative;display:flex;align-items:center}
@@ -76,8 +78,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .hero .big{font-size:44px;font-weight:800;letter-spacing:-.02em;line-height:1.1;color:var(--acb-red)}
 .hero .cap-label{font-size:13.5px;color:var(--acb-text-light);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
 .chip{display:inline-block;margin-top:12px;font-size:13.5px;font-weight:600;padding:7px 16px;border-radius:50px;background:var(--acb-blue-light);color:var(--acb-blue);border:1px solid var(--acb-blue-mid)}
-.donut-wrap{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:20px}
-.legend{display:flex;flex-direction:column;gap:8px;min-width:220px}
+.donut-wrap{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.legend{display:flex;flex-direction:column;gap:7px;min-width:200px}
 .legend .lrow{display:flex;align-items:center;gap:9px;font-size:13.5px}
 .legend .dot{width:11px;height:11px;border-radius:3px;flex-shrink:0}
 .legend .lname{color:var(--acb-text-mid);flex:1}
@@ -89,9 +91,26 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .stat-row .v{font-weight:700;font-variant-numeric:tabular-nums}
 .stat-row.total .k,.stat-row.total .v{font-weight:800;color:var(--acb-text);font-size:15.5px}
 .acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
-.acb-tip-bubble{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--acb-text);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;padding:10px 12px;border-radius:10px;width:230px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;text-transform:none;letter-spacing:normal}
-.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble{opacity:1}
-@media(max-width:720px){.acb-tip-bubble{left:auto;right:-10px;transform:none}}
+.acb-tip:hover,.acb-tip:focus,.acb-tip.open{color:var(--acb-blue)}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 10px 30px rgba(26,26,46,.14);font-size:12.5px;font-weight:400;line-height:1.6;padding:12px 14px;border-radius:12px;width:270px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;text-transform:none;letter-spacing:normal;text-align:left}
+.acb-tip-bubble::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#fff;filter:drop-shadow(0 1.5px 0 var(--acb-border))}
+.acb-tip-bubble b{display:block;font-size:12px;font-weight:700;color:var(--acb-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.acb-tip-bubble i{font-style:normal;display:block}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:720px){.acb-tip-bubble{left:auto;right:-12px;transform:none}.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{transform:none}.acb-tip-bubble::after{left:auto;right:14px;transform:none}}
+.acb-coach-ring{position:relative;z-index:91}
+.acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.55;width:250px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach::before{content:"";position:absolute;bottom:100%;left:24px;border:8px solid transparent;border-bottom-color:var(--acb-text)}
+.acb-coach b{display:block;margin-bottom:3px}
+.acb-coach button{margin-top:9px;background:#fff;color:var(--acb-text);border:none;border-radius:50px;padding:6px 16px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+.acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
+.acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
+.acb-rate-card p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:12px}
+.acb-rate-card .skip{margin-top:10px;background:none;border:none;color:var(--acb-text-light);font-size:12.5px;cursor:pointer;font-family:inherit;text-decoration:underline}
+@media(min-width:841px){.results-col{position:sticky;top:16px}}
 /* retention + annualized */
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;margin-top:22px}
 @media(max-width:840px){.row2{grid-template-columns:1fr}}
@@ -158,9 +177,9 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
 
   <div class="grid">
-    <div class="card">
+    <div class="card" id="inputsCard">
       <div class="group">
-        <div class="sec-label">Vacancy <span class="sub" id="subVacancy"></span></div>
+        <div class="sec-divider"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg>Vacancy <span class="sub" id="subVacancy"></span></div>
 
         <div class="field">
           <label for="rent">Monthly rent
@@ -180,7 +199,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <div class="li" id="liLostRent">
           <input type="checkbox" id="cbLostRent" checked aria-label="Include lost rent during vacancy">
           <label class="li-name" for="cbLostRent">Lost rent during vacancy
-            <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Calculated automatically: monthly rent ÷ 30.44 (average days per month) × days vacant. Usually the single biggest turnover cost.</span></span>
+            <span class="acb-tip" tabindex="0" data-t="Lost rent during vacancy"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Calculated automatically: monthly rent ÷ 30.44 (average days per month) × days vacant. Usually the single biggest turnover cost.</span></span>
             <span class="auto-val" id="lostRentNote"></span>
           </label>
           <div class="li-calc" id="lostRentVal" aria-live="polite">$0</div>
@@ -189,7 +208,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <div class="li" id="liUtils">
           <input type="checkbox" id="cbUtils" checked aria-label="Include utilities and lawn or snow care during vacancy">
           <label class="li-name" for="cbUtils">Utilities + lawn/snow during vacancy
-            <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">While the unit sits empty, you pay the electric, water, and yard care the tenant normally covers. Enter a monthly amount — it's prorated by your vacancy days.</span></span>
+            <span class="acb-tip" tabindex="0" data-t="Utilities during vacancy"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">While the unit sits empty, you pay the electric, water, and yard care the tenant normally covers. Enter a monthly amount — it's prorated by your vacancy days.</span></span>
             <span class="auto-val" id="utilsNote"></span>
           </label>
           <div class="in-wrap has-pre has-suf"><span class="pre">$</span><input type="text" id="utils" inputmode="decimal" value="150" aria-label="Utilities and lawn care cost per month"><span class="suf">/mo</span></div>
@@ -197,7 +216,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       </div>
 
       <div class="group">
-        <div class="sec-label">Make-ready <span class="sub" id="subMakeReady"></span></div>
+        <div class="sec-divider"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 2l-2 2m-7.6 7.6a5.5 5.5 0 1 1-7.78 7.78 5.5 5.5 0 0 1 7.78-7.78zm0 0L15.5 7.5m3 3L21 8m-3-3 3 3"/></svg>Make-ready <span class="sub" id="subMakeReady"></span></div>
         <div class="li" id="liClean">
           <input type="checkbox" id="cbClean" checked aria-label="Include cleaning">
           <label class="li-name" for="cbClean">Cleaning</label>
@@ -236,7 +255,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       </div>
 
       <div class="group">
-        <div class="sec-label">Leasing <span class="sub" id="subLeasing"></span></div>
+        <div class="sec-divider"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Leasing <span class="sub" id="subLeasing"></span></div>
         <div class="li" id="liAdv">
           <input type="checkbox" id="cbAdv" checked aria-label="Include advertising and listing">
           <label class="li-name" for="cbAdv">Advertising / listing</label>
@@ -282,7 +301,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       </div>
 
       <div class="group">
-        <div class="sec-label">Admin &amp; loss <span class="sub" id="subAdmin"></span></div>
+        <div class="sec-divider"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Admin &amp; loss <span class="sub" id="subAdmin"></span></div>
         <div class="li" id="liUnpaid">
           <input type="checkbox" id="cbUnpaid" checked aria-label="Include unpaid rent or damages beyond the deposit">
           <label class="li-name" for="cbUnpaid">Unpaid rent / damages beyond deposit
@@ -302,7 +321,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       </div>
     </div>
 
-    <div class="card" aria-live="polite">
+    <div class="card results-col" id="resultsCard" aria-live="polite">
       <div class="sec-label">Results</div>
       <div class="hero">
         <div class="cap-label">Total Turnover Cost</div>
@@ -325,7 +344,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   </div>
 
   <div class="row2">
-    <div class="card" aria-live="polite">
+    <div class="card" id="retCard" aria-live="polite">
       <div class="sec-label">Turnover vs. retention
         <span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">Compare the full cost of this turnover against what it would cost to keep your current tenant — a renewal incentive, and optionally the rent increase you'd give up.</span></span>
       </div>
@@ -426,6 +445,71 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 </div>
 
 <script>
+/* ===== shared UI v3 helpers (see docs/ui-v3-spec.md) ===== */
+var ACB_REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tweenText(el,fmt,to,ms){
+  if(!el)return;
+  if(ACB_REDUCED||!isFinite(to)){el.textContent=fmt(isFinite(to)?to:0);el.__tv=isFinite(to)?to:0;return;}
+  var from=isFinite(el.__tv)?el.__tv:0;
+  el.__tv=to;
+  if(from===to){el.textContent=fmt(to);return;}
+  var t0=performance.now();ms=ms||480;
+  (function step(){
+    var p=Math.min(1,(performance.now()-t0)/ms);p=1-Math.pow(1-p,3);
+    el.textContent=fmt(from+(to-from)*p);
+    if(p<1)requestAnimationFrame(step);
+  })();
+}
+function smoothResize(el,mutate){
+  if(ACB_REDUCED||!el){if(mutate)mutate();return;}
+  var h0=el.offsetHeight;if(mutate)mutate();var h1=el.offsetHeight;
+  if(Math.abs(h0-h1)<3)return;
+  el.style.height=h0+'px';el.style.overflow='hidden';el.style.transition='height .3s ease';
+  void el.offsetHeight;
+  el.style.height=h1+'px';
+  setTimeout(function(){el.style.height='';el.style.overflow='';el.style.transition='';},320);
+}
+function acbTipUpgrade(root){
+  (root||document).querySelectorAll('.acb-tip').forEach(function(t){
+    if(t.__up)return;t.__up=true;
+    var bub=t.querySelector('.acb-tip-bubble');
+    if(bub&&!bub.querySelector('b')){
+      var body=bub.innerHTML;
+      var title=t.dataset.t||'';
+      if(!title){
+        var host=t.closest('label')||t.parentNode;
+        if(host){var c=host.cloneNode(true);var tip=c.querySelector('.acb-tip');if(tip)tip.remove();title=c.textContent.replace(/\s+/g,' ').trim();}
+      }
+      bub.innerHTML='<i>'+body+'</i>';
+      var b=document.createElement('b');b.textContent=(title||'About this field').slice(0,42);
+      bub.insertBefore(b,bub.firstChild);
+    }
+    t.addEventListener('click',function(e){e.stopPropagation();t.classList.toggle('open');});
+  });
+}
+document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
+function acbCoach(slug,target,title,body){
+  try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
+  var el=typeof target==='string'?document.querySelector(target):target;
+  if(!el)return;
+  var tip=null;
+  function done(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}
+    el.classList.remove('acb-coach-ring');if(tip)tip.remove();
+    document.removeEventListener('input',done,true);}
+  el.classList.add('acb-coach-ring');
+  var wrap=el.closest('.field')||el.parentNode;
+  if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+  tip=document.createElement('div');tip.className='acb-coach';
+  tip.innerHTML='<b>'+title+'</b>'+body+'<br><button type="button">Got it</button>';
+  wrap.appendChild(tip);
+  tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';
+  tip.style.left=Math.max(0,Math.min(el.offsetLeft,wrap.clientWidth-260))+'px';
+  tip.querySelector('button').addEventListener('click',done);
+  document.addEventListener('input',done,true);
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){done();document.removeEventListener('keydown',esc);}});
+}
+</script>
+<script>
 (function(){
 "use strict";
 var fmtUSD=function(n,c){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:c?2:0,maximumFractionDigits:c?2:0}).format(isFinite(n)?n:0);};
@@ -483,7 +567,7 @@ var CATS=[
 ];
 function drawDonut(vals,total){
   var r=58,cx=80,cy=80,C=2*Math.PI*r;
-  var svg='<svg viewBox="0 0 160 160" width="172" height="172" role="img" aria-label="Turnover cost breakdown by category">';
+  var svg='<svg viewBox="0 0 160 160" width="144" height="144" role="img" aria-label="Turnover cost breakdown by category">';
   svg+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="#EEF0F6" stroke-width="20"/>';
   if(total>0){
     var off=0;
@@ -513,7 +597,7 @@ function statRow(k,v,cls,tip){
   return '<div class="stat-row'+(cls?' '+cls:'')+'"><span class="k">'+k+(tip?'<span class="acb-tip" tabindex="0"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip">'+tip+'</span></span>':'')+'</span><span class="v">'+v+'</span></div>';
 }
 
-var lastSummary='';
+var lastSummary='',lastCallout=null;
 function calc(){
   var rent=moneyVal($('rent'));
   var days=clamp(numVal($('days')),0,120);
@@ -544,7 +628,11 @@ function calc(){
 
   var unpaid=moneyVal($('unpaid'));
   var admin=(on('cbUnpaid')?unpaid:0)+(on('cbLegal')?moneyVal($('legal')):0);
-  $('acbCallout').hidden=!(unpaid>0);
+  var showCallout=unpaid>0;
+  if(showCallout!==lastCallout){
+    lastCallout=showCallout;
+    smoothResize($('inputsCard'),function(){$('acbCallout').hidden=!showCallout;});
+  }
 
   var total=vacancy+makeReady+leasing+admin;
   var months=rent>0?total/rent:NaN;
@@ -559,7 +647,7 @@ function calc(){
   $('subAdmin').textContent=fmtUSD(admin);
 
   /* hero */
-  $('heroVal').textContent=fmtUSD(total);
+  tweenText($('heroVal'),function(v){return fmtUSD(v);},total);
   $('monthsChip').textContent=isFinite(months)?'= '+months.toFixed(1)+' month'+(months.toFixed(1)==='1.0'?'':'s')+' of rent':'Enter monthly rent to compare';
 
   drawDonut({vacancy:vacancy,makeReady:makeReady,leasing:leasing,admin:admin},total);
@@ -572,6 +660,7 @@ function calc(){
   rows+=statRow('Total turnover cost',fmtUSD(total),'total');
   rows+=statRow('Cost per vacant day',days>0?fmtUSD(total/days):'—','','Your total turnover cost divided by days vacant — a quick gauge of what each extra day on the market costs you.');
   $('statRows').innerHTML=rows;
+  acbTipUpgrade($('statRows'));
 
   /* retention comparison */
   var incentive=moneyVal($('incentive'));
@@ -579,17 +668,20 @@ function calc(){
   $('skipEcho').textContent=skipMo?skipMo.toLocaleString('en-US',{maximumFractionDigits:0}):'0';
   var retention=incentive+(on('cbSkip')?skipMo*12:0);
   var saved=total-retention;
-  $('vsTurnover').textContent=fmtUSD(total);
-  $('vsRetention').textContent=fmtUSD(retention);
+  tweenText($('vsTurnover'),function(v){return fmtUSD(v);},total);
+  tweenText($('vsRetention'),function(v){return fmtUSD(v);},retention);
   var sl=$('saveLine');
-  if(saved>0){sl.className='save-line pos';sl.textContent='Keeping a good tenant saves you '+fmtUSD(saved);}
-  else if(saved<0){sl.className='save-line neg';sl.textContent='Retention costs '+fmtUSD(-saved)+' more than this turnover';}
-  else{sl.className='save-line neg';sl.textContent='Turnover and retention cost the same';}
+  sl.className='save-line '+(saved>0?'pos':'neg');
+  tweenText(sl,function(v){
+    if(saved>0)return 'Keeping a good tenant saves you '+fmtUSD(Math.max(0,v));
+    if(saved<0)return 'Retention costs '+fmtUSD(Math.max(0,-v))+' more than this turnover';
+    return 'Turnover and retention cost the same';
+  },saved);
 
   /* annualized */
   var years=clamp(numVal($('years'))||0,0.5,30);
   var perYear=total/years;
-  $('perYearVal').textContent=fmtUSD(perYear);
+  tweenText($('perYearVal'),function(v){return fmtUSD(v);},perYear);
   $('perYearNote').textContent='If tenants stay '+years+' year'+(years===1?'':'s')+' on average, every year of operation absorbs '+fmtUSD(perYear)+' of this turn — about '+(rent>0?fmtUSD(perYear/12)+'/mo':'—')+' off your effective rent.';
 
   /* portfolio */
@@ -598,9 +690,9 @@ function calc(){
   var turnsPerYear=units*turnRate/100;
   var pfAnnual=turnsPerYear*total;
   var pfSave=units*0.10*total;
-  $('pfPerTurn').textContent=fmtUSD(total);
+  tweenText($('pfPerTurn'),function(v){return fmtUSD(v);},total);
   $('pfTurns').textContent=turnsPerYear.toFixed(1);
-  $('pfAnnual').textContent=fmtUSD(pfAnnual);
+  tweenText($('pfAnnual'),function(v){return fmtUSD(v);},pfAnnual);
   $('pfFlip').textContent='Cutting turnover by 10 points would save '+fmtUSD(pfSave)+'/year';
 
   /* summary */
@@ -633,7 +725,11 @@ $('daysRange').addEventListener('input',function(){
   calc();persist();
 });
 CHECKS.forEach(function(id){
-  $(id).addEventListener('change',function(){calc();persist();});
+  $(id).addEventListener('change',function(){
+    var host=(id==='cbSkip')?$('retCard'):$('inputsCard');
+    smoothResize(host,function(){calc();});
+    persist();
+  });
 });
 
 /* shareable scenario links: #acb=<base64 json> (forwarded into the iframe by the embed snippet) */
@@ -688,6 +784,8 @@ $('copyBtn').addEventListener('click',function(){
 /* init (applyHash ran above so hash state wins before first render) */
 $('daysRange').value=clamp(numVal($('days')),0,120);
 setLeaseMode(leaseMode);
+acbTipUpgrade(document);
+acbCoach('turnover-cost-estimator','#rent','Start here','Enter the monthly rent — every cost line updates live and you can include/exclude items.');
 })();
 </script>
 
@@ -716,6 +814,37 @@ setLeaseMode(leaseMode);
     meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
   }
   render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var SLUG='turnover-cost-estimator',clicks=0,shown=false,t0=Date.now();
+  try{if(localStorage.getItem('acb:'+SLUG+':ratePrompted')||localStorage.getItem('acb:'+SLUG+':rating'))return;}catch(e){return;}
+  document.addEventListener('click',function(){clicks++;maybe();});
+  setTimeout(maybe,121000);
+  function maybe(){
+    if(shown||clicks<6||Date.now()-t0<120000)return;
+    shown=true;
+    try{localStorage.setItem('acb:'+SLUG+':ratePrompted','1');}catch(e){}
+    var pop=document.createElement('div');pop.className='acb-rate-pop';
+    pop.innerHTML='<div class="acb-rate-card"><h3>Quick favor?</h3><p>If this tool saved you time, a rating helps other landlords find it.</p><div class="acb-rate-stars"></div><button type="button" class="skip">Maybe later</button></div>';
+    document.body.appendChild(pop);
+    var stars=pop.querySelector('.acb-rate-stars');
+    for(var i=1;i<=5;i++)(function(i){
+      var b=document.createElement('button');b.type='button';b.className='acb-star';b.textContent='★';b.style.fontSize='34px';
+      b.onmouseenter=function(){[].forEach.call(stars.children,function(s,j){s.classList.toggle('on',j<i);});};
+      b.onclick=function(){
+        var w=document.querySelectorAll('#acbStars .acb-star')[i-1];
+        if(w)w.click();
+        pop.querySelector('.acb-rate-card').innerHTML='<h3>Thank you! ⭐</h3><p>Your rating was recorded.</p>';
+        setTimeout(function(){pop.remove();},1400);
+      };
+      stars.appendChild(b);
+    })(i);
+    pop.querySelector('.skip').addEventListener('click',function(){pop.remove();});
+    pop.addEventListener('click',function(e){if(e.target===pop)pop.remove();});
+  }
 })();
 </script>
 

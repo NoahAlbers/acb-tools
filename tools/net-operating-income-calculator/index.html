@@ -22,10 +22,14 @@ body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-te
 .tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
 .tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
 .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.badge{font-size:12px;font-weight:500;color:#7E88B8;background:rgba(61,90,241,.045);border:1px solid rgba(61,90,241,.10);border-radius:50px;padding:4px 12px;letter-spacing:.01em}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
 @media(max-width:840px){.grid{grid-template-columns:1fr}}
+@media(min-width:841px){.results-col{position:sticky;top:16px}}
 .col{display:flex;flex-direction:column;gap:22px}
+.sec-divider{display:flex;align-items:center;gap:8px;margin:22px 0 12px;padding-top:18px;border-top:1px solid var(--acb-border);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light)}
+.sec-divider:first-child{margin-top:0;padding-top:0;border-top:none}
+.sec-divider svg{width:15px;height:15px;color:var(--acb-blue)}
 .card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
 .sec-label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light);margin-bottom:14px}
 .field{margin-bottom:16px}
@@ -87,9 +91,25 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .stat-row .v{font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
 .stat-row .v.neg{color:var(--acb-red)}
 .acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
-.acb-tip-bubble{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--acb-text);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;padding:10px 12px;border-radius:10px;width:230px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;text-transform:none;letter-spacing:normal}
-.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble{opacity:1}
-@media(max-width:720px){.acb-tip-bubble{left:auto;right:-10px;transform:none}}
+.acb-tip:hover,.acb-tip:focus,.acb-tip.open{color:var(--acb-blue)}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 10px 30px rgba(26,26,46,.14);font-size:12.5px;font-weight:400;line-height:1.6;padding:12px 14px;border-radius:12px;width:270px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;text-transform:none;letter-spacing:normal;text-align:left}
+.acb-tip-bubble::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#fff;filter:drop-shadow(0 1.5px 0 var(--acb-border))}
+.acb-tip-bubble b{display:block;font-size:12px;font-weight:700;color:var(--acb-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.acb-tip-bubble i{font-style:normal;display:block}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:720px){.acb-tip-bubble{left:auto;right:-12px;transform:none}.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{transform:none}.acb-tip-bubble::after{left:auto;right:14px;transform:none}}
+.acb-coach-ring{position:relative;z-index:91}
+.acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.55;width:250px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach::before{content:"";position:absolute;bottom:100%;left:24px;border:8px solid transparent;border-bottom-color:var(--acb-text)}
+.acb-coach b{display:block;margin-bottom:3px}
+.acb-coach button{margin-top:9px;background:#fff;color:var(--acb-text);border:none;border-radius:50px;padding:6px 16px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+.acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
+.acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
+.acb-rate-card p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:12px}
+.acb-rate-card .skip{margin-top:10px;background:none;border:none;color:var(--acb-text-light);font-size:12.5px;cursor:pointer;font-family:inherit;text-decoration:underline}
 .bars{margin-top:20px}
 .bars svg{width:100%;height:auto;display:block}
 .mini-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -137,7 +157,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   <div class="grid">
     <div class="col">
       <div class="card">
-        <div class="sec-label">Income</div>
+        <div class="sec-divider"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Income</div>
         <div class="li-rows" id="incomeRows"></div>
         <div class="presets" id="incPresets" aria-label="Add income line"></div>
         <hr class="divider">
@@ -148,10 +168,8 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
           <div class="in-wrap has-suf"><input type="number" id="vac" inputmode="decimal" value="5" step="0.5" min="0" max="100"><span class="suf">%</span></div>
           <input type="range" id="vacRange" min="0" max="20" step="0.5" value="5" aria-label="Vacancy and credit loss slider">
         </div>
-      </div>
 
-      <div class="card">
-        <div class="sec-label">Operating expenses</div>
+        <div class="sec-divider"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M12 10h2M16 10h2M8 14h2M12 14h2M16 14h2M8 18h2M12 18h6"/></svg>Operating expenses</div>
         <div class="li-rows" id="expenseRows"></div>
         <div class="presets" id="expPresets" aria-label="Add expense line"></div>
         <p class="hint" style="margin-top:12px">Tip: set property management to <strong>% EGI</strong> if your manager charges a percentage of collected income — most do.</p>
@@ -171,7 +189,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
       </div>
     </div>
 
-    <div class="card" aria-live="polite">
+    <div class="card results-col" aria-live="polite">
       <div class="sec-label">Results</div>
       <div class="hero">
         <div class="noi-label">Net Operating Income (annual)</div>
@@ -179,11 +197,12 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
         <div class="sub" id="heroMonthly"></div>
       </div>
       <div class="chip-line" id="oerChip"></div>
-      <div style="margin-top:18px" id="statRows"></div>
 
       <div class="bars">
         <svg id="barsSvg" viewBox="0 0 640 134" role="img" aria-label="Income, expenses, and NOI bar chart" xmlns="http://www.w3.org/2000/svg"></svg>
       </div>
+
+      <div style="margin-top:18px" id="statRows"></div>
 
       <hr class="divider">
       <div class="sec-label">Optional extras</div>
@@ -235,6 +254,71 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
   <p class="disclaimer">This calculator provides estimates for educational purposes only and is not financial, investment, or tax advice. Verify all figures independently before making investment decisions. © Advanced Collection Bureau, Inc.</p>
 </div>
 
+<script>
+/* ===== shared UI v3 helpers (see docs/ui-v3-spec.md) ===== */
+var ACB_REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tweenText(el,fmt,to,ms){
+  if(!el)return;
+  if(ACB_REDUCED||!isFinite(to)){el.textContent=fmt(isFinite(to)?to:0);el.__tv=isFinite(to)?to:0;return;}
+  var from=isFinite(el.__tv)?el.__tv:0;
+  el.__tv=to;
+  if(from===to){el.textContent=fmt(to);return;}
+  var t0=performance.now();ms=ms||480;
+  (function step(){
+    var p=Math.min(1,(performance.now()-t0)/ms);p=1-Math.pow(1-p,3);
+    el.textContent=fmt(from+(to-from)*p);
+    if(p<1)requestAnimationFrame(step);
+  })();
+}
+function smoothResize(el,mutate){
+  if(ACB_REDUCED||!el){if(mutate)mutate();return;}
+  var h0=el.offsetHeight;if(mutate)mutate();var h1=el.offsetHeight;
+  if(Math.abs(h0-h1)<3)return;
+  el.style.height=h0+'px';el.style.overflow='hidden';el.style.transition='height .3s ease';
+  void el.offsetHeight;
+  el.style.height=h1+'px';
+  setTimeout(function(){el.style.height='';el.style.overflow='';el.style.transition='';},320);
+}
+function acbTipUpgrade(root){
+  (root||document).querySelectorAll('.acb-tip').forEach(function(t){
+    if(t.__up)return;t.__up=true;
+    var bub=t.querySelector('.acb-tip-bubble');
+    if(bub&&!bub.querySelector('b')){
+      var body=bub.innerHTML;
+      var title=t.dataset.t||'';
+      if(!title){
+        var host=t.closest('label')||t.parentNode;
+        if(host){var c=host.cloneNode(true);var tip=c.querySelector('.acb-tip');if(tip)tip.remove();title=c.textContent.replace(/\s+/g,' ').trim();}
+      }
+      bub.innerHTML='<i>'+body+'</i>';
+      var b=document.createElement('b');b.textContent=(title||'About this field').slice(0,42);
+      bub.insertBefore(b,bub.firstChild);
+    }
+    t.addEventListener('click',function(e){e.stopPropagation();t.classList.toggle('open');});
+  });
+}
+document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
+function acbCoach(slug,target,title,body){
+  try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
+  var el=typeof target==='string'?document.querySelector(target):target;
+  if(!el)return;
+  var tip=null;
+  function done(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}
+    el.classList.remove('acb-coach-ring');if(tip)tip.remove();
+    document.removeEventListener('input',done,true);}
+  el.classList.add('acb-coach-ring');
+  var wrap=el.closest('.field')||el.parentNode;
+  if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+  tip=document.createElement('div');tip.className='acb-coach';
+  tip.innerHTML='<b>'+title+'</b>'+body+'<br><button type="button">Got it</button>';
+  wrap.appendChild(tip);
+  tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';
+  tip.style.left=Math.max(0,Math.min(el.offsetLeft,wrap.clientWidth-260))+'px';
+  tip.querySelector('button').addEventListener('click',done);
+  document.addEventListener('input',done,true);
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){done();document.removeEventListener('keydown',esc);}});
+}
+</script>
 <script>
 (function(){
 "use strict";
@@ -346,8 +430,11 @@ function buildRow(row,list,kind){
   rm.type='button';rm.className='li-rm';rm.textContent='×';
   rm.setAttribute('aria-label','Remove '+(row.l||'line'));
   rm.addEventListener('click',function(){
-    var i=list.indexOf(row);if(i>-1)list.splice(i,1);
-    render();calc();persist();
+    smoothResize(div.parentNode,function(){
+      var i=list.indexOf(row);if(i>-1)list.splice(i,1);
+      render();
+    });
+    calc();persist();
   });
   div.appendChild(lbl);div.appendChild(wrap);div.appendChild(ut);div.appendChild(rm);
   return div;
@@ -376,8 +463,11 @@ function presetBtn(p,list,containerId){
   b.type='button';b.className='preset';b.textContent='+ '+p.l;b.dataset.label=p.l;
   b.addEventListener('click',function(){
     if(hasLabel(list,p.l))return;
-    list.push({l:p.l,a:p.a,u:p.u});
-    render();calc();persist();
+    smoothResize($(containerId),function(){
+      list.push({l:p.l,a:p.a,u:p.u});
+      render();
+    });
+    calc();persist();
     focusLastRow(containerId,'amount');
   });
   return b;
@@ -386,8 +476,11 @@ function customBtn(list,containerId){
   var b=document.createElement('button');
   b.type='button';b.className='preset';b.textContent='+ Custom';
   b.addEventListener('click',function(){
-    list.push({l:'',a:0,u:'mo'});
-    render();calc();persist();
+    smoothResize($(containerId),function(){
+      list.push({l:'',a:0,u:'mo'});
+      render();
+    });
+    calc();persist();
     focusLastRow(containerId,'label');
   });
   return b;
@@ -486,9 +579,9 @@ function calc(){
   var units=Math.floor(parseFloat(state.units))||0;
   var val=parseAmt(state.val);
   var hero=$('heroVal');
-  hero.textContent=fmtUSD(r.noi);
+  tweenText(hero,function(v){return fmtUSD(v);},r.noi);
   hero.className='big '+(r.noi<0?'neg':'pos');
-  $('heroMonthly').textContent=fmtUSD(r.noi/12)+' per month';
+  tweenText($('heroMonthly'),function(v){return fmtUSD(v)+' per month';},r.noi/12);
   $('oerChip').innerHTML=oerChip(r);
   var rows='';
   rows+=statRow('Potential gross income (PGI)',fmtUSD(r.pgi)+' / yr','All income at 100% occupancy, before vacancy: rent plus parking, laundry, pet rent, and other fees, annualized.');
@@ -498,7 +591,8 @@ function calc(){
   rows+=statRow('Operating expense ratio',isFinite(r.oer)?fmtPct(r.oer,1):'—','Operating expenses ÷ EGI. Most rentals land between 35% and 55%; the chip above flags anything outside that range.');
   if(units>0)rows+=statRow('NOI per unit',fmtUSD(r.noi/units)+' / yr','Annual NOI divided by your '+units+' unit'+(units>1?'s':'')+' — useful for comparing buildings of different sizes.');
   if(val>0)rows+=statRow('Cap rate at '+fmtUSD(val),fmtPct(r.noi/val*100),'NOI ÷ property value. The financing-blind return the property itself produces — compare deals with our cap rate calculator.');
-  $('statRows').innerHTML=rows;
+  smoothResize($('statRows'),function(){$('statRows').innerHTML=rows;});
+  acbTipUpgrade($('statRows'));
   drawBars(r);
   lastSummary=buildSummary(r,units,val);
 }
@@ -626,6 +720,8 @@ if(state.val)$('propVal').value=state.val;
 buildPresets();
 render();
 calc();
+acbTipUpgrade(document);
+acbCoach('net-operating-income-calculator',document.querySelector('#incomeRows .li-amt input'),'Start here','Enter the monthly rent, then add any other income and your expenses below.');
 })();
 </script>
 
@@ -654,6 +750,37 @@ calc();
     meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
   }
   render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var SLUG='net-operating-income-calculator',clicks=0,shown=false,t0=Date.now();
+  try{if(localStorage.getItem('acb:'+SLUG+':ratePrompted')||localStorage.getItem('acb:'+SLUG+':rating'))return;}catch(e){return;}
+  document.addEventListener('click',function(){clicks++;maybe();});
+  setTimeout(maybe,121000);
+  function maybe(){
+    if(shown||clicks<6||Date.now()-t0<120000)return;
+    shown=true;
+    try{localStorage.setItem('acb:'+SLUG+':ratePrompted','1');}catch(e){}
+    var pop=document.createElement('div');pop.className='acb-rate-pop';
+    pop.innerHTML='<div class="acb-rate-card"><h3>Quick favor?</h3><p>If this tool saved you time, a rating helps other landlords find it.</p><div class="acb-rate-stars"></div><button type="button" class="skip">Maybe later</button></div>';
+    document.body.appendChild(pop);
+    var stars=pop.querySelector('.acb-rate-stars');
+    for(var i=1;i<=5;i++)(function(i){
+      var b=document.createElement('button');b.type='button';b.className='acb-star';b.textContent='★';b.style.fontSize='34px';
+      b.onmouseenter=function(){[].forEach.call(stars.children,function(s,j){s.classList.toggle('on',j<i);});};
+      b.onclick=function(){
+        var w=document.querySelectorAll('#acbStars .acb-star')[i-1];
+        if(w)w.click();
+        pop.querySelector('.acb-rate-card').innerHTML='<h3>Thank you! ⭐</h3><p>Your rating was recorded.</p>';
+        setTimeout(function(){pop.remove();},1400);
+      };
+      stars.appendChild(b);
+    })(i);
+    pop.querySelector('.skip').addEventListener('click',function(){pop.remove();});
+    pop.addEventListener('click',function(e){if(e.target===pop)pop.remove();});
+  }
 })();
 </script>
 

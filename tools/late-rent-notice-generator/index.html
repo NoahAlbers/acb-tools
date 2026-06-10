@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <style>
 :root{
   --acb-blue:#3D5AF1;--acb-blue-dark:#2D45C6;--acb-blue-light:#EEF1FE;--acb-blue-mid:#D5DBFC;
@@ -22,7 +23,7 @@ body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-te
 .tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
 .tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
 .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.badge{font-size:12px;font-weight:500;color:#7E88B8;background:rgba(61,90,241,.045);border:1px solid rgba(61,90,241,.10);border-radius:50px;padding:4px 12px;letter-spacing:.01em}
 .modes{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
 .mode-btn{padding:11px 22px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14.5px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s;min-height:44px}
 .mode-btn.on{background:var(--acb-blue-light);border-color:var(--acb-blue);color:var(--acb-blue);font-weight:600}
@@ -49,11 +50,44 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
 .dl-note{background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--acb-text-mid);line-height:1.55;margin-top:14px}
 .dl-note strong{color:var(--acb-text)}
 .dl-note.warn{background:var(--acb-warn-bg);border-color:#F0DCB2;color:#8A6213}
-/* tooltips */
+/* tooltips v2 */
 .acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
-.acb-tip-bubble{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--acb-text);color:#fff;font-size:12.5px;font-weight:400;line-height:1.5;padding:10px 12px;border-radius:10px;width:230px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;text-transform:none;letter-spacing:normal}
-.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble{opacity:1}
-@media(max-width:720px){.acb-tip-bubble{left:auto;right:-10px;transform:none}}
+.acb-tip:hover,.acb-tip:focus,.acb-tip.open{color:var(--acb-blue)}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 10px 30px rgba(26,26,46,.14);font-size:12.5px;font-weight:400;line-height:1.6;padding:12px 14px;border-radius:12px;width:270px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;text-transform:none;letter-spacing:normal;text-align:left}
+.acb-tip-bubble::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#fff;filter:drop-shadow(0 1.5px 0 var(--acb-border))}
+.acb-tip-bubble b{display:block;font-size:12px;font-weight:700;color:var(--acb-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.acb-tip-bubble i{font-style:normal;display:block}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:720px){.acb-tip-bubble{left:auto;right:-12px;transform:none}.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{transform:none}.acb-tip-bubble::after{left:auto;right:14px;transform:none}}
+/* calendar date picker */
+.acb-cal{position:absolute;z-index:120;background:#fff;border:1px solid var(--acb-border);border-radius:14px;box-shadow:0 12px 32px rgba(26,26,46,.14);padding:14px;width:264px;font-family:inherit}
+.acb-cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.acb-cal-title{font-weight:700;font-size:14px}
+.acb-cal-nav{width:30px;height:30px;border:1px solid var(--acb-border);background:#fff;border-radius:8px;cursor:pointer;color:var(--acb-text-mid);font-size:14px}
+.acb-cal-nav:hover{border-color:var(--acb-blue);color:var(--acb-blue)}
+.acb-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.acb-cal-dow{font-size:10.5px;font-weight:700;color:var(--acb-text-light);padding:4px 0;text-transform:uppercase}
+.acb-cal-d{border:none;background:none;border-radius:8px;padding:7px 0;font-size:13px;font-family:inherit;cursor:pointer;color:var(--acb-text)}
+.acb-cal-d:hover{background:var(--acb-blue-light)}
+.acb-cal-d.out{color:#C9CDDC}
+.acb-cal-d.today{box-shadow:inset 0 0 0 1.5px var(--acb-blue-mid)}
+.acb-cal-d.sel{background:var(--acb-blue);color:#fff;font-weight:700}
+.acb-cal-foot{display:flex;justify-content:space-between;margin-top:8px}
+.acb-cal-foot button{border:none;background:none;color:var(--acb-blue);font-weight:600;font-size:12.5px;cursor:pointer;font-family:inherit;padding:4px 6px}
+/* first-run coach */
+.acb-coach-ring{position:relative;z-index:91}
+.acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.55;width:250px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach::before{content:"";position:absolute;bottom:100%;left:24px;border:8px solid transparent;border-bottom-color:var(--acb-text)}
+.acb-coach b{display:block;margin-bottom:3px}
+.acb-coach button{margin-top:9px;background:#fff;color:var(--acb-text);border:none;border-radius:50px;padding:6px 16px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+/* rating prompt */
+.acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
+.acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
+.acb-rate-card p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:12px}
+.acb-rate-card .skip{margin-top:10px;background:none;border:none;color:var(--acb-text-light);font-size:12.5px;cursor:pointer;font-family:inherit;text-decoration:underline}
 /* ledger */
 .led-row{display:flex;gap:8px;margin-bottom:8px;align-items:center}
 .led-row .led-desc{flex:1.55;min-width:0}
@@ -110,7 +144,9 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
 .doc .cos .cos-t{font-size:11.5px;font-weight:800;letter-spacing:.05em;margin-bottom:7px}
 .doc .cos-line{font-size:12px;margin:5px 0}
 .doc .statenote{background:#f7f7fa;border:1px solid #c9c9d4;padding:10px 12px;font-size:10.8px;line-height:1.55;margin-top:18px;color:#33333f}
-.doc .doc-legal{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:12px;border-top:1px solid #d8d8e0;padding-top:8px}
+.doc .doc-foot{margin-top:16px;border-top:1px solid #d8d8e0;padding-top:8px}
+.doc .doc-foot .df1{font-size:12px;color:#26263a;line-height:1.5}
+.doc .doc-foot .df2{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:4px}
 /* actions */
 .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 .btn-secondary{padding:11px 24px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
@@ -276,10 +312,11 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
         <div class="doc" id="docPreview" aria-live="polite"></div>
       </div>
       <div class="actions no-print">
-        <button type="button" class="acb-btn-primary" id="printBtn">Print / Save as PDF</button>
+        <button type="button" class="acb-btn-primary" id="pdfBtn">Download PDF</button>
+        <button type="button" class="btn-secondary" id="printBtn">Print</button>
         <button type="button" class="btn-secondary" id="copyBtn">Copy text</button>
       </div>
-      <p class="hint no-print" style="text-align:center;margin-top:10px">"Print / Save as PDF" prints only the notice. Nothing you type leaves this page — there's no upload and no account.</p>
+      <p class="hint no-print" id="pdfStatus" aria-live="polite" style="text-align:center;margin-top:10px">"Download PDF" builds a fillable PDF of this notice with your answers pre-filled; "Print" prints only the notice. Nothing you type leaves this page — there's no upload and no account.</p>
     </div>
   </div>
 
@@ -302,6 +339,117 @@ input:focus,select:focus,textarea:focus{border-color:var(--acb-blue);box-shadow:
   <p class="disclaimer no-print">This generator produces a general-purpose template for informational purposes only — it is not legal advice and no attorney-client relationship is created. Cure periods, service rules, and notice requirements change frequently and vary by state, county, and city; some cities require additional or longer notices, and any grace period in your lease still applies. Verify current law and review the notice with a local attorney before serving it. © Advanced Collection Bureau, Inc.</p>
 </div>
 
+<script>
+/* ===== shared UI v3 helpers (see docs/ui-v3-spec.md) ===== */
+var ACB_REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tweenText(el,fmt,to,ms){
+  if(!el)return;
+  if(ACB_REDUCED||!isFinite(to)){el.textContent=fmt(isFinite(to)?to:0);el.__tv=isFinite(to)?to:0;return;}
+  var from=isFinite(el.__tv)?el.__tv:0;
+  el.__tv=to;
+  if(from===to){el.textContent=fmt(to);return;}
+  var t0=performance.now();ms=ms||480;
+  (function step(){
+    var p=Math.min(1,(performance.now()-t0)/ms);p=1-Math.pow(1-p,3);
+    el.textContent=fmt(from+(to-from)*p);
+    if(p<1)requestAnimationFrame(step);
+  })();
+}
+function smoothResize(el,mutate){
+  if(ACB_REDUCED||!el){if(mutate)mutate();return;}
+  var h0=el.offsetHeight;if(mutate)mutate();var h1=el.offsetHeight;
+  if(Math.abs(h0-h1)<3)return;
+  el.style.height=h0+'px';el.style.overflow='hidden';el.style.transition='height .3s ease';
+  void el.offsetHeight;
+  el.style.height=h1+'px';
+  setTimeout(function(){el.style.height='';el.style.overflow='';el.style.transition='';},320);
+}
+function acbTipUpgrade(root){
+  (root||document).querySelectorAll('.acb-tip').forEach(function(t){
+    if(t.__up)return;t.__up=true;
+    var bub=t.querySelector('.acb-tip-bubble');
+    if(bub&&!bub.querySelector('b')){
+      var body=bub.innerHTML;
+      var title=t.dataset.t||'';
+      if(!title){
+        var host=t.closest('label')||t.parentNode;
+        if(host){var c=host.cloneNode(true);var tip=c.querySelector('.acb-tip');if(tip)tip.remove();title=c.textContent.replace(/\s+/g,' ').trim();}
+      }
+      bub.innerHTML='<i>'+body+'</i>';
+      var b=document.createElement('b');b.textContent=(title||'About this field').slice(0,42);
+      bub.insertBefore(b,bub.firstChild);
+    }
+    t.addEventListener('click',function(e){e.stopPropagation();t.classList.toggle('open');});
+  });
+}
+document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
+function acbCoach(slug,target,title,body){
+  try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
+  var el=typeof target==='string'?document.querySelector(target):target;
+  if(!el)return;
+  var tip=null;
+  function done(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}
+    el.classList.remove('acb-coach-ring');if(tip)tip.remove();
+    document.removeEventListener('input',done,true);}
+  el.classList.add('acb-coach-ring');
+  var wrap=el.closest('.field')||el.parentNode;
+  if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+  tip=document.createElement('div');tip.className='acb-coach';
+  tip.innerHTML='<b>'+title+'</b>'+body+'<br><button type="button">Got it</button>';
+  wrap.appendChild(tip);
+  tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';
+  tip.style.left=Math.max(0,Math.min(el.offsetLeft,wrap.clientWidth-260))+'px';
+  tip.querySelector('button').addEventListener('click',done);
+  document.addEventListener('input',done,true);
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){done();document.removeEventListener('keydown',esc);}});
+}
+function acbDate(input){
+  var pop=null,view;
+  function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  function close(){if(pop){pop.remove();pop=null;document.removeEventListener('mousedown',onDoc);}}
+  function onDoc(e){if(pop&&!pop.contains(e.target)&&e.target!==input)close();}
+  function set(d){input.value=iso(d);input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));close();}
+  function render(){
+    var sel=input.value?new Date(input.value+'T00:00:00'):null;
+    var today=new Date();today.setHours(0,0,0,0);
+    var y=view.getFullYear(),m=view.getMonth();
+    var first=new Date(y,m,1),startDow=first.getDay(),dim=new Date(y,m+1,0).getDate();
+    var h='<div class="acb-cal-head"><button type="button" class="acb-cal-nav" data-n="-1" aria-label="Previous month">‹</button><span class="acb-cal-title">'+view.toLocaleDateString('en-US',{month:'long',year:'numeric'})+'</span><button type="button" class="acb-cal-nav" data-n="1" aria-label="Next month">›</button></div><div class="acb-cal-grid">';
+    ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(function(d){h+='<span class="acb-cal-dow">'+d+'</span>';});
+    var prev=new Date(y,m,0).getDate();
+    for(var i=0;i<startDow;i++)h+='<button type="button" class="acb-cal-d out" data-d="'+iso(new Date(y,m-1,prev-startDow+1+i))+'">'+(prev-startDow+1+i)+'</button>';
+    for(var d=1;d<=dim;d++){
+      var cur=new Date(y,m,d),cls='acb-cal-d';
+      if(sel&&cur.getTime()===sel.getTime())cls+=' sel';
+      if(cur.getTime()===today.getTime())cls+=' today';
+      h+='<button type="button" class="'+cls+'" data-d="'+iso(cur)+'">'+d+'</button>';
+    }
+    var cells=startDow+dim,next=1;
+    for(var j=cells;j%7!==0;j++)h+='<button type="button" class="acb-cal-d out" data-d="'+iso(new Date(y,m+1,next))+'">'+(next++)+'</button>';
+    h+='</div><div class="acb-cal-foot"><button type="button" data-t="1">Today</button><button type="button" data-c="1">Close</button></div>';
+    pop.innerHTML=h;
+    pop.querySelectorAll('[data-n]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();view.setMonth(view.getMonth()+(+b.dataset.n));render();});});
+    pop.querySelectorAll('[data-d]').forEach(function(b){b.addEventListener('click',function(){set(new Date(b.dataset.d+'T00:00:00'));});});
+    pop.querySelector('[data-t]').addEventListener('click',function(){set(new Date());});
+    pop.querySelector('[data-c]').addEventListener('click',close);
+  }
+  function open(){
+    if(pop)return;
+    view=input.value?new Date(input.value+'T00:00:00'):new Date();view.setDate(1);
+    pop=document.createElement('div');pop.className='acb-cal';
+    var r=input.getBoundingClientRect();
+    var wrap=input.closest('.field')||input.parentNode;
+    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+    wrap.appendChild(pop);
+    pop.style.top=(input.offsetTop+input.offsetHeight+6)+'px';
+    pop.style.left=Math.max(0,Math.min(input.offsetLeft,wrap.clientWidth-270))+'px';
+    render();
+    setTimeout(function(){document.addEventListener('mousedown',onDoc);},0);
+  }
+  input.addEventListener('click',function(e){e.preventDefault();open();});
+  input.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}if(e.key==='Escape')close();});
+}
+</script>
 <script>
 /* ============ Pure data + document model (no DOM access in this block) ============ */
 "use strict";
@@ -452,7 +600,9 @@ function demandText(M){
 }
 var FAIL_TEXT='If you fail to pay the total amount due or to surrender possession of the premises within the period stated above, legal proceedings to recover possession (eviction), unpaid rent, late fees, damages, court costs, and any other relief permitted by law may be initiated against you.';
 var RESERVE_TEXT='RESERVATION OF RIGHTS — This notice is given without waiver of any right or remedy available to the landlord. Acceptance of a partial payment does not waive the landlord’s right to demand the remaining balance or to pursue possession, except where applicable law provides otherwise. All rights and remedies under the lease and applicable law are expressly reserved.';
-var LEGAL_TEXT='Generated with a free tool from Advanced Collection Bureau (advancedcb.com). This is a general template for informational purposes only — not legal advice, and no attorney-client relationship is created. Cure periods and notice and service requirements change frequently and vary by state, county, and city; some cities require additional or different notices, and any grace period in the lease still applies. Verify current law and review this notice with a local attorney before serving it.';
+var FOOT_LINE1='This Late Rent Notice was created with Advanced Collection Bureau, Inc. (advancedcb.com)';
+var FOOT_LEGAL='This resource from Advanced Collection Bureau, Inc. is for general informational purposes. It is not legal advice. Notice and cure-period rules vary by state, county, and city, and laws change; verify current requirements with a local attorney before sending.';
+function docFootHtml(){return '<div class="doc-foot"><div class="df1">'+escHtml(FOOT_LINE1)+'</div><div class="df2">'+escHtml(FOOT_LEGAL)+'</div></div>';}
 
 /* ---------- HTML preview ---------- */
 function ledgerTableHtml(M){
@@ -497,7 +647,7 @@ function docHtmlFormal(M){
   o+='<div class="doc-row" style="margin-top:14px"><span class="doc-f" style="flex:1"><span class="lbl">Printed name:</span><span class="line filled">'+ll+'</span></span></div>';
   o+=cosHtml(M);
   o+='<div class="statenote"><strong>State note — '+escHtml(M.stName)+':</strong> Pay-or-quit cure period: '+escHtml(M.c.d)+'. '+escHtml(VERIFY_LINE)+'</div>';
-  o+='<p class="doc-legal">'+escHtml(LEGAL_TEXT)+'</p>';
+  o+=docFootHtml();
   return o;
 }
 function docHtmlFriendly(M){
@@ -519,7 +669,7 @@ function docHtmlFriendly(M){
   o+='<p class="para">If something has come up, please reach out — we’d much rather work something out early than let a balance grow.</p>';
   o+='<p class="para">If you’ve already sent payment, please disregard this letter — and thank you!</p>';
   o+='<p class="para" style="margin-top:22px">Sincerely,<br><br>'+ll+'</p>';
-  o+='<p class="doc-legal">'+escHtml(LEGAL_TEXT)+'</p>';
+  o+=docFootHtml();
   return o;
 }
 function docHtml(M){return M.S.mode==='friendly'?docHtmlFriendly(M):docHtmlFormal(M);}
@@ -569,7 +719,8 @@ function docTextFormal(M){
   L.push('');
   L.push('STATE NOTE — '+M.stName+': Pay-or-quit cure period: '+M.c.d+'. '+VERIFY_LINE);
   L.push('');
-  L.push(LEGAL_TEXT);
+  L.push(FOOT_LINE1);
+  L.push(FOOT_LEGAL);
   return L.join('\n');
 }
 function docTextFriendly(M){
@@ -593,7 +744,8 @@ function docTextFriendly(M){
   L.push('');
   L.push(S.landlord||'[Landlord / manager name]');
   L.push('');
-  L.push(LEGAL_TEXT);
+  L.push(FOOT_LINE1);
+  L.push(FOOT_LEGAL);
   return L.join('\n');
 }
 function docText(M){return M.S.mode==='friendly'?docTextFriendly(M):docTextFormal(M);}
@@ -646,7 +798,10 @@ Object.keys(CURE).map(function(k){return [k,CURE[k].n];})
     var op=document.createElement('option');op.value=p[0];op.textContent=p[1];stSel.appendChild(op);
   });
 stSel.value=S.st;
-stSel.addEventListener('change',function(){S.st=stSel.value;update();});
+stSel.addEventListener('change',function(){
+  S.st=stSel.value;
+  smoothResize($('dlWrap'),function(){smoothResize($('previewCard'),update);});
+});
 
 /* ---- ledger ---- */
 function renderRows(){
@@ -727,7 +882,9 @@ function setMode(m){
   update();
 }
 Array.prototype.forEach.call(modeBtns,function(b){
-  b.addEventListener('click',function(){setMode(b.dataset.mode);});
+  b.addEventListener('click',function(){
+    smoothResize($('previewCard'),function(){setMode(b.dataset.mode);});
+  });
 });
 
 /* ---- panels ---- */
@@ -762,7 +919,7 @@ function update(){
   var M=computeModel(S);
   renderCurePanel(M);
   renderDeadline(M);
-  $('totalDue').textContent=fmtUSD(M.total,true);
+  tweenText($('totalDue'),function(v){return fmtUSD(v,true);},M.total);
   $('ctaMini').hidden=!(M.total>0);
   $('docPreview').innerHTML=docHtml(M);
 }
@@ -780,9 +937,125 @@ $('copyBtn').addEventListener('click',function(){
   });
 });
 
+/* ---------- Download PDF: pre-filled fillable AcroForm (pdf-lib) ---------- */
+function buildNoticePdf(){
+  var M=computeModel(S),P=PDFLib,W=612,H=792,MG=54,fc=0;
+  return P.PDFDocument.create().then(function(doc){
+    return Promise.all([doc.embedFont(P.StandardFonts.Helvetica),doc.embedFont(P.StandardFonts.HelveticaBold),doc.embedFont(P.StandardFonts.HelveticaOblique)]).then(function(fonts){
+      var font=fonts[0],bold=fonts[1],ital=fonts[2];
+      var form=doc.getForm();
+      var page=doc.addPage([W,H]),y=H-MG;
+      var INK=P.rgb(0.1,0.1,0.18),GRAY=P.rgb(0.45,0.45,0.55),LINE=P.rgb(0.7,0.72,0.8),BG=P.rgb(0.975,0.98,0.995);
+      function need(h){if(y-h<MG+30){page=doc.addPage([W,H]);y=H-MG;}}
+      function wrapTxt(text,size,f,maxW){
+        var words=String(text).split(' '),lines=[],line='';
+        words.forEach(function(wd){var t=line?line+' '+wd:wd;
+          if(f.widthOfTextAtSize(t,size)>maxW){lines.push(line);line=wd;}else line=t;});
+        if(line)lines.push(line);return lines;
+      }
+      function para(text,size,f,color){
+        size=size||9.5;f=f||font;
+        wrapTxt(text,size,f,W-2*MG).forEach(function(l){need(size+4);page.drawText(l,{x:MG,y:y-size,size:size,font:f,color:color||INK});y-=size+3.5;});
+        y-=4;
+      }
+      function tf(label,val,wd,h,multi){
+        h=h||16;need(h+20);
+        if(label)page.drawText(label,{x:MG,y:y-8,size:8,font:bold,color:GRAY});
+        var f=form.createTextField('f'+(fc++));
+        if(multi)f.enableMultiline();
+        f.addToPage(page,{x:MG,y:y-12-h,width:wd||(W-2*MG),height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:BG});
+        f.setFontSize(9);
+        if(val)f.setText(String(val));
+        y-=h+22;return f;
+      }
+      function row2(items){
+        var gap=14,x=MG,tw=W-2*MG-gap*(items.length-1),h=16;
+        need(h+20);
+        items.forEach(function(it){
+          var wd=tw*it.w;
+          if(it.l)page.drawText(it.l,{x:x,y:y-8,size:8,font:bold,color:GRAY});
+          var f=form.createTextField('f'+(fc++));
+          f.addToPage(page,{x:x,y:y-12-h,width:wd,height:h,borderWidth:0.75,borderColor:LINE,backgroundColor:BG});
+          f.setFontSize(9);
+          if(it.v)f.setText(String(it.v));
+          x+=wd+gap;
+        });
+        y-=h+24;
+      }
+      function heading(t){
+        need(30);
+        page.drawText(t,{x:MG,y:y-12,size:10.5,font:bold,color:INK});
+        page.drawLine({start:{x:MG,y:y-17},end:{x:W-MG,y:y-17},thickness:0.6,color:LINE});
+        y-=28;
+      }
+      var formal=(S.mode==='formal');
+      page.drawText(formal?'NOTICE TO PAY RENT OR QUIT':'RENT PAYMENT REMINDER',{x:MG,y:y-16,size:15,font:bold,color:INK});
+      page.drawText('State of '+M.stName,{x:MG,y:y-32,size:9,font:ital,color:GRAY});
+      y-=48;
+      row2([{l:'Date served',w:.5,v:M.served?fmtDateMid(M.served):''},{l:'Rent was due',w:.5,v:M.due?fmtDateMid(M.due):''}]);
+      tf('To (tenant name(s))',S.tenants);
+      tf('Property address',(S.street?S.street+', ':'')+(S.city?S.city+', ':'')+M.stName+(S.zip?' '+S.zip:''));
+      heading('AMOUNT DUE');
+      var lim=Math.min(M.rows.length,8);
+      for(var i=0;i<lim;i++){
+        var r=M.rows[i];
+        row2([{l:i===0?'Description':'',w:.68,v:(r.pay?'Less: ':'')+r.desc},{l:i===0?'Amount':'',w:.32,v:(r.pay?'-':'')+fmtUSD(r.amt,true)}]);
+      }
+      row2([{l:'',w:.68,v:''},{l:'',w:.32,v:''}]);
+      row2([{l:'TOTAL AMOUNT DUE',w:.68,v:''},{l:'',w:.32,v:fmtUSD(M.total,true)}]);
+      if(formal){
+        para(demandText(M),9.5,font);
+        para(FAIL_TEXT,9.5,font);
+        if(M.deadline)tf('Pay on or before',(M.deadline.biz?'Approximately ':'')+fmtDateLong(M.deadline.date),300);
+      }else{
+        para('This is a friendly reminder that we have not yet received the rent payment shown above. If you have already sent payment, please disregard this letter — otherwise we would appreciate payment at your earliest convenience.',9.5,font);
+        if(S.personal)para(S.personal,9.5,ital,GRAY);
+      }
+      tf('Payment instructions',S.payTo);
+      row2([{l:'Contact phone',w:.5,v:S.phone},{l:'Contact email',w:.5,v:S.email}]);
+      heading('METHOD OF SERVICE');
+      Object.keys(METHODS).forEach(function(k){
+        need(20);
+        var cb=form.createCheckBox('c'+(fc++));
+        cb.addToPage(page,{x:MG,y:y-13,width:11,height:11,borderWidth:0.9,borderColor:LINE});
+        if(S.method===k)cb.check();
+        page.drawText(METHODS[k],{x:MG+16,y:y-11.5,size:8.5,font:font,color:INK});
+        y-=20;
+      });
+      y-=6;
+      row2([{l:'Landlord / manager (print + sign)',w:.68,v:S.landlord},{l:'Date',w:.32,v:M.served?fmtDateMid(M.served):''}]);
+      page.drawText(FOOT_LINE1,{x:MG,y:36,size:8,font:font,color:GRAY});
+      wrapTxt(FOOT_LEGAL,6.5,ital,W-2*MG).forEach(function(l,idx){
+        page.drawText(l,{x:MG,y:26-idx*8,size:6.5,font:ital,color:GRAY});
+      });
+      form.updateFieldAppearances(font);
+      return doc.save();
+    });
+  });
+}
+$('pdfBtn').addEventListener('click',function(){
+  var b=this;
+  if(typeof PDFLib==='undefined'){$('pdfStatus').textContent='PDF library failed to load — check your connection and refresh.';return;}
+  b.disabled=true;b.textContent='Building PDF…';
+  buildNoticePdf().then(function(bytes){
+    var blob=new Blob([bytes],{type:'application/pdf'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=(S.mode==='formal'?'Late-Rent-Notice-':'Rent-Reminder-')+(S.st||'XX')+'.pdf';
+    document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);
+    b.disabled=false;b.textContent='Download PDF';
+  }).catch(function(){
+    b.disabled=false;b.textContent='Download PDF';
+    $('pdfStatus').textContent='Sorry, something went wrong building the PDF.';
+  });
+});
+
 renderRows();
 renderChips();
 setMode(S.mode);
+acbTipUpgrade(document);
+acbCoach('late-rent-notice-generator','#inState','Start here','Pick your state and we\u2019ll fill in its cure period \u2014 then add what\u2019s owed and the notice writes itself.');
 })();
 </script>
 

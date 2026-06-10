@@ -26,7 +26,7 @@ body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-te
 .tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
 .tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55;max-width:620px;margin-left:auto;margin-right:auto}
 .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.badge{font-size:12px;font-weight:500;color:#7E88B8;background:rgba(61,90,241,.045);border:1px solid rgba(61,90,241,.10);border-radius:50px;padding:4px 12px;letter-spacing:.01em}
 .card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
 .step-title{font-size:23px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
 .step-sub{font-size:14.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:20px}
@@ -150,11 +150,46 @@ textarea{resize:vertical;min-height:84px;line-height:1.5}
 .acb-star:hover{transform:scale(1.15)}
 .acb-rating-meta{font-size:13px;color:var(--acb-text-light)}
 .disclaimer{font-size:12px;color:var(--acb-text-light);text-align:center;line-height:1.6;margin-top:26px;max-width:660px;margin-left:auto;margin-right:auto}
+/* ===== UI v3 shared components (docs/ui-v3-spec.md) ===== */
+.acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
+.acb-tip:hover,.acb-tip:focus,.acb-tip.open{color:var(--acb-blue)}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 10px 30px rgba(26,26,46,.14);font-size:12.5px;font-weight:400;line-height:1.6;padding:12px 14px;border-radius:12px;width:270px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;text-transform:none;letter-spacing:normal;text-align:left}
+.acb-tip-bubble::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#fff;filter:drop-shadow(0 1.5px 0 var(--acb-border))}
+.acb-tip-bubble b{display:block;font-size:12px;font-weight:700;color:var(--acb-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.acb-tip-bubble i{font-style:normal;display:block}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (max-width:720px){.acb-tip-bubble{left:auto;right:-12px;transform:none}.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{transform:none}.acb-tip-bubble::after{left:auto;right:14px;transform:none}}
+.acb-cal{position:absolute;z-index:120;background:#fff;border:1px solid var(--acb-border);border-radius:14px;box-shadow:0 12px 32px rgba(26,26,46,.14);padding:14px;width:264px;font-family:inherit}
+.acb-cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.acb-cal-title{font-weight:700;font-size:14px}
+.acb-cal-nav{width:30px;height:30px;border:1px solid var(--acb-border);background:#fff;border-radius:8px;cursor:pointer;color:var(--acb-text-mid);font-size:14px}
+.acb-cal-nav:hover{border-color:var(--acb-blue);color:var(--acb-blue)}
+.acb-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.acb-cal-dow{font-size:10.5px;font-weight:700;color:var(--acb-text-light);padding:4px 0;text-transform:uppercase}
+.acb-cal-d{border:none;background:none;border-radius:8px;padding:7px 0;font-size:13px;font-family:inherit;cursor:pointer;color:var(--acb-text)}
+.acb-cal-d:hover{background:var(--acb-blue-light)}
+.acb-cal-d.out{color:#C9CDDC}
+.acb-cal-d.today{box-shadow:inset 0 0 0 1.5px var(--acb-blue-mid)}
+.acb-cal-d.sel{background:var(--acb-blue);color:#fff;font-weight:700}
+.acb-cal-foot{display:flex;justify-content:space-between;margin-top:8px}
+.acb-cal-foot button{border:none;background:none;color:var(--acb-blue);font-weight:600;font-size:12.5px;cursor:pointer;font-family:inherit;padding:4px 6px}
+.acb-coach-ring{position:relative;z-index:91}
+.acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.55;width:250px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach::before{content:"";position:absolute;bottom:100%;left:24px;border:8px solid transparent;border-bottom-color:var(--acb-text)}
+.acb-coach b{display:block;margin-bottom:3px}
+.acb-coach button{margin-top:9px;background:#fff;color:var(--acb-text);border:none;border-radius:50px;padding:6px 16px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+.acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
+.acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
+.acb-rate-card p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:12px}
+.acb-rate-card .skip{margin-top:10px;background:none;border:none;color:var(--acb-text-light);font-size:12.5px;cursor:pointer;font-family:inherit;text-decoration:underline}
 .fade{animation:fadeIn .35s ease both}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media print{
   body{background:#fff}
-  .no-print,.progress,.wiz-nav,.acb-cta,.acb-rating,.final-actions,.modal-ov,.add-item,.add-space{display:none!important}
+  .no-print,.progress,.wiz-nav,.acb-cta,.acb-rating,.final-actions,.modal-ov,.add-item,.add-space,.acb-cal,.acb-coach,.acb-rate-pop{display:none!important}
   .wrap{max-width:none;padding:0}
   .card,.room-acc,.rev-room,.stat{box-shadow:none;border-color:#ccc}
   .room-body{display:block!important}
@@ -249,6 +284,117 @@ textarea{resize:vertical;min-height:84px;line-height:1.5}
   </div>
 </div>
 
+<script>
+/* ===== shared UI v3 helpers (see docs/ui-v3-spec.md) ===== */
+var ACB_REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tweenText(el,fmt,to,ms){
+  if(!el)return;
+  if(ACB_REDUCED||!isFinite(to)){el.textContent=fmt(isFinite(to)?to:0);el.__tv=isFinite(to)?to:0;return;}
+  var from=isFinite(el.__tv)?el.__tv:0;
+  el.__tv=to;
+  if(from===to){el.textContent=fmt(to);return;}
+  var t0=performance.now();ms=ms||480;
+  (function step(){
+    var p=Math.min(1,(performance.now()-t0)/ms);p=1-Math.pow(1-p,3);
+    el.textContent=fmt(from+(to-from)*p);
+    if(p<1)requestAnimationFrame(step);
+  })();
+}
+function smoothResize(el,mutate){
+  if(ACB_REDUCED||!el){if(mutate)mutate();return;}
+  var h0=el.offsetHeight;if(mutate)mutate();var h1=el.offsetHeight;
+  if(Math.abs(h0-h1)<3)return;
+  el.style.height=h0+'px';el.style.overflow='hidden';el.style.transition='height .3s ease';
+  void el.offsetHeight;
+  el.style.height=h1+'px';
+  setTimeout(function(){el.style.height='';el.style.overflow='';el.style.transition='';},320);
+}
+function acbTipUpgrade(root){
+  (root||document).querySelectorAll('.acb-tip').forEach(function(t){
+    if(t.__up)return;t.__up=true;
+    var bub=t.querySelector('.acb-tip-bubble');
+    if(bub&&!bub.querySelector('b')){
+      var body=bub.innerHTML;
+      var title=t.dataset.t||'';
+      if(!title){
+        var host=t.closest('label')||t.parentNode;
+        if(host){var c=host.cloneNode(true);var tip=c.querySelector('.acb-tip');if(tip)tip.remove();title=c.textContent.replace(/\s+/g,' ').trim();}
+      }
+      bub.innerHTML='<i>'+body+'</i>';
+      var b=document.createElement('b');b.textContent=(title||'About this field').slice(0,42);
+      bub.insertBefore(b,bub.firstChild);
+    }
+    t.addEventListener('click',function(e){e.stopPropagation();t.classList.toggle('open');});
+  });
+}
+document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
+function acbCoach(slug,target,title,body){
+  try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
+  var el=typeof target==='string'?document.querySelector(target):target;
+  if(!el)return;
+  var tip=null;
+  function done(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}
+    el.classList.remove('acb-coach-ring');if(tip)tip.remove();
+    document.removeEventListener('input',done,true);}
+  el.classList.add('acb-coach-ring');
+  var wrap=el.closest('.field')||el.parentNode;
+  if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+  tip=document.createElement('div');tip.className='acb-coach';
+  tip.innerHTML='<b>'+title+'</b>'+body+'<br><button type="button">Got it</button>';
+  wrap.appendChild(tip);
+  tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';
+  tip.style.left=Math.max(0,Math.min(el.offsetLeft,wrap.clientWidth-260))+'px';
+  tip.querySelector('button').addEventListener('click',done);
+  document.addEventListener('input',done,true);
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){done();document.removeEventListener('keydown',esc);}});
+}
+function acbDate(input){
+  var pop=null,view;
+  function iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  function close(){if(pop){pop.remove();pop=null;document.removeEventListener('mousedown',onDoc);}}
+  function onDoc(e){if(pop&&!pop.contains(e.target)&&e.target!==input)close();}
+  function set(d){input.value=iso(d);input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));close();}
+  function render(){
+    var sel=input.value?new Date(input.value+'T00:00:00'):null;
+    var today=new Date();today.setHours(0,0,0,0);
+    var y=view.getFullYear(),m=view.getMonth();
+    var first=new Date(y,m,1),startDow=first.getDay(),dim=new Date(y,m+1,0).getDate();
+    var h='<div class="acb-cal-head"><button type="button" class="acb-cal-nav" data-n="-1" aria-label="Previous month">‹</button><span class="acb-cal-title">'+view.toLocaleDateString('en-US',{month:'long',year:'numeric'})+'</span><button type="button" class="acb-cal-nav" data-n="1" aria-label="Next month">›</button></div><div class="acb-cal-grid">';
+    ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(function(d){h+='<span class="acb-cal-dow">'+d+'</span>';});
+    var prev=new Date(y,m,0).getDate();
+    for(var i=0;i<startDow;i++)h+='<button type="button" class="acb-cal-d out" data-d="'+iso(new Date(y,m-1,prev-startDow+1+i))+'">'+(prev-startDow+1+i)+'</button>';
+    for(var d=1;d<=dim;d++){
+      var cur=new Date(y,m,d),cls='acb-cal-d';
+      if(sel&&cur.getTime()===sel.getTime())cls+=' sel';
+      if(cur.getTime()===today.getTime())cls+=' today';
+      h+='<button type="button" class="'+cls+'" data-d="'+iso(cur)+'">'+d+'</button>';
+    }
+    var cells=startDow+dim,next=1;
+    for(var j=cells;j%7!==0;j++)h+='<button type="button" class="acb-cal-d out" data-d="'+iso(new Date(y,m+1,next))+'">'+(next++)+'</button>';
+    h+='</div><div class="acb-cal-foot"><button type="button" data-t="1">Today</button><button type="button" data-c="1">Close</button></div>';
+    pop.innerHTML=h;
+    pop.querySelectorAll('[data-n]').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();view.setMonth(view.getMonth()+(+b.dataset.n));render();});});
+    pop.querySelectorAll('[data-d]').forEach(function(b){b.addEventListener('click',function(){set(new Date(b.dataset.d+'T00:00:00'));});});
+    pop.querySelector('[data-t]').addEventListener('click',function(){set(new Date());});
+    pop.querySelector('[data-c]').addEventListener('click',close);
+  }
+  function open(){
+    if(pop)return;
+    view=input.value?new Date(input.value+'T00:00:00'):new Date();view.setDate(1);
+    pop=document.createElement('div');pop.className='acb-cal';
+    var r=input.getBoundingClientRect();
+    var wrap=input.closest('.field')||input.parentNode;
+    if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+    wrap.appendChild(pop);
+    pop.style.top=(input.offsetTop+input.offsetHeight+6)+'px';
+    pop.style.left=Math.max(0,Math.min(input.offsetLeft,wrap.clientWidth-270))+'px';
+    render();
+    setTimeout(function(){document.addEventListener('mousedown',onDoc);},0);
+  }
+  input.addEventListener('click',function(e){e.preventDefault();open();});
+  input.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}if(e.key==='Escape')close();});
+}
+</script>
 <script>
 "use strict";
 (function(){
@@ -647,7 +793,7 @@ var steps=[
        var k=b.dataset.roomtoggle;
        openRooms[k]=!openRooms[k];
        var acc=root.querySelector('[data-roomacc="'+CSS.escape(k)+'"]');
-       if(acc)acc.classList.toggle('open',!!openRooms[k]);
+       smoothResize(acc,function(){if(acc)acc.classList.toggle('open',!!openRooms[k]);});
        b.setAttribute('aria-expanded',openRooms[k]?'true':'false');
      });
    });
@@ -702,14 +848,16 @@ var steps=[
      t+='</div>';
    });
    t+='<div class="final-actions">'
-     +'<button type="button" class="btn-primary" id="btnPdf">View PDF</button>'
+     +'<button type="button" class="btn-primary" id="btnPdfDl">Download PDF</button>'
+     +'<button type="button" class="btn-secondary" id="btnPdfView">View &amp; Print</button>'
      +'<button type="button" class="btn-secondary" id="btnShare">🔗 Share</button>'
      +'<button type="button" class="btn-secondary" id="btnRestart">Start New Checklist</button>'
      +'</div><p class="hint" id="pdfStatus" style="text-align:center;margin-top:10px"></p>';
    return t;
  },
  bind:function(root){
-   root.querySelector('#btnPdf').addEventListener('click',function(){viewPdf(root.querySelector('#pdfStatus'));});
+   root.querySelector('#btnPdfDl').addEventListener('click',function(){downloadPdf(root.querySelector('#pdfStatus'));});
+   root.querySelector('#btnPdfView').addEventListener('click',function(){viewPdf(root.querySelector('#pdfStatus'));});
    root.querySelector('#btnShare').addEventListener('click',openShareModal);
    root.querySelector('#btnRestart').addEventListener('click',function(){
      if(!confirm('Clear this checklist (including photos) and start a new one?'))return;
@@ -727,6 +875,8 @@ function rerender(){
   var body=$('stepBody');
   body.innerHTML='<div class="fade"><div class="step-title">'+st.title+'</div><p class="step-sub">'+st.sub+'</p><div id="stepErr" role="alert" aria-live="polite"></div>'+st.html()+'</div>';
   st.bind(body);
+  body.querySelectorAll('input[type=date]').forEach(acbDate);
+  acbTipUpgrade(body);
   $('wizBack').style.visibility=cur===0?'hidden':'visible';
   $('stepDots').textContent='Step '+(cur+1)+' of '+steps.length;
   $('wizNext').style.display=cur===steps.length-1?'none':'';
@@ -740,10 +890,10 @@ $('wizNext').addEventListener('click',function(){
     return;
   }
   save();
-  if(cur<steps.length-1){cur++;save();rerender();window.scrollTo({top:0});}
+  if(cur<steps.length-1){cur++;save();smoothResize($('stepBody').closest('.card'),rerender);window.scrollTo({top:0});}
 });
 $('wizBack').addEventListener('click',function(){
-  if(cur>0){cur--;save();rerender();window.scrollTo({top:0});}
+  if(cur>0){cur--;save();smoothResize($('stepBody').closest('.card'),rerender);window.scrollTo({top:0});}
 });
 document.addEventListener('keydown',function(e){
   if(e.key!=='Enter')return;
@@ -895,6 +1045,28 @@ $('shText').addEventListener('click',function(){
 });
 
 /* ---------- PDF ---------- */
+function pdfFilename(){
+  var parts=[(S.step1.type==='moveout'?'MoveOut':'MoveIn')+'-Checklist'];
+  var unit=String(S.step1.unit||'').trim();
+  if(/^n\/?a$/i.test(unit))unit='';
+  unit=unit.replace(/[^A-Za-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+  if(unit)parts.push(unit);
+  if(/^\d{4}-\d{2}-\d{2}$/.test(S.step1.date))parts.push(S.step1.date);
+  return parts.join('-')+'.pdf';
+}
+function downloadPdf(statusEl){
+  if(!(window.jspdf&&window.jspdf.jsPDF)){
+    if(statusEl)statusEl.textContent='The PDF library failed to load — check your connection and refresh.';
+    return;
+  }
+  if(statusEl)statusEl.textContent='Building your PDF…';
+  try{
+    buildPdf().save(pdfFilename());
+    if(statusEl)statusEl.textContent='PDF downloaded. ✓';
+  }catch(e){
+    if(statusEl)statusEl.textContent='Sorry, something went wrong building the PDF.';
+  }
+}
 function viewPdf(statusEl){
   if(!(window.jspdf&&window.jspdf.jsPDF)){
     if(statusEl)statusEl.textContent='The PDF library failed to load — check your connection and refresh.';
@@ -906,9 +1078,9 @@ function viewPdf(statusEl){
     var opened=null;
     try{opened=window.open(doc.output('bloburl'),'_blank');}catch(e){}
     if(!opened){
-      doc.save((S.step1.type==='moveout'?'Move-Out':'Move-In')+'-Checklist.pdf');
+      doc.save(pdfFilename());
       if(statusEl)statusEl.textContent='Pop-up blocked — the PDF was downloaded instead. ✓';
-    }else if(statusEl){statusEl.textContent='PDF opened in a new tab. ✓';}
+    }else if(statusEl){statusEl.textContent='PDF opened in a new tab — use the browser’s print button there. ✓';}
   }catch(e){
     if(statusEl)statusEl.textContent='Sorry, something went wrong building the PDF.';
   }
@@ -1028,13 +1200,16 @@ function buildPdf(){
   }
   S.step1.tenants.filter(function(t){return t.trim();}).forEach(function(t){sigLine('Tenant',t.trim());});
   sigLine('Inspector',S.step1.inspector.trim());
-  /* footer */
-  nl(36);
-  y+=14;
+  /* footer — last page, bottom (ui-v3-spec §10) */
+  doc.setFont('helvetica','normal');doc.setFontSize(7.2);
+  var legal=doc.splitTextToSize('This resource from Advanced Collection Bureau, Inc. is for general informational purposes. It is not legal advice. Inspection and deposit-documentation rules vary by state, county, and city, and laws change; verify current requirements with a local attorney.',W-2*M);
+  var fy=H-16-legal.length*9-13;
+  if(y>fy-8)doc.addPage();
   doc.setTextColor(LIGHT[0],LIGHT[1],LIGHT[2]);
-  doc.setFont('helvetica','normal');doc.setFontSize(8.5);
-  var foot=doc.splitTextToSize('Generated free at advancedcb.com — Advanced Collection Bureau’s tools for landlords & property managers. This checklist documents unit condition and is not legal advice.',W-2*M);
-  doc.text(foot,M,y);
+  doc.setFontSize(8.5);
+  doc.text('This Inspection Checklist was created with Advanced Collection Bureau, Inc. (advancedcb.com)',M,fy);
+  doc.setFontSize(7.2);
+  doc.text(legal,M,fy+13);
   return doc;
 }
 
@@ -1047,6 +1222,7 @@ window.__mimo={
 };
 
 rerender();
+acbCoach('move-in-move-out-checklist-creator','#wAddr','Start here','Enter the property details and who signs — then pick rooms and walk through with photos. Progress saves automatically.');
 })();
 </script>
 
@@ -1075,6 +1251,37 @@ rerender();
     meta.textContent=a.v.toFixed(1)+' out of 5 — '+a.c.toLocaleString()+' ratings'+(mine?' · Thanks for rating!':' · Rate this tool');
   }
   render(0);
+})();
+</script>
+
+<script>
+(function(){
+  var SLUG='move-in-move-out-checklist-creator',clicks=0,shown=false,t0=Date.now();
+  try{if(localStorage.getItem('acb:'+SLUG+':ratePrompted')||localStorage.getItem('acb:'+SLUG+':rating'))return;}catch(e){return;}
+  document.addEventListener('click',function(){clicks++;maybe();});
+  setTimeout(maybe,121000);
+  function maybe(){
+    if(shown||clicks<6||Date.now()-t0<120000)return;
+    shown=true;
+    try{localStorage.setItem('acb:'+SLUG+':ratePrompted','1');}catch(e){}
+    var pop=document.createElement('div');pop.className='acb-rate-pop';
+    pop.innerHTML='<div class="acb-rate-card"><h3>Quick favor?</h3><p>If this tool saved you time, a rating helps other landlords find it.</p><div class="acb-rate-stars"></div><button type="button" class="skip">Maybe later</button></div>';
+    document.body.appendChild(pop);
+    var stars=pop.querySelector('.acb-rate-stars');
+    for(var i=1;i<=5;i++)(function(i){
+      var b=document.createElement('button');b.type='button';b.className='acb-star';b.textContent='★';b.style.fontSize='34px';
+      b.onmouseenter=function(){[].forEach.call(stars.children,function(s,j){s.classList.toggle('on',j<i);});};
+      b.onclick=function(){
+        var w=document.querySelectorAll('#acbStars .acb-star')[i-1];
+        if(w)w.click();
+        pop.querySelector('.acb-rate-card').innerHTML='<h3>Thank you! ⭐</h3><p>Your rating was recorded.</p>';
+        setTimeout(function(){pop.remove();},1400);
+      };
+      stars.appendChild(b);
+    })(i);
+    pop.querySelector('.skip').addEventListener('click',function(){pop.remove();});
+    pop.addEventListener('click',function(e){if(e.target===pop)pop.remove();});
+  }
 })();
 </script>
 

@@ -23,7 +23,7 @@ body{background:var(--acb-bg);font-family:'Outfit',sans-serif;color:var(--acb-te
 .tool-head h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
 .tool-head p{color:var(--acb-text-mid);font-size:15.5px;margin-top:8px;line-height:1.55}
 .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
-.badge{font-size:12.5px;font-weight:600;color:var(--acb-blue);background:var(--acb-blue-light);border:1px solid var(--acb-blue-mid);border-radius:50px;padding:5px 14px}
+.badge{font-size:12px;font-weight:500;color:#7E88B8;background:rgba(61,90,241,.045);border:1px solid rgba(61,90,241,.10);border-radius:50px;padding:4px 12px;letter-spacing:.01em}
 .grid{display:grid;grid-template-columns:10fr 11fr;gap:22px;align-items:start}
 @media(max-width:960px){.grid{grid-template-columns:1fr}}
 .card{background:var(--acb-card);border:1px solid var(--acb-border);border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.04);padding:26px}
@@ -51,18 +51,19 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 .sec-title{flex:1;min-width:0}
 .sec-title .tt{font-size:14.5px;font-weight:600}
 .sec-title .ts{font-size:12px;color:var(--acb-text-light);margin-top:2px;line-height:1.4}
-.sw{position:relative;width:40px;height:23px;flex-shrink:0}
+.sw{position:relative;width:46px;height:26px;flex-shrink:0}
 .sw input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2}
 .sw input:disabled{cursor:default}
-.sw .knob{position:absolute;inset:0;background:#D0D3DC;border-radius:50px;transition:background .2s}
-.sw .knob:after{content:'';position:absolute;top:2.5px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw .knob{position:absolute;inset:0;background:#D0D3DC;border-radius:50px;transition:background .25s}
+.sw .knob:after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .25s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
 .sw input:checked+.knob{background:var(--acb-blue)}
-.sw input:checked+.knob:after{transform:translateX(16px)}
+.sw input:checked+.knob:after{transform:translateX(20px)}
 .sw input:disabled+.knob{opacity:.55}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .exp{flex-shrink:0;background:none;border:none;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--acb-blue);cursor:pointer;padding:6px 4px;display:flex;align-items:center;gap:4px}
 .exp .chev{display:inline-block;transition:transform .25s;font-size:10px}
 .sec.open .exp .chev{transform:rotate(180deg)}
-.sec-opts{display:none;margin:12px 0 2px 52px;padding:14px 16px;background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px}
+.sec-opts{display:none;margin:12px 0 2px 0;padding:14px 16px;background:#FAFBFD;border:1px solid var(--acb-border);border-radius:12px}
 .sec.open .sec-opts{display:block}
 .sec.off .sec-title,.sec.off .exp{opacity:.45}
 .sec-opts .field:last-child{margin-bottom:0}
@@ -84,7 +85,7 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 .doc-row{display:flex;gap:18px;margin-bottom:12px;flex-wrap:nowrap}
 .doc-f{display:flex;align-items:flex-end;gap:6px;min-width:0}
 .doc-f .lbl{white-space:nowrap;font-size:11.5px;color:#26263a}
-.doc-f .line{flex:1;border-bottom:1px solid #6a6a78;min-width:30px;height:14px}
+.doc-f .line{flex:1;border-bottom:1px solid #6a6a78;min-width:30px;min-height:14px;font-size:11.5px;line-height:1.25;padding:0 3px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .doc-sig .line{border-bottom-width:1.4px;height:20px}
 .doc-yn{display:flex;justify-content:space-between;gap:16px;align-items:baseline;margin-bottom:10px}
 .doc-yn .q{font-size:12px;color:#1c1c2c;line-height:1.5}
@@ -100,7 +101,8 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 .doc-eho svg{flex-shrink:0}
 .doc-eho .et b{display:block;font-size:9.5px;letter-spacing:.08em}
 .doc-eho .et span{font-size:9px;color:#44444f;line-height:1.45;display:block;margin-top:2px}
-.doc-legal{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:14px;border-top:1px solid #d8d8e0;padding-top:8px}
+.doc-foot1{font-size:11px;color:#26263a;line-height:1.5;margin-top:16px;border-top:1px solid #d8d8e0;padding-top:8px}
+.doc-legal{font-size:9.5px;color:#6b6b78;font-style:italic;line-height:1.5;margin-top:5px}
 /* actions / tips */
 .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 .btn-secondary{padding:11px 24px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:14px;font-family:inherit;font-weight:500;cursor:pointer;transition:all .2s}
@@ -125,12 +127,32 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 .acb-star:hover{transform:scale(1.15)}
 .acb-rating-meta{font-size:13px;color:var(--acb-text-light)}
 .disclaimer{font-size:12px;color:var(--acb-text-light);text-align:center;line-height:1.6;margin-top:26px;max-width:640px;margin-left:auto;margin-right:auto}
+.acb-tip{position:relative;display:inline-flex;color:var(--acb-text-light);cursor:help;vertical-align:middle;margin-left:5px}
+.acb-tip:hover,.acb-tip:focus,.acb-tip.open{color:var(--acb-blue)}
+.acb-tip-bubble{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);background:#fff;color:var(--acb-text-mid);border:1px solid var(--acb-border);box-shadow:0 10px 30px rgba(26,26,46,.14);font-size:12.5px;font-weight:400;line-height:1.6;padding:12px 14px;border-radius:12px;width:270px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:60;text-transform:none;letter-spacing:normal;text-align:left}
+.acb-tip-bubble::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#fff;filter:drop-shadow(0 1.5px 0 var(--acb-border))}
+.acb-tip-bubble b{display:block;font-size:12px;font-weight:700;color:var(--acb-blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.acb-tip-bubble i{font-style:normal;display:block}
+.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:720px){.acb-tip-bubble{left:auto;right:-12px;transform:none}.acb-tip:hover .acb-tip-bubble,.acb-tip:focus .acb-tip-bubble,.acb-tip.open .acb-tip-bubble{transform:none}.acb-tip-bubble::after{left:auto;right:14px;transform:none}}
+.acb-coach-ring{position:relative;z-index:91}
+.acb-coach-ring::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid var(--acb-blue);animation:acbPulse 1.6s ease-out infinite;pointer-events:none}
+@keyframes acbPulse{0%{opacity:.9;transform:scale(.985)}70%{opacity:0;transform:scale(1.035)}100%{opacity:0}}
+.acb-coach{position:absolute;z-index:92;background:var(--acb-text);color:#fff;border-radius:12px;padding:13px 16px;font-size:13.5px;line-height:1.55;width:250px;box-shadow:0 12px 32px rgba(26,26,46,.3)}
+.acb-coach::before{content:"";position:absolute;bottom:100%;left:24px;border:8px solid transparent;border-bottom-color:var(--acb-text)}
+.acb-coach b{display:block;margin-bottom:3px}
+.acb-coach button{margin-top:9px;background:#fff;color:var(--acb-text);border:none;border-radius:50px;padding:6px 16px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+.acb-rate-pop{position:fixed;inset:0;background:rgba(26,26,46,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+.acb-rate-card{background:#fff;border-radius:18px;padding:30px 34px;max-width:380px;text-align:center;box-shadow:0 24px 64px rgba(26,26,46,.3)}
+.acb-rate-card h3{font-size:19px;font-weight:800;margin-bottom:6px}
+.acb-rate-card p{font-size:13.5px;color:var(--acb-text-mid);line-height:1.55;margin-bottom:12px}
+.acb-rate-card .skip{margin-top:10px;background:none;border:none;color:var(--acb-text-light);font-size:12.5px;cursor:pointer;font-family:inherit;text-decoration:underline}
 .fade{animation:fadeIn .35s ease both}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media print{
   @page{margin:.6in}
   body{background:#fff}
-  .no-print{display:none!important}
+  .no-print,.acb-rate-pop,.acb-coach,.acb-coach-ring::after{display:none!important}
   .wrap{max-width:none;padding:0}
   .grid{display:block}
   #previewCard{border:none;box-shadow:none;padding:0;border-radius:0;margin:0}
@@ -156,7 +178,9 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
         <div class="sec-label">1 · Property setup</div>
 
         <div class="field">
-          <label for="inState">Property state</label>
+          <label for="inState">Property state
+            <span class="acb-tip" tabindex="0" data-t="Property state"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip"><b></b><i>Sets the state-specific notes printed on the form — application-fee caps, screening-fee rules, and criminal-history ("fair chance") cautions.</i></span></span>
+          </label>
           <select id="inState" aria-describedby="stateNote"></select>
           <div class="state-note" id="stateNote" aria-live="polite"></div>
         </div>
@@ -172,7 +196,9 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
         </div>
 
         <div class="field">
-          <label for="inFee">Application fee (per applicant)</label>
+          <label for="inFee">Application fee (per applicant)
+            <span class="acb-tip" tabindex="0" data-t="Application fee"><svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 11.5a.75.75 0 110-1.5.75.75 0 010 1.5zM10.75 9.5a.75.75 0 01-1.5 0V6.75a.75.75 0 011.5 0V9.5z" fill="currentColor"/></svg><span class="acb-tip-bubble" role="tooltip"><b></b><i>Several states cap or prohibit application fees — a warning appears here if your fee may exceed the selected state's cap. Charge every applicant the same fee.</i></span></span>
+          </label>
           <div class="in-wrap has-pre"><span class="pre">$</span><input type="text" id="inFee" inputmode="decimal" placeholder="0"></div>
           <div class="hint">Leave blank or 0 if you don't charge one. Keep fees tied to your actual screening costs.</div>
           <div class="chip-warn" id="feeWarn" hidden role="alert"></div>
@@ -193,9 +219,9 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 
         <div class="sec" id="sec-applicant">
           <div class="sec-head">
-            <span class="sw"><input type="checkbox" checked disabled aria-label="Applicant information — always included"><span class="knob"></span></span>
             <div class="sec-title"><div class="tt">Applicant information</div><div class="ts">Name, DOB, ID, contact, emergency contact — always included</div></div>
             <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+            <span class="sw"><input type="checkbox" checked disabled aria-label="Applicant information — always included"><span class="knob"></span></span>
           </div>
           <div class="sec-opts">
             <div class="field">
@@ -212,9 +238,9 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 
         <div class="sec" id="sec-coapp">
           <div class="sec-head">
-            <span class="sw"><input type="checkbox" id="t-coapp" aria-label="Include co-applicants and occupants section"><span class="knob"></span></span>
             <div class="sec-title"><div class="tt">Co-applicants &amp; occupants</div><div class="ts">Other adults applying and everyone who will live in the unit</div></div>
             <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+            <span class="sw"><input type="checkbox" id="t-coapp" aria-label="Include co-applicants and occupants section"><span class="knob"></span></span>
           </div>
           <div class="sec-opts">
             <div class="mini-row">
@@ -233,9 +259,9 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 
         <div class="sec" id="sec-res">
           <div class="sec-head">
-            <span class="sw"><input type="checkbox" id="t-res" aria-label="Include residence history section"><span class="knob"></span></span>
             <div class="sec-title"><div class="tt">Residence history</div><div class="ts">Current and previous addresses, rent, landlord references</div></div>
             <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+            <span class="sw"><input type="checkbox" id="t-res" aria-label="Include residence history section"><span class="knob"></span></span>
           </div>
           <div class="sec-opts">
             <div class="field">
@@ -248,9 +274,9 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 
         <div class="sec" id="sec-emp">
           <div class="sec-head">
-            <span class="sw"><input type="checkbox" id="t-emp" aria-label="Include employment and income section"><span class="knob"></span></span>
             <div class="sec-title"><div class="tt">Employment &amp; income</div><div class="ts">Employer, position, income, optional proof-of-income checklist</div></div>
             <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+            <span class="sw"><input type="checkbox" id="t-emp" aria-label="Include employment and income section"><span class="knob"></span></span>
           </div>
           <div class="sec-opts">
             <label class="chk-line"><input type="checkbox" id="optPrevEmp"> Include previous employer</label>
@@ -260,16 +286,16 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 
         <div class="sec" id="sec-oinc">
           <div class="sec-head">
-            <span class="sw"><input type="checkbox" id="t-oinc" aria-label="Include other income section"><span class="knob"></span></span>
             <div class="sec-title"><div class="tt">Other income sources</div><div class="ts">Optional income the applicant wants considered (with safe disclosure wording)</div></div>
+            <span class="sw"><input type="checkbox" id="t-oinc" aria-label="Include other income section"><span class="knob"></span></span>
           </div>
         </div>
 
         <div class="sec" id="sec-ref">
           <div class="sec-head">
-            <span class="sw"><input type="checkbox" id="t-ref" aria-label="Include references section"><span class="knob"></span></span>
             <div class="sec-title"><div class="tt">References</div><div class="ts">Personal or professional references with phone numbers</div></div>
             <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+            <span class="sw"><input type="checkbox" id="t-ref" aria-label="Include references section"><span class="knob"></span></span>
           </div>
           <div class="sec-opts">
             <div class="field">
@@ -281,9 +307,9 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 
         <div class="sec" id="sec-veh">
           <div class="sec-head">
-            <span class="sw"><input type="checkbox" id="t-veh" aria-label="Include vehicles section"><span class="knob"></span></span>
             <div class="sec-title"><div class="tt">Vehicles</div><div class="ts">Make, model, year, plate — for parking rules</div></div>
             <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+            <span class="sw"><input type="checkbox" id="t-veh" aria-label="Include vehicles section"><span class="knob"></span></span>
           </div>
           <div class="sec-opts">
             <div class="field">
@@ -295,9 +321,9 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 
         <div class="sec" id="sec-pet">
           <div class="sec-head">
-            <span class="sw"><input type="checkbox" id="t-pet" aria-label="Include pets section"><span class="knob"></span></span>
             <div class="sec-title"><div class="tt">Pets</div><div class="ts">Type, breed, weight — with an assistance-animal fair-housing note</div></div>
             <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+            <span class="sw"><input type="checkbox" id="t-pet" aria-label="Include pets section"><span class="knob"></span></span>
           </div>
           <div class="sec-opts">
             <div class="field">
@@ -309,9 +335,9 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 
         <div class="sec" id="sec-bg">
           <div class="sec-head">
-            <span class="sw"><input type="checkbox" id="t-bg" aria-label="Include background questions section"><span class="knob"></span></span>
             <div class="sec-title"><div class="tt">Background questions</div><div class="ts">Eviction, felony, bankruptcy, smoking — each individually toggleable</div></div>
             <button type="button" class="exp" aria-expanded="false">Options <span class="chev">▾</span></button>
+            <span class="sw"><input type="checkbox" id="t-bg" aria-label="Include background questions section"><span class="knob"></span></span>
           </div>
           <div class="sec-opts">
             <label class="chk-line"><input type="checkbox" id="optBgEvict"> Prior eviction / eviction filing</label>
@@ -325,8 +351,8 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
 
         <div class="sec" id="sec-consent">
           <div class="sec-head">
-            <span class="sw"><input type="checkbox" checked disabled aria-label="Authorization and consent — always included"><span class="knob"></span></span>
             <div class="sec-title"><div class="tt">Authorization &amp; consent</div><div class="ts">FCRA-compliant consent for credit, background &amp; eviction checks, plus signatures — always included</div></div>
+            <span class="sw"><input type="checkbox" checked disabled aria-label="Authorization and consent — always included"><span class="knob"></span></span>
           </div>
         </div>
       </div>
@@ -339,11 +365,11 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
         <div class="doc" id="docPreview" aria-live="polite"></div>
       </div>
       <div class="actions no-print">
-        <button type="button" class="acb-btn-primary" id="printBtn">Print / Save as PDF</button>
-        <button type="button" class="btn-secondary" id="pdfBtn">Download fillable PDF</button>
+        <button type="button" class="acb-btn-primary" id="printBtn">Print</button>
+        <button type="button" class="acb-btn-primary" id="pdfBtn">Download PDF</button>
         <button type="button" class="btn-secondary" id="copyBtn">Copy text</button>
       </div>
-      <p class="hint no-print" style="text-align:center;margin-top:10px">"Print / Save as PDF" prints only the application document. The fillable PDF can be typed into with any PDF reader.</p>
+      <p class="hint no-print" style="text-align:center;margin-top:10px">"Print" prints only the application document. "Download PDF" saves a fillable PDF with your property details already filled in — applicants type their answers into the rest with any PDF reader.</p>
     </div>
   </div>
 
@@ -376,6 +402,73 @@ input:focus,select:focus{border-color:var(--acb-blue);box-shadow:0 0 0 3px rgba(
   <p class="disclaimer no-print">This generator produces a general-purpose template and is provided for informational purposes only — it is not legal advice. Landlord-tenant and screening laws change frequently and vary by state, county, and city; review the generated form with a local attorney before use. © Advanced Collection Bureau, Inc.</p>
 </div>
 
+<script>
+/* ===== shared UI v3 helpers (see docs/ui-v3-spec.md) ===== */
+var ACB_REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+function tweenText(el,fmt,to,ms){
+  if(!el)return;
+  if(ACB_REDUCED||!isFinite(to)){el.textContent=fmt(isFinite(to)?to:0);el.__tv=isFinite(to)?to:0;return;}
+  var from=isFinite(el.__tv)?el.__tv:0;
+  el.__tv=to;
+  if(from===to){el.textContent=fmt(to);return;}
+  var t0=performance.now();ms=ms||480;
+  (function step(){
+    var p=Math.min(1,(performance.now()-t0)/ms);p=1-Math.pow(1-p,3);
+    el.textContent=fmt(from+(to-from)*p);
+    if(p<1)requestAnimationFrame(step);
+  })();
+}
+function smoothResize(el,mutate){
+  if(ACB_REDUCED||!el){if(mutate)mutate();return;}
+  var h0=el.offsetHeight;if(mutate)mutate();var h1=el.offsetHeight;
+  if(Math.abs(h0-h1)<3)return;
+  el.style.height=h0+'px';el.style.overflow='hidden';el.style.transition='height .3s ease';
+  void el.offsetHeight;
+  el.style.height=h1+'px';
+  setTimeout(function(){el.style.height='';el.style.overflow='';el.style.transition='';},320);
+}
+function acbTipUpgrade(root){
+  (root||document).querySelectorAll('.acb-tip').forEach(function(t){
+    if(t.__up)return;t.__up=true;
+    var bub=t.querySelector('.acb-tip-bubble');
+    if(bub&&!bub.querySelector('b')){
+      var body=bub.innerHTML;
+      var title=t.dataset.t||'';
+      if(!title){
+        var host=t.closest('label')||t.parentNode;
+        if(host){var c=host.cloneNode(true);var tip=c.querySelector('.acb-tip');if(tip)tip.remove();title=c.textContent.replace(/\s+/g,' ').trim();}
+      }
+      bub.innerHTML='<i>'+body+'</i>';
+      var b=document.createElement('b');b.textContent=(title||'About this field').slice(0,42);
+      bub.insertBefore(b,bub.firstChild);
+    }
+    var b2=t.querySelector('.acb-tip-bubble b');
+    if(b2&&!b2.textContent)b2.textContent=t.dataset.t||'About this field';
+    t.addEventListener('click',function(e){e.stopPropagation();t.classList.toggle('open');});
+  });
+}
+document.addEventListener('click',function(){document.querySelectorAll('.acb-tip.open').forEach(function(t){t.classList.remove('open');});});
+function acbCoach(slug,target,title,body){
+  try{if(localStorage.getItem('acb:'+slug+':coached'))return;}catch(e){return;}
+  var el=typeof target==='string'?document.querySelector(target):target;
+  if(!el)return;
+  var tip=null;
+  function done(){try{localStorage.setItem('acb:'+slug+':coached','1');}catch(e){}
+    el.classList.remove('acb-coach-ring');if(tip)tip.remove();
+    document.removeEventListener('input',done,true);}
+  el.classList.add('acb-coach-ring');
+  var wrap=el.closest('.field')||el.parentNode;
+  if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+  tip=document.createElement('div');tip.className='acb-coach';
+  tip.innerHTML='<b>'+title+'</b>'+body+'<br><button type="button">Got it</button>';
+  wrap.appendChild(tip);
+  tip.style.top=(el.offsetTop+el.offsetHeight+12)+'px';
+  tip.style.left=Math.max(0,Math.min(el.offsetLeft,wrap.clientWidth-260))+'px';
+  tip.querySelector('button').addEventListener('click',done);
+  document.addEventListener('input',done,true);
+  document.addEventListener('keydown',function esc(e){if(e.key==='Escape'){done();document.removeEventListener('keydown',esc);}});
+}
+</script>
 <script>
 /* ============ Pure data + document model (no DOM access in this block) ============ */
 "use strict";
@@ -439,8 +532,12 @@ function buildFieldList(d){
   if(d.retEmail)ret.push('Email: '+d.retEmail);
   if(d.retPhone)ret.push('Phone: '+d.retPhone);
   if(d.retAddr)ret.push('Mail/deliver: '+d.retAddr);
-  if(ret.length)L.push({t:'note',text:'Return completed application to — '+ret.join('  ·  ')});
   var fee=parseFee(d.fee);
+  L.push({t:'gap',h:5});
+  L.push({t:'sh',text:'Property information (completed by landlord / manager)'});
+  row([{label:'Property / community name',flex:1.5,value:d.property},{label:'Application fee',flex:.8,value:fee>0?fmtUSD(fee,true):''}]);
+  row([{label:'Property address',flex:1,value:d.address}]);
+  row([{label:'Return completed application to',flex:1,value:ret.join('  ·  ')}]);
   if(fee>0)L.push({t:'note',text:'Application fee: '+fmtUSD(fee,true)+' per applicant, due with this application. See the State Notes at the end of this form for fee rules that may apply.'});
   L.push({t:'gap',h:6});
   row([{label:'Date of application'},{label:'Desired move-in date'}]);
@@ -583,7 +680,9 @@ function buildFieldList(d){
   L.push({t:'notes',title:'State Notes — '+stateName(d.st),lines:lines});
 
   L.push({t:'eho'});
-  L.push({t:'legal',text:'This document was created with a free generator provided by Advanced Collection Bureau (advancedcb.com) for general informational purposes. It is not legal advice and no attorney-client relationship is created. Laws vary by state, county, and city — review this form with a local attorney before use.'});
+  L.push({t:'foot',
+    line1:'This Rental Application was created with Advanced Collection Bureau, Inc. (advancedcb.com)',
+    line2:'This resource from Advanced Collection Bureau, Inc. is for general informational purposes. It is not legal advice. Application and screening rules vary by state, county, and city, and laws change; verify current requirements with a local attorney before using it.'});
   return L;
 }
 
@@ -602,7 +701,7 @@ function renderDocHtml(list){
       case 'sh':out+='<div class="doc-sh">'+escHtml(it.text)+'</div>';break;
       case 'row':
         out+='<div class="doc-row">'+it.fields.map(function(f){
-          return '<span class="doc-f" style="flex:'+(f.flex||1)+'"><span class="lbl">'+escHtml(f.label)+'</span><span class="line"></span></span>';
+          return '<span class="doc-f" style="flex:'+(f.flex||1)+'"><span class="lbl">'+escHtml(f.label)+'</span><span class="line">'+(f.value?escHtml(f.value):'')+'</span></span>';
         }).join('')+'</div>';break;
       case 'yn':out+='<div class="doc-yn"><span class="q">'+escHtml(it.label)+'</span><span class="ops"><span class="doc-cb"></span>Yes&nbsp;&nbsp;&nbsp;<span class="doc-cb"></span>No</span></div>';break;
       case 'chk':out+='<div class="doc-chk"><span class="doc-cb"></span>'+escHtml(it.label)+'</div>';break;
@@ -610,7 +709,7 @@ function renderDocHtml(list){
       case 'sig':out+='<div class="doc-row doc-sig"><span class="doc-f" style="flex:2.2"><span class="lbl">X</span><span class="line"></span><span class="lbl">'+escHtml(it.label)+'</span></span><span class="doc-f" style="flex:.8"><span class="lbl">Date</span><span class="line"></span></span></div>';break;
       case 'notes':out+='<div class="doc-notes"><div class="nt">'+escHtml(it.title)+'</div>'+it.lines.map(function(l){return '<p>'+escHtml(l)+'</p>';}).join('')+'</div>';break;
       case 'eho':out+='<div class="doc-eho">'+EHO_SVG+'<span class="et"><b>EQUAL HOUSING OPPORTUNITY</b><span>'+escHtml(EHO_TEXT)+'</span></span></div>';break;
-      case 'legal':out+='<p class="doc-legal">'+escHtml(it.text)+'</p>';break;
+      case 'foot':out+='<p class="doc-foot1">'+escHtml(it.line1)+'</p><p class="doc-legal">'+escHtml(it.line2)+'</p>';break;
     }
   });
   return out;
@@ -626,14 +725,14 @@ function buildPlainText(list){
       case 'gap':out.push('');break;
       case 'h':out.push('');out.push(it.text.toUpperCase());out.push('------------------------------------------');break;
       case 'sh':out.push('');out.push('* '+it.text);break;
-      case 'row':out.push(it.fields.map(function(f){return f.label+': ______________';}).join('    '));break;
+      case 'row':out.push(it.fields.map(function(f){return f.label+': '+(f.value?f.value:'______________');}).join('    '));break;
       case 'yn':out.push(it.label+'   [ ] Yes   [ ] No');break;
       case 'chk':out.push('  [ ] '+it.label);break;
       case 'para':out.push('');out.push(it.text);break;
       case 'sig':out.push('X ______________________________  ('+it.label+')    Date: ____________');break;
       case 'notes':out.push('');out.push(it.title.toUpperCase());it.lines.forEach(function(l){out.push('- '+l);});break;
       case 'eho':out.push('');out.push('EQUAL HOUSING OPPORTUNITY — '+EHO_TEXT);break;
-      case 'legal':out.push('');out.push(it.text);break;
+      case 'foot':out.push('');out.push(it.line1);out.push(it.line2);break;
     }
   });
   return out.join('\n');
@@ -699,7 +798,10 @@ function warnings(){
 function update(){
   persist();
   warnings();
-  $('docPreview').innerHTML=renderDocHtml(buildFieldList(S));
+  smoothResize($('previewCard'),function(){
+    $('docPreview').innerHTML=renderDocHtml(buildFieldList(S));
+  });
+  acbTipUpgrade($('docPreview'));
 }
 
 /* ---- wire inputs ---- */
@@ -743,8 +845,10 @@ $('optSsn').addEventListener('change',function(){S.ssn=this.value;update();});
 Array.prototype.forEach.call(document.querySelectorAll('.exp'),function(btn){
   btn.addEventListener('click',function(){
     var sec=btn.closest('.sec');
-    var open=sec.classList.toggle('open');
-    btn.setAttribute('aria-expanded',open?'true':'false');
+    smoothResize(sec,function(){
+      var open=sec.classList.toggle('open');
+      btn.setAttribute('aria-expanded',open?'true':'false');
+    });
   });
 });
 
@@ -840,7 +944,8 @@ async function makePdf(d){
         var f=it.fields[k],colW=avail*(f.flex||1)/totalFlex;
         var lw=helv.widthOfTextAtSize(f.label,8.5)+5;
         page.drawText(f.label,{x:x,y:y-12.5,size:8.5,font:helv,color:ink});
-        textField(x+lw,colW-lw,f.label);
+        var tf=textField(x+lw,colW-lw,f.label);
+        if(f.value)tf.setText(String(f.value)); /* pre-fill landlord-provided details; applicant fields stay blank */
         x+=colW+gp;
       }
       y-=24;
@@ -899,8 +1004,8 @@ async function makePdf(d){
       var els2=wrap(EHO_TEXT,helv,7.3,usable-40),ey=Y0-18;
       els2.forEach(function(l){page.drawText(l,{x:tx,y:ey,size:7.3,font:helv,color:gray});ey-=9;});
       y=Math.min(y-34,ey-2);
-    }else if(it.t==='legal'){
-      y-=6;para(it.text,obl,7.8,10,gray);
+    }else if(it.t==='foot'){
+      y-=8;para(it.line1,helv,8.6,11,ink);y-=2;para(it.line2,obl,7.8,10,gray);
     }
   }
 
@@ -926,14 +1031,16 @@ $('pdfBtn').addEventListener('click',function(){
     a.download='Rental-Application-'+S.st+'.pdf';
     document.body.appendChild(a);a.click();document.body.removeChild(a);
     setTimeout(function(){URL.revokeObjectURL(a.href);},4000);
-    b.disabled=false;b.textContent='Download fillable PDF';
+    b.disabled=false;b.textContent='Download PDF';
   }).catch(function(err){
-    b.disabled=false;b.textContent='Download fillable PDF';
+    b.disabled=false;b.textContent='Download PDF';
     alert('Sorry — the PDF could not be generated. '+(err&&err.message?err.message:''));
   });
 });
 
 update();
+acbTipUpgrade(document);
+acbCoach('rental-application-generator','#inProperty','Start here','Name the property, toggle the sections you want, and watch the application build itself on the right.');
 })();
 </script>
 
