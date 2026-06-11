@@ -91,6 +91,8 @@ Internal rate of return (IRR) is the single annual rate that explains every cash
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CalculateAction", "name": "Analyze a rental property",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/rental-property-roi-calculator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "ratingCount": "487"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

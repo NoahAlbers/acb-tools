@@ -104,6 +104,8 @@ Almost everywhere: unpaid rent and damage beyond normal wear and tear. Many stat
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CalculateAction", "name": "Calculate security deposit interest",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/security-deposit-interest-calculator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "341"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

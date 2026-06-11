@@ -15,19 +15,29 @@ Target URL: `https://www.advancedcb.com/resources/70-percent-rule-calculator`
    > The fastest way to screen a fix-and-flip: pay no more than 70% of the after repair value, minus repairs. This calculator finds your maximum allowable offer, lets you adjust the rule percentage for your market, pressure-tests a real asking price, and shows exactly where the 30% margin goes — free, instant, and no email required.
 3. **Embed block #1** — the tool iframe (paste in an Embed element):
 
+> **v3.3 — re-paste this embed:** this tool's input card follows the page as you
+> scroll. That requires the snippet below (it forwards the page's scroll position
+> into the iframe). If your page still has the older snippet, replace it with this one.
+
 ```html
 <iframe id="acb-tool-frame" title="70% Rule Calculator"
-  style="width:1px;min-width:100%;border:0;height:1600px" loading="eager"></iframe>
+  style="width:1px;min-width:100%;border:0;height:1400px" loading="eager"></iframe>
 <script>
 (function(){
   var f=document.getElementById('acb-tool-frame');
-  /* forward #acb=… shared-scenario links into the tool */
   f.src='https://noahalbers.github.io/acb-tools/tools/70-percent-rule-calculator/'+(location.hash||'');
   window.addEventListener('message',function(e){
     if(e.data&&e.data.acbTool==='70-percent-rule-calculator'&&e.data.height){
       f.style.height=(e.data.height+2)+'px';
     }
   });
+  function sendScroll(){
+    var r=f.getBoundingClientRect();
+    if(f.contentWindow)f.contentWindow.postMessage({acbScrollInfo:1,top:-r.top,vh:window.innerHeight},'*');
+  }
+  window.addEventListener('scroll',sendScroll,{passive:true});
+  window.addEventListener('resize',sendScroll);
+  f.addEventListener('load',sendScroll);
 })();
 </script>
 ```
@@ -90,6 +100,8 @@ The 70% rule is a screen, not an underwriting model. It distorts at the price ex
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CalculateAction", "name": "Calculate a maximum allowable offer",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/70-percent-rule-calculator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "176"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

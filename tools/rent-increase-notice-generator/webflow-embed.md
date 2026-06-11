@@ -93,6 +93,8 @@ A perfect letter delivered wrong is an invalid notice. Check your lease and stat
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CreateAction", "name": "Create a rent increase notice",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/rent-increase-notice-generator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "189"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

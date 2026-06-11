@@ -91,6 +91,8 @@ Before buying a rental, check whether the rent actually covers the full monthly 
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CalculateAction", "name": "Calculate a mortgage payment",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/mortgage-calculator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "641"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

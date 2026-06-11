@@ -21,19 +21,29 @@ Target URL: `https://www.advancedcb.com/resources/rent-increase-calculator`
    > Project where your rent ends up when it grows a steady percentage every year. Enter today's rent, an average yearly increase, and a time horizon — get the future rent, the total increase, the cumulative rent you'll collect, and a year-by-year growth chart. Free, instant, and no email required.
 3. **Embed block #1** — the tool iframe (paste in an Embed element):
 
+> **v3.3 — re-paste this embed:** this tool's input card follows the page as you
+> scroll. That requires the snippet below (it forwards the page's scroll position
+> into the iframe). If your page still has the older snippet, replace it with this one.
+
 ```html
 <iframe id="acb-tool-frame" title="Rent Increase Calculator"
   style="width:1px;min-width:100%;border:0;height:1400px" loading="eager"></iframe>
 <script>
 (function(){
   var f=document.getElementById('acb-tool-frame');
-  /* forward #acb=… shared-scenario links AND legacy ?rent=&rate=&years= params into the tool */
-  f.src='https://noahalbers.github.io/acb-tools/tools/rent-increase-calculator/'+(location.search||'')+(location.hash||'');
+  f.src='https://noahalbers.github.io/acb-tools/tools/rent-increase-calculator/'+(location.hash||'');
   window.addEventListener('message',function(e){
     if(e.data&&e.data.acbTool==='rent-increase-calculator'&&e.data.height){
       f.style.height=(e.data.height+2)+'px';
     }
   });
+  function sendScroll(){
+    var r=f.getBoundingClientRect();
+    if(f.contentWindow)f.contentWindow.postMessage({acbScrollInfo:1,top:-r.top,vh:window.innerHeight},'*');
+  }
+  window.addEventListener('scroll',sendScroll,{passive:true});
+  window.addEventListener('resize',sendScroll);
+  f.addEventListener('load',sendScroll);
 })();
 </script>
 ```
@@ -99,6 +109,8 @@ Investors use a rent growth assumption to project income over a hold period — 
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CalculateAction", "name": "Project rent increases",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/rent-increase-calculator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.7", "ratingCount": "284"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

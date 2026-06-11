@@ -90,6 +90,8 @@ Both come out of this generator from the same template. The **printed form** (Pr
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CreateAction", "name": "Create a rental application",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/rental-application-generator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "294"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

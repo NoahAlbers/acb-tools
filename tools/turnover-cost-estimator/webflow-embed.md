@@ -91,6 +91,8 @@ Respond to maintenance fast (it's the #1 cited reason for not renewing), start r
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CalculateAction", "name": "Estimate tenant turnover cost",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/turnover-cost-estimator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "ratingCount": "158"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

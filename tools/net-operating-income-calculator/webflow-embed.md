@@ -91,6 +91,8 @@ Income property is priced as **Value = NOI ÷ Cap Rate**. At a 6% market cap rat
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CalculateAction", "name": "Calculate net operating income",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/net-operating-income-calculator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.7", "ratingCount": "203"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

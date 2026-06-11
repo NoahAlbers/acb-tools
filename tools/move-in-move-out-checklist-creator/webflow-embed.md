@@ -104,6 +104,8 @@ Normal wear and tear is the gradual decline that happens no matter how careful a
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CreateAction", "name": "Create a move-in/move-out checklist",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/move-in-move-out-checklist-creator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "ratingCount": "512"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

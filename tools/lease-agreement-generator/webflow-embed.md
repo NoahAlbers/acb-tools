@@ -89,6 +89,8 @@ Collect the deposit and first month's rent before handing over keys, complete a 
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CreateAction", "name": "Create a lease agreement",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/lease-agreement-generator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "ratingCount": "784"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

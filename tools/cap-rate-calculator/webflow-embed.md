@@ -89,6 +89,8 @@ Add up all income (rent, parking, laundry, pet rent), subtract vacancy, then sub
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CalculateAction", "name": "Calculate cap rate",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/cap-rate-calculator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "312"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

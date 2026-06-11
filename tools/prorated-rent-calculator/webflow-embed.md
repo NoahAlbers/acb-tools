@@ -98,6 +98,8 @@ Yes. On a move-out, the tenant owes rent from the regular billing date through t
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CalculateAction", "name": "Calculate prorated rent",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/prorated-rent-calculator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "426"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}

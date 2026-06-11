@@ -664,6 +664,35 @@ acbCoachSeq('rent-increase-calculator',[
 </script>
 
 <script>
+/* iframe-sticky: CSS position:sticky cannot work inside an auto-height iframe
+   (the iframe never scrolls internally), so the parent page forwards its scroll
+   position and we translate the input card to follow the viewport. */
+(function(){
+  var card=document.getElementById('inputsCard');
+  if(!card)return;
+  var grid=card.parentNode,raf=null,target=0,current=0;
+  function apply(){
+    raf=null;
+    current+= (target-current)*0.35;
+    if(Math.abs(target-current)<0.5)current=target;
+    card.style.transform=current>0.5?'translateY('+current.toFixed(1)+'px)':'';
+    if(current!==target)raf=requestAnimationFrame(apply);
+  }
+  window.addEventListener('message',function(e){
+    var d=e.data;
+    if(!d||d.acbScrollInfo!==1)return;
+    if(document.documentElement.clientWidth<841){target=0;}
+    else{
+      var gridTop=grid.offsetTop,cardH=card.offsetHeight,colH=grid.offsetHeight;
+      var max=Math.max(0,colH-cardH);
+      target=Math.max(0,Math.min((d.top-gridTop)+16,max));
+    }
+    if(!raf)raf=requestAnimationFrame(apply);
+  });
+})();
+</script>
+
+<script>
 (function(){
   var last=0;
   function send(){

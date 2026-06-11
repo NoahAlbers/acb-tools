@@ -93,6 +93,8 @@ If the tenant pays within the cure period, the matter ends — accept the paymen
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "potentialAction": {"@type": "CreateAction", "name": "Create a late rent notice",
+        "target": {"@type": "EntryPoint", "urlTemplate": "https://www.advancedcb.com/resources/late-rent-notice-generator"}},
       "aggregateRating": {"@type": "AggregateRating", "ratingValue": "4.9", "ratingCount": "391"},
       "publisher": {"@type": "Organization", "name": "Advanced Collection Bureau",
         "url": "https://www.advancedcb.com"}
