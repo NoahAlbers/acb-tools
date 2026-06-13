@@ -124,10 +124,38 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media(min-width:841px){#inputsCard{position:sticky;top:16px}}
+.acb-print-only{display:none}
+@media print{
+  @page{margin:0.55in}
+  html,body{background:#fff!important}
+  .acb-print-only{display:block!important}
+  .tool-head,.modes,.actions,.acb-cta,.acb-rating,.acb-coach,.acb-coach-ring,.acb-tip,.badges,.acb-rate-pop,.acb-cal,
+  #pvOpen,.embed-card,.presets,.li-rm,.basis-toggle,.table-toggle-row,.scn-bar,.modal-ov,.expander>button,.chev,
+  input[type=range],.more-tools,.related{display:none!important}
+  .wrap{max-width:none!important;padding:0!important;margin:0!important}
+  .grid{gap:18px!important}
+  .card{box-shadow:none!important;border:1px solid #d9dbe4!important;break-inside:avoid;border-radius:10px}
+  input,select{-webkit-appearance:none!important;appearance:none!important;border:none!important;background:transparent!important;color:#111!important;font-weight:700!important;box-shadow:none!important;padding-left:0!important}
+  .in-wrap{border:none!important;background:transparent!important;border-bottom:1px solid #cfd2db!important;border-radius:0!important;box-shadow:none!important}
+  .acb-print-head{margin:0 0 18px;padding:0 0 12px;border-bottom:2px solid #3D5AF1}
+  .aph-brand{font-size:11px;letter-spacing:.16em;font-weight:800;color:#3D5AF1}
+  .aph-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:7px;gap:16px}
+  .aph-title{font-size:21px;font-weight:800;color:#1A1A2E}
+  .aph-date{font-size:11px;color:#666;white-space:nowrap}
+  .aph-sub{font-size:10.5px;color:#666;margin-top:4px}
+  .acb-print-foot{margin-top:22px;padding-top:11px;border-top:1px solid #ccc;text-align:center}
+  .apf-brand{font-size:11px;color:#333;font-weight:700}
+  .apf-legal{font-size:9px;color:#888;margin-top:3px;line-height:1.5;max-width:560px;margin-left:auto;margin-right:auto}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
+  <div class="acb-print-only acb-print-head" aria-hidden="true">
+    <div class="aph-brand">ADVANCED COLLECTION BUREAU</div>
+    <div class="aph-row"><span class="aph-title"></span><span class="aph-date"></span></div>
+    <div class="aph-sub">Free tools for landlords and property managers · advancedcb.com</div>
+  </div>
   <div class="tool-head">
     <h1>Rent Increase Calculator</h1>
     <p>Project where your rent ends up when it grows a steady percentage every year — and how much total rent you'll collect along the way.</p>
@@ -204,6 +232,10 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
     <button type="button" class="btn-secondary" onclick="window.print()">Print results</button>
   </div>
 
+  <div class="acb-print-only acb-print-foot" aria-hidden="true">
+    <div class="apf-brand">This report was created with Advanced Collection Bureau, Inc. (advancedcb.com)</div>
+    <div class="apf-legal">Provided for general informational purposes only. Not legal, tax, or financial advice. Verify all figures and local rules before relying on them.</div>
+  </div>
   <div class="acb-rating" id="acbRating" aria-label="Rate this tool">
     <div class="acb-rating-stars" id="acbStars" role="radiogroup"></div>
     <div class="acb-rating-meta" id="acbRatingMeta"></div>
@@ -705,5 +737,6 @@ acbCoachSeq('rent-increase-calculator',[
   setInterval(send,800);
 })();
 </script>
+<script>(function(){try{var h=document.querySelector('h1'),t=document.querySelector('.aph-title');if(h&&t)t.textContent=h.textContent;var d=document.querySelector('.aph-date');if(d)d.textContent=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});}catch(e){}})();</script>
 </body>
 </html>
