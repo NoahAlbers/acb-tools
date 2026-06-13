@@ -21,18 +21,26 @@ Target URL: `https://www.advancedcb.com/resources/prorated-rent-calculator`
 3. **Embed block #1**, the tool iframe (paste in an Embed element):
 
 ```html
-<iframe id="acb-tool-frame" title="Prorated Rent Calculator"
+<iframe id="acb-tool-frame" aria-label="Prorated Rent Calculator"
   style="width:1px;min-width:100%;border:0;height:1200px" loading="eager"></iframe>
 <script>
 (function(){
-  var f=document.getElementById('acb-tool-frame');
-  /* forward #acb=… shared-scenario links into the tool */
-  f.src='https://noahalbers.github.io/acb-tools/tools/prorated-rent-calculator/'+(location.hash||'');
+  var f=document.getElementById('acb-tool-frame'),slug='prorated-rent-calculator';
+  /* forward #… shared-scenario fragments into the tool */
+  f.src='https://noahalbers.github.io/acb-tools/tools/'+slug+'/'+(location.hash||'');
   window.addEventListener('message',function(e){
-    if(e.data&&e.data.acbTool==='prorated-rent-calculator'&&e.data.height){
+    if(e.data&&e.data.acbTool===slug&&e.data.height){
       f.style.height=(e.data.height+2)+'px';
     }
   });
+  /* forward parent scroll so the tool’s sticky panels work inside the auto-height iframe */
+  function sendScroll(){
+    var r=f.getBoundingClientRect();
+    if(f.contentWindow)f.contentWindow.postMessage({acbScrollInfo:1,top:-r.top,vh:window.innerHeight},'*');
+  }
+  window.addEventListener('scroll',sendScroll,{passive:true});
+  window.addEventListener('resize',sendScroll,{passive:true});
+  f.addEventListener('load',sendScroll);
 })();
 </script>
 ```

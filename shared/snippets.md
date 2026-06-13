@@ -32,17 +32,33 @@ Replace `TOOL_SLUG` / `TOOL_NAME` per tool.
 </script>
 ```
 
-Parent-side listener (goes in the Webflow page embed — already included in each tool's
-`webflow-embed.md`):
+Parent-side embed (goes in the Webflow page — already included in each tool's
+`webflow-embed.md`). Use `aria-label`, not `title`, on the iframe: `title` makes the
+browser show a native tooltip that lingers because the iframe covers most of the page.
+The `sendScroll` forwarding is what lets the tool's sticky panels work inside an
+auto-height iframe (the iframe never scrolls internally, so CSS `position:sticky` alone
+can't engage).
 
 ```html
+<iframe id="acb-tool-frame" aria-label="TOOL NAME"
+  style="width:1px;min-width:100%;border:0;height:1200px" loading="eager"></iframe>
 <script>
-window.addEventListener('message',function(e){
-  if(e.data&&e.data.acbTool){
-    var f=document.getElementById('acb-tool-frame');
-    if(f) f.style.height=(e.data.height+2)+'px';
+(function(){
+  var f=document.getElementById('acb-tool-frame'),slug='TOOL_SLUG';
+  f.src='https://noahalbers.github.io/acb-tools/tools/'+slug+'/'+(location.hash||'');
+  window.addEventListener('message',function(e){
+    if(e.data&&e.data.acbTool===slug&&e.data.height){
+      f.style.height=(e.data.height+2)+'px';
+    }
+  });
+  function sendScroll(){
+    var r=f.getBoundingClientRect();
+    if(f.contentWindow)f.contentWindow.postMessage({acbScrollInfo:1,top:-r.top,vh:window.innerHeight},'*');
   }
-});
+  window.addEventListener('scroll',sendScroll,{passive:true});
+  window.addEventListener('resize',sendScroll,{passive:true});
+  f.addEventListener('load',sendScroll);
+})();
 </script>
 ```
 

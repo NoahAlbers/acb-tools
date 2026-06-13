@@ -936,5 +936,43 @@ acbCoachSeq('turnover-cost-estimator',[
 })();
 </script>
 <script>(function(){try{var h=document.querySelector('h1'),t=document.querySelector('.aph-title');if(h&&t)t.textContent=h.textContent;var d=document.querySelector('.aph-date');if(d)d.textContent=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});}catch(e){}})();</script>
+<script>
+/* iframe-sticky: CSS position:sticky cannot work inside an auto-height iframe
+   (the iframe is sized to its full content, so it never scrolls internally). The
+   parent embed forwards its scroll position and we translate the would-be sticky
+   panels to follow the viewport. Standalone (no messages) keeps native CSS sticky. */
+(function(){
+  var SEL='#inputsCard,#resultsCol,.results-col,.results-sticky,.side,.pv';
+  var items=null,top0=0,raf=null;
+  function docTop(el){var y=0;while(el){y+=el.offsetTop;el=el.offsetParent;}return y;}
+  function collect(){
+    items=[];var els=document.querySelectorAll(SEL),i,el,cs;
+    for(i=0;i<els.length;i++){el=els[i];cs=getComputedStyle(el);
+      if(cs.position==='sticky'){el.style.transform='';items.push({el:el,top:parseFloat(cs.top)||0,cur:0,target:0});}}
+  }
+  function frame(){
+    raf=null;var moving=false,i,it,el,c,elTop,elH,cBottom,max;
+    for(i=0;i<items.length;i++){
+      it=items[i];el=it.el;c=el.parentNode;
+      elTop=docTop(el);elH=el.offsetHeight;cBottom=docTop(c)+c.offsetHeight;
+      max=Math.max(0,cBottom-(elTop+elH));
+      it.target=Math.max(0,Math.min((top0-elTop)+it.top,max));
+      it.cur+=(it.target-it.cur)*0.35;
+      if(Math.abs(it.target-it.cur)<0.5)it.cur=it.target;
+      el.style.transform=it.cur>0.5?'translateY('+it.cur.toFixed(1)+'px)':'';
+      if(it.cur!==it.target)moving=true;
+    }
+    if(moving)raf=requestAnimationFrame(frame);
+  }
+  window.addEventListener('message',function(e){
+    var d=e.data;if(!d||d.acbScrollInfo!==1)return;
+    if(!items)collect();top0=d.top;if(!raf)raf=requestAnimationFrame(frame);
+  });
+  window.addEventListener('resize',function(){
+    if(items){for(var i=0;i<items.length;i++)items[i].el.style.transform='';}
+    items=null;
+  });
+})();
+</script>
 </body>
 </html>

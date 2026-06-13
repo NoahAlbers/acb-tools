@@ -16,16 +16,27 @@ Target URL: `https://www.advancedcb.com/resources/rental-application-generator`
 3. **Embed block #1**, the tool iframe (paste in an Embed element):
 
 ```html
-<iframe id="acb-tool-frame" src="https://noahalbers.github.io/acb-tools/tools/rental-application-generator/"
-  title="Rental Application Form Generator" style="width:1px;min-width:100%;border:0;height:2400px"
-  loading="eager"></iframe>
+<iframe id="acb-tool-frame" aria-label="Rental Application Form Generator"
+  style="width:1px;min-width:100%;border:0;height:2400px" loading="eager"></iframe>
 <script>
-window.addEventListener('message',function(e){
-  if(e.data&&e.data.acbTool==='rental-application-generator'){
-    var f=document.getElementById('acb-tool-frame');
-    if(f) f.style.height=(e.data.height+2)+'px';
+(function(){
+  var f=document.getElementById('acb-tool-frame'),slug='rental-application-generator';
+  /* forward #… shared-scenario fragments into the tool */
+  f.src='https://noahalbers.github.io/acb-tools/tools/'+slug+'/'+(location.hash||'');
+  window.addEventListener('message',function(e){
+    if(e.data&&e.data.acbTool===slug&&e.data.height){
+      f.style.height=(e.data.height+2)+'px';
+    }
+  });
+  /* forward parent scroll so the tool’s sticky panels work inside the auto-height iframe */
+  function sendScroll(){
+    var r=f.getBoundingClientRect();
+    if(f.contentWindow)f.contentWindow.postMessage({acbScrollInfo:1,top:-r.top,vh:window.innerHeight},'*');
   }
-});
+  window.addEventListener('scroll',sendScroll,{passive:true});
+  window.addEventListener('resize',sendScroll,{passive:true});
+  f.addEventListener('load',sendScroll);
+})();
 </script>
 ```
 
