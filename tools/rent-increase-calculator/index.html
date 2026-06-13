@@ -545,13 +545,14 @@ $('csvBtn').addEventListener('click',function(){
 /* ---- shareable scenario links: #acb=<base64 json> (forwarded into the iframe by the embed snippet) ---- */
 function encodeState(){
   var o={b:basis,rent:els.rent.value,rate:els.rate.value,years:els.years.value};
-  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'');
+  Object.keys(o).forEach(function(k){if(o[k]===''||o[k]==null)delete o[k];});
+  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 function applyHash(){
   var m=(location.hash||'').match(/[#&]acb=([^&]+)/);
   if(!m)return false;
   try{
-    var o=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    var o=JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g,'+').replace(/_/g,'/')))));
     if(o.rent!==undefined&&o.rent!=='')els.rent.value=o.rent;
     if(o.rate!==undefined&&o.rate!=='')els.rate.value=o.rate;
     if(o.years!==undefined&&o.years!=='')els.years.value=o.years;
@@ -572,7 +573,7 @@ function applyLegacyQuery(){
   return true;
 }
 function shareUrl(){
-  var base=(window.parent!==window&&document.referrer)?document.referrer.split('#')[0]:location.href.split('#')[0];
+  var base='https://www.advancedcb.com/resources/rent-increase-calculator';
   return base.split('?')[0]+'#acb='+encodeState();
 }
 function copyText(txt,btn,label){

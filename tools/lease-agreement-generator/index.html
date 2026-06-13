@@ -126,12 +126,17 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
 .pv-head .t{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acb-text-light)}
 .pv-btn{padding:7px 14px;border-radius:50px;border:1.5px solid var(--acb-border);background:#fff;color:var(--acb-text-mid);font-size:12px;font-family:inherit;font-weight:600;cursor:pointer;transition:all .2s}
 .pv-btn:hover{border-color:var(--acb-blue-mid);color:var(--acb-blue)}
-.pv-scroll{max-height:calc(100vh - 76px);overflow:auto;border-radius:6px}
-.pv-paper{padding:36px 32px;font-size:11px;line-height:1.55}
-.pv-paper h2.doc-title{font-size:14px}
-.pv-paper .doc-sub{font-size:10px;margin-bottom:16px}
-.pv-paper h3{font-size:11px;margin:14px 0 6px}
-.pv-paper .sig-grid{gap:22px 24px;margin-top:22px}
+.pv-scroll{max-height:calc(100vh - 76px);overflow:auto;border-radius:6px;background:var(--acb-bg);padding:6px 4px 12px}
+.pv-pages{display:flex;flex-direction:column;align-items:center;gap:16px}
+.pv-sheet{position:relative;background:#fff;border:1px solid var(--acb-border);box-shadow:0 4px 18px rgba(0,0,0,.12);border-radius:2px;overflow:hidden}
+.pv-sheet .doc-paper{border:none;box-shadow:none;border-radius:0;height:100%;box-sizing:border-box;padding:8.8% 9.2%;font-size:11px;line-height:1.5;background:transparent}
+.pv-sheet .doc-paper h2.doc-title{font-size:14px}
+.pv-sheet .doc-paper .doc-sub{font-size:10px;margin-bottom:14px}
+.pv-sheet .doc-paper h3{font-size:11px;margin:13px 0 6px}
+.pv-sheet .doc-paper .sig-grid{gap:20px 24px;margin-top:20px}
+.pv-sheet .doc-paper table.doc-util{font-size:10px}
+.pv-sheet .doc-paper .doc-foot{margin-top:18px;padding-top:10px}
+.pv-sheet .pg-num{position:absolute;left:0;right:0;bottom:5px;text-align:center;font-size:8px;letter-spacing:.04em;color:#b3b6c2;pointer-events:none}
 #pvOpen{display:none}
 .jump-hl{box-shadow:0 0 0 3px rgba(61,90,241,.35)!important;border-radius:10px}
 @media(max-width:900px){
@@ -305,7 +310,7 @@ input[type=number]{-moz-appearance:textfield;appearance:textfield}
             <button type="button" class="pv-btn" id="pvPdf">Download PDF</button>
           </span>
         </div>
-        <div class="pv-scroll"><div class="doc-paper pv-paper" id="previewPaper"></div></div>
+        <div class="pv-scroll" id="pvScroll"><div class="pv-pages" id="previewPages"></div></div>
       </div>
     </div>
     <button type="button" id="pvOpen">Preview lease</button>
@@ -1462,13 +1467,13 @@ function docHTML(){
   secs.forEach(function(sec,i){h+='<h3>'+(i+1)+'. '+sec.h+'</h3>'+sec.b;});
   h+='<p style="margin-top:26px">IN WITNESS WHEREOF, the parties execute this Agreement as of the dates written below.</p>';
   h+='<div class="sig-grid">';
-  h+='<div class="sig-block"><div class="line"></div><div class="lbl">Landlord: '+txt(A.llName,18)+' — Signature / Date</div></div>';
+  h+='<div class="sig-block"><div class="line"></div><div class="lbl">Landlord: '+txt(A.llName,18)+' · Signature / Date</div></div>';
   if(tenants.length){
-    tenants.forEach(function(t){h+='<div class="sig-block"><div class="line"></div><div class="lbl">Tenant: '+esc(t)+' — Signature / Date</div></div>';});
+    tenants.forEach(function(t){h+='<div class="sig-block"><div class="line"></div><div class="lbl">Tenant: '+esc(t)+' · Signature / Date</div></div>';});
   }else{
-    h+='<div class="sig-block"><div class="line"></div><div class="lbl">Tenant: '+bl(18)+' — Signature / Date</div></div>';
+    h+='<div class="sig-block"><div class="line"></div><div class="lbl">Tenant: '+bl(18)+' · Signature / Date</div></div>';
   }
-  if(A.cosigner.trim())h+='<div class="sig-block"><div class="line"></div><div class="lbl">Co-Signer (Guarantor): '+esc(A.cosigner)+' — Signature / Date</div></div>';
+  if(A.cosigner.trim())h+='<div class="sig-block"><div class="line"></div><div class="lbl">Co-Signer (Guarantor): '+esc(A.cosigner)+' · Signature / Date</div></div>';
   h+='</div>';
   h+='<div class="doc-foot"><div style="font-size:12.5px;color:#333">This Lease Agreement was created with Advanced Collection Bureau, Inc. (advancedcb.com)</div><div style="font-size:9.5px;margin-top:4px">This resource from Advanced Collection Bureau, Inc. is for general informational purposes. It is not legal advice. Lease requirements vary by state, county, and city, and laws change; verify current requirements with a local attorney before using it.</div></div>';
   return h;
@@ -1478,10 +1483,61 @@ window.ACB.docHTML=docHTML;
 window.ACB.renderDoc=function(){
   $('docPaper').innerHTML=docHTML();
 };
+/* Paginated live preview: lay the document out onto US-Letter-proportioned sheets
+   with real page breaks, so the preview reads like the printed/PDF lease. */
 window.ACB.renderPreview=function(){
-  var pp=$('previewPaper');
-  if(pp)pp.innerHTML=docHTML();
+  var scroll=$('pvScroll'),wrap=$('previewPages');
+  if(!scroll||!wrap)return;
+  var W=scroll.clientWidth-8;
+  if(!W||W<60)W=360;
+  var sheetH=Math.round(W*11/8.5);
+  wrap.innerHTML='';
+  var tmp=document.createElement('div');
+  tmp.innerHTML=docHTML();
+  var nodes=[];for(var i=0;i<tmp.childNodes.length;i++){if(tmp.childNodes[i].nodeType===1)nodes.push(tmp.childNodes[i]);}
+  function addSheet(){
+    var sh=document.createElement('div');sh.className='pv-sheet';
+    sh.style.width=W+'px';sh.style.height=sheetH+'px';
+    var inner=document.createElement('div');inner.className='doc-paper';
+    sh.appendChild(inner);wrap.appendChild(sh);
+    return inner;
+  }
+  var inner=addSheet();
+  nodes.forEach(function(n){
+    inner.appendChild(n);
+    if(inner.scrollHeight>inner.clientHeight){
+      if(inner.children.length===1){
+        /* a single block taller than one page: let this sheet grow rather than clip */
+        inner.parentNode.style.height='auto';
+        inner.style.height='auto';
+        inner=addSheet();
+        return;
+      }
+      inner.removeChild(n);
+      var carry=[n];
+      var prev=inner.lastElementChild;
+      if(prev&&prev.tagName==='H3'&&prev.previousElementSibling){inner.removeChild(prev);carry.unshift(prev);}
+      inner=addSheet();
+      carry.forEach(function(x){inner.appendChild(x);});
+    }
+  });
+  /* drop a trailing empty sheet if the last carry created one */
+  var last=wrap.lastElementChild;
+  if(last&&!last.firstChild.childNodes.length)wrap.removeChild(last);
+  var total=wrap.children.length;
+  for(var p=0;p<total;p++){
+    var pn=document.createElement('div');pn.className='pg-num';
+    pn.textContent='Page '+(p+1)+' of '+total;
+    wrap.children[p].appendChild(pn);
+  }
 };
+(function(){
+  var rt=null;
+  window.addEventListener('resize',function(){
+    if($('screenWizard')&&$('screenWizard').style.display==='none')return;
+    clearTimeout(rt);rt=setTimeout(function(){if(window.ACB.renderPreview)window.ACB.renderPreview();},200);
+  });
+})();
 
 /* Word download */
 $('docWord').addEventListener('click',function(){
@@ -1569,12 +1625,160 @@ function buildFill(){
 }
 window.ACB.buildFill=buildFill;
 
+/* Full typeset lease PDF — renders the exact narrative shown in the live preview,
+   paginated across US-Letter pages. Used by the wizard "Download PDF" so the file
+   matches the complete lease the user built. (The fillable AcroForm above is reserved
+   for the "Download a Blank Template" path, where pre-filled values do not exist.) */
+function generateNarrativePdf(){
+  var A=window.ACB.A,s=SD[A.state]||null,P=PDFLib;
+  var secs=buildSections();
+  var W=612,H=792,M=64,CW=W-2*M;
+  return P.PDFDocument.create().then(function(doc){
+    return Promise.all([
+      doc.embedFont(P.StandardFonts.TimesRoman),
+      doc.embedFont(P.StandardFonts.TimesRomanBold),
+      doc.embedFont(P.StandardFonts.TimesRomanItalic),
+      doc.embedFont(P.StandardFonts.Helvetica),
+      doc.embedFont(P.StandardFonts.HelveticaBold)
+    ]).then(function(F){
+      var serif=F[0],serifB=F[1],serifI=F[2],sans=F[3],sansB=F[4];
+      var INK=P.rgb(0.08,0.08,0.13),GRAY=P.rgb(0.42,0.42,0.52),LINE=P.rgb(0.72,0.74,0.82),BLUE=P.rgb(0.24,0.353,0.945);
+      var pages=[],page,y;
+      function san(t){return String(t==null?'':t)
+        .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&nbsp;/g,' ')
+        .replace(/…/g,'...').replace(/[‒–—]/g,'-').replace(/ /g,' ');}
+      function addPage(){page=doc.addPage([W,H]);pages.push(page);y=H-M;}
+      function need(h){if(y-h<M+22)addPage();}
+      function widthOf(t,size,f){return f.widthOfTextAtSize(t,size);}
+      /* break runs (each {t,b}) into justified lines that fit CW */
+      function layout(runs,size,maxW){
+        maxW=maxW||CW;
+        var lines=[],cur=[],curW=0,sp=widthOf(' ',size,serif);
+        runs.forEach(function(r){
+          var f=r.b?serifB:serif;
+          san(r.t).split(/\s+/).forEach(function(w){
+            if(!w)return;
+            var ww=widthOf(w,size,f);
+            if(curW>0&&curW+sp+ww>maxW){lines.push(cur);cur=[];curW=0;}
+            cur.push({t:w,f:f,w:ww});
+            curW+=(curW>0?sp:0)+ww;
+          });
+        });
+        if(cur.length)lines.push(cur);
+        return {lines:lines,sp:sp};
+      }
+      function drawRuns(runs,size,opt){
+        opt=opt||{};
+        var L=layout(runs,size,opt.maxW),lh=size*1.42;
+        L.lines.forEach(function(line,li){
+          need(lh);
+          var x=opt.x||M,extra=0;
+          var lineW=line.reduce(function(a,w){return a+w.w;},0)+(line.length-1)*L.sp;
+          if(opt.justify&&li<L.lines.length-1&&line.length>1&&lineW>(opt.maxW||CW)*0.72)
+            extra=((opt.maxW||CW)-lineW)/(line.length-1);
+          line.forEach(function(w){
+            page.drawText(w.t,{x:x,y:y-size,size:size,font:w.f,color:opt.color||INK});
+            x+=w.w+L.sp+extra;
+          });
+          y-=lh;
+        });
+        y-=size*0.42;
+      }
+      function parseRuns(frag){
+        var runs=[],re=/<strong>([\s\S]*?)<\/strong>|([^<]+)/g,m;
+        while((m=re.exec(frag))){
+          if(m[1]!==undefined)runs.push({t:m[1].replace(/<[^>]+>/g,''),b:true});
+          else if(m[2])runs.push({t:m[2],b:false});
+        }
+        return runs;
+      }
+      function drawTable(tableHtml,size){
+        var rows=[],rre=/<tr>([\s\S]*?)<\/tr>/g,rm;
+        while((rm=rre.exec(tableHtml))){
+          var cells=[],cre=/<t[dh]>([\s\S]*?)<\/t[dh]>/g,cm;
+          while((cm=cre.exec(rm[1])))cells.push(san(cm[1].replace(/<[^>]+>/g,'')));
+          if(cells.length)rows.push({head:rm[1].indexOf('<th>')>=0,cells:cells});
+        }
+        var c0=CW*0.62,rh=size+11;
+        rows.forEach(function(r){
+          need(rh);
+          page.drawRectangle({x:M,y:y-rh+3,width:CW,height:rh,borderWidth:0.7,borderColor:LINE,color:r.head?P.rgb(0.95,0.96,0.99):undefined});
+          page.drawLine({start:{x:M+c0,y:y-rh+3},end:{x:M+c0,y:y+3},thickness:0.7,color:LINE});
+          var f=r.head?serifB:serif;
+          page.drawText(r.cells[0]||'',{x:M+7,y:y-size+1,size:size,font:f,color:INK});
+          if(r.cells[1]!==undefined)page.drawText(r.cells[1],{x:M+c0+7,y:y-size+1,size:size,font:f,color:INK});
+          y-=rh;
+        });
+        y-=6;
+      }
+      function heading(num,t){
+        need(34);
+        y-=6;
+        page.drawText(num+'. '+san(t),{x:M,y:y-11,size:10.5,font:sansB,color:INK});
+        page.drawLine({start:{x:M,y:y-16},end:{x:W-M,y:y-16},thickness:0.6,color:LINE});
+        y-=26;
+      }
+      function renderHtml(html){
+        var re=/<p>([\s\S]*?)<\/p>|<table[\s\S]*?<\/table>/g,m;
+        while((m=re.exec(html))){
+          if(m[1]!==undefined)drawRuns(parseRuns(m[1]),9.5,{justify:true});
+          else drawTable(m[0],9);
+        }
+      }
+
+      addPage();
+      /* Title block */
+      var title='RESIDENTIAL LEASE AGREEMENT';
+      page.drawText(title,{x:(W-widthOf(title,17,serifB))/2,y:y-18,size:17,font:serifB,color:INK});
+      y-=30;
+      var sub='State of '+(s?s.n:'____________');
+      page.drawText(sub,{x:(W-widthOf(sub,11,serifI))/2,y:y-12,size:11,font:serifI,color:GRAY});
+      y-=22;
+      page.drawLine({start:{x:M,y:y},end:{x:W-M,y:y},thickness:1,color:BLUE});
+      y-=18;
+
+      secs.forEach(function(sec,i){heading(i+1,sec.h);renderHtml(sec.b);});
+
+      /* Execution + signatures */
+      need(24);
+      drawRuns([{t:'IN WITNESS WHEREOF, the parties execute this Agreement as of the dates written below.',b:false}],9.5,{justify:true});
+      var signers=[{role:'Landlord',name:A.llName}];
+      var ten=A.tenants.filter(function(t){return t.trim();});
+      if(ten.length)ten.forEach(function(t){signers.push({role:'Tenant',name:t});});
+      else signers.push({role:'Tenant',name:''});
+      if(A.cosigner.trim())signers.push({role:'Co-Signer (Guarantor)',name:A.cosigner});
+      var colW=(CW-30)/2,rowTop;
+      need(20);y-=8;
+      for(var i2=0;i2<signers.length;i2+=2){
+        need(60);rowTop=y;
+        for(var j=0;j<2&&i2+j<signers.length;j++){
+          var sg=signers[i2+j],x=M+j*(colW+30);
+          if(sg.name&&sg.name.trim())page.drawText(san(sg.name.trim()),{x:x+2,y:rowTop-26,size:10,font:serif,color:GRAY});
+          page.drawLine({start:{x:x,y:rowTop-30},end:{x:x+colW,y:rowTop-30},thickness:0.8,color:INK});
+          page.drawText(san(sg.role)+'  ·  Signature / Date',{x:x,y:rowTop-42,size:8,font:sans,color:GRAY});
+        }
+        y=rowTop-58;
+      }
+
+      /* Branded footer + page numbers on every page */
+      pages.forEach(function(p,idx){
+        p.drawLine({start:{x:M,y:44},end:{x:W-M,y:44},thickness:0.5,color:LINE});
+        p.drawText('This Lease Agreement was created with Advanced Collection Bureau, Inc. (advancedcb.com)',{x:M,y:32,size:7.5,font:sans,color:GRAY});
+        var pg='Page '+(idx+1)+' of '+pages.length;
+        p.drawText(pg,{x:W-M-widthOf(pg,7.5,sans),y:32,size:7.5,font:sans,color:GRAY});
+      });
+      return doc.save();
+    });
+  });
+}
+window.ACB.generateNarrativePdf=generateNarrativePdf;
+
 function downloadPdf(btn){
   var A=window.ACB.A;
   if(typeof PDFLib==='undefined'){alert('PDF library failed to load — check your connection and refresh.');return;}
   var orig=btn.textContent;
   btn.disabled=true;btn.textContent='Building PDF…';
-  generatePdf(A.state,buildFill()).then(function(bytes){
+  generateNarrativePdf().then(function(bytes){
     var blob=new Blob([bytes],{type:'application/pdf'});
     var a=document.createElement('a');
     a.href=URL.createObjectURL(blob);

@@ -667,13 +667,14 @@ $('copyBtn').addEventListener('click',function(){
 /* ---------- shareable scenario links: #acb=<base64 json model> (forwarded into the iframe by the embed snippet) ---------- */
 function encodeState(){
   var o={income:state.income,vac:state.vac,exp:state.exp,units:state.units,val:state.val};
-  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'');
+  Object.keys(o).forEach(function(k){if(o[k]===''||o[k]==null)delete o[k];});
+  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 function applyHash(){
   var m=(location.hash||'').match(/[#&]acb=([^&]+)/);
   if(!m)return;
   try{
-    var o=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    var o=JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g,'+').replace(/_/g,'/')))));
     if(o&&typeof o==='object'){
       var inc=sanitizeRows(o.income,'inc'),exp=sanitizeRows(o.exp,'exp');
       if(inc)state.income=inc;
@@ -685,7 +686,7 @@ function applyHash(){
   }catch(e){}
 }
 function shareUrl(){
-  var base=(window.parent!==window&&document.referrer)?document.referrer.split('#')[0]:location.href.split('#')[0];
+  var base='https://www.advancedcb.com/resources/net-operating-income-calculator';
   return base+'#acb='+encodeState();
 }
 function copyText(txt,btn,label){

@@ -774,13 +774,14 @@ var SHARE_IDS=MONEY.concat(NUMS);
 function encodeState(){
   var o={lm:leaseMode,ck:CHECKS.map(function(id){return $(id).checked?'1':'0';}).join('')};
   SHARE_IDS.forEach(function(id){o[id]=$(id).value;});
-  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'');
+  Object.keys(o).forEach(function(k){if(o[k]===''||o[k]==null)delete o[k];});
+  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 function applyHash(){
   var m=(location.hash||'').match(/[#&]acb=([^&]+)/);
   if(!m)return;
   try{
-    var o=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    var o=JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g,'+').replace(/_/g,'/')))));
     SHARE_IDS.forEach(function(id){if(o[id]!==undefined&&o[id]!=='')$(id).value=o[id];});
     if(typeof o.ck==='string')CHECKS.forEach(function(id,i){
       if(o.ck.charAt(i)==='1')$(id).checked=true;
@@ -790,7 +791,7 @@ function applyHash(){
   }catch(e){}
 }
 function shareUrl(){
-  var base=(window.parent!==window&&document.referrer)?document.referrer.split('#')[0]:location.href.split('#')[0];
+  var base='https://www.advancedcb.com/resources/turnover-cost-estimator';
   return base+'#acb='+encodeState();
 }
 function copyText(txt,btn,label){

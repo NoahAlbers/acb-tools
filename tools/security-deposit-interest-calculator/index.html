@@ -517,19 +517,20 @@ function applyQuery(){
 function encodeState(){
   var o={};
   IDS.forEach(function(id){o[id]=$(id).value;});
-  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/=+$/,'');
+  Object.keys(o).forEach(function(k){if(o[k]===''||o[k]==null)delete o[k];});
+  return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 function applyHash(){
   var m=(location.hash||'').match(/[#&]acb=([^&]+)/);
   if(!m)return;
   try{
-    var o=JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+    var o=JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g,'+').replace(/_/g,'/')))));
     IDS.forEach(function(id){if(o[id]!==undefined&&o[id]!=='')$(id).value=o[id];});
     if(!SR[$('state').value])$('state').value='FL';
   }catch(e){}
 }
 function shareUrl(){
-  var base=(window.parent!==window&&document.referrer)?document.referrer.split('#')[0].split('?')[0]:location.href.split('#')[0].split('?')[0];
+  var base='https://www.advancedcb.com/resources/security-deposit-interest-calculator';
   return base+'#acb='+encodeState();
 }
 
