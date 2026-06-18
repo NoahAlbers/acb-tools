@@ -1,0 +1,60 @@
+/* ============================================================================
+   Advanced Collection Bureau, Design System, Design Tokens
+   Drop this in and build on the CSS custom properties below. These are the same
+   tokens the live tools use, plus the marketing-surface tokens (dark hero,
+   decorative squares) seen on advancedcb.com.
+   Font: Outfit (Google Fonts), weights 300 to 800, fallback sans-serif.
+   ============================================================================ */
+:root{
+  /* Brand blue ramp */
+  --acb-blue:        #3D5AF1;  /* primary: buttons, links, accents, stat numbers */
+  --acb-blue-dark:   #2D45C6;  /* hover, gradient end */
+  --acb-blue-deep:   #22329C;  /* decorative deep square */
+  --acb-blue-mid:    #D5DBFC;  /* borders on selected items */
+  --acb-blue-light:  #EEF1FE;  /* selected backgrounds, chips, tint panels */
+
+  /* Surfaces */
+  --acb-bg:          #F4F5F9;  /* page background */
+  --acb-card:        #FFFFFF;  /* card background */
+  --acb-dark:        #24243A;  /* dark hero / footer surface */
+  --acb-dark-2:      #1B1B2E;  /* deeper dark surface */
+
+  /* Text */
+  --acb-text:        #1A1A2E;  /* headings / primary text (also "ink") */
+  --acb-text-mid:    #4A4A68;  /* body text */
+  --acb-text-light:  #8889A0;  /* captions, hints, labels */
+  --acb-on-dark:     #FFFFFF;  /* text on dark surfaces */
+  --acb-on-dark-mid: #B9BACE;  /* muted text on dark surfaces */
+
+  /* Lines */
+  --acb-border:      #E2E4EC;  /* card & input borders */
+
+  /* Semantic */
+  --acb-green:       #16A34A;  /* success / positive numbers */
+  --acb-red:         #DC2626;  /* errors / negative numbers */
+  --acb-warn:        #E8A83E;  /* warnings */
+  --acb-warn-bg:     #FEF9EE;  /* warning backgrounds */
+  --acb-gold:        #F5B301;  /* star ratings */
+
+  /* Typography */
+  --acb-font:        'Outfit', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+
+  /* Radius */
+  --acb-r-sm:        8px;
+  --acb-r-md:        12px;
+  --acb-r-lg:        16px;
+  --acb-r-pill:      50px;
+
+  /* Elevation */
+  --acb-shadow-card:  0 2px 12px rgba(0,0,0,.04);
+  --acb-shadow-raise: 0 10px 30px rgba(26,26,46,.10);
+  --acb-shadow-blue:  0 4px 18px rgba(61,90,241,.27);
+
+  /* Spacing scale (4px base) */
+  --acb-s-1: 4px;  --acb-s-2: 8px;  --acb-s-3: 12px; --acb-s-4: 16px;
+  --acb-s-5: 20px; --acb-s-6: 24px; --acb-s-8: 32px; --acb-s-10: 40px;
+  --acb-s-14: 56px; --acb-s-18: 72px;
+
+  /* Motion */
+  --acb-ease: cubic-bezier(.2,.7,.3,1);
+}
